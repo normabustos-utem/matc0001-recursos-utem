@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto COIL · Modelamiento Matemático UTEM & PUCE Ibarra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- Header Institucional Binacional -->
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <div class="flex items-center space-x-1 font-black text-xs sm:text-sm">
+          <span class="px-2.5 py-1.5 rounded-lg bg-blue-600 text-white shadow">UTEM (Chile)</span>
+          <span class="text-slate-500 font-bold">✕</span>
+          <span class="px-2.5 py-1.5 rounded-lg bg-amber-600 text-white shadow">PUCE (Ecuador)</span>
+        </div>
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-950/70 border border-amber-500/30 px-2 py-0.5 rounded-full">
+            Iniciativa COIL Internacional
+          </span>
+          <h1 class="text-xs sm:text-sm font-bold text-slate-200 mt-0.5">
+            Modelamiento Matemático de Tarifas de Agua por Tramos
+          </h1>
+        </div>
+      </div>
+
+      <div class="text-right hidden md:block">
+        <div class="text-[11px] text-slate-400">Coordinación Académica:</div>
+        <div class="text-xs font-semibold text-slate-200">Prof. Norma Bustos Cerda (UTEM)</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de Navegación de Pestañas -->
+  <nav class="bg-slate-900/90 border-b border-slate-800 sticky top-[57px] z-20 overflow-x-auto py-2 px-4 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto flex items-center space-x-2 min-w-max">
+      <button id="nav-slides" onclick="showTab('slides')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow">
+        1. 📽️ Presentación para Estudiantes
+      </button>
+      <button id="nav-dossiers" onclick="showTab('dossiers')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+        2. 📁 Dossiers Binacionales (10 Equipos)
+      </button>
+      <button id="nav-simulator" onclick="showTab('simulator')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+        3. 📈 Graficador por Tramos y Empalmes
+      </button>
+      <button id="nav-methodology" onclick="showTab('methodology')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+        4. 📋 Guía Google Sites, Rúbrica y Forms
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="max-w-7xl w-full mx-auto px-4 py-6 flex-1">
+
+    <!-- PESTAÑA 1: PRESENTACIÓN INTERACTIVA DE DIAPOSITIVAS -->
+    <section id="tab-slides" class="tab-content space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+          <div>
+            <span class="text-xs font-bold uppercase text-amber-400">Proyector de Clases</span>
+            <h2 class="text-xl sm:text-2xl font-black text-white">Presentación de Inducción COIL para el Estudiantado</h2>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span id="slide-num-badge" class="px-3 py-1 bg-slate-800 text-amber-400 font-mono font-bold text-xs rounded-lg border border-slate-700">Diapositiva 1 / 10</span>
+          </div>
+        </div>
+
+        <!-- Visor de Diapositiva Activa -->
+        <div id="slide-viewport" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-10 min-h-[380px] flex flex-col justify-between shadow-inner">
+          <div id="slide-body">
+            <!-- Contenido inyectado por JS -->
+          </div>
+        </div>
+
+        <!-- Controles de Navegación de Diapositivas -->
+        <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-800">
+          <button onclick="prevSlide()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+            ← Anterior
+          </button>
+          <div class="flex items-center space-x-1.5" id="slide-dots">
+            <!-- Dots inyectados por JS -->
+          </div>
+          <button onclick="nextSlide()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+            Siguiente →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA 2: LOS 10 DOSSIERS OFICIALES -->
+    <section id="tab-dossiers" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-6">
+          <div>
+            <span class="text-xs font-bold uppercase text-blue-400">Banco Oficial de Datos</span>
+            <h2 class="text-xl sm:text-2xl font-black text-white">Dossiers Binacionales (10 Equipos Asignados)</h2>
+            <p class="text-xs text-slate-400 mt-1">Obligación del equipo: Validar las fuentes primarias en los enlaces de la BCN y Ordenanzas GAD.</p>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 block mb-1">Seleccionar Equipo:</label>
+            <select id="select-team" onchange="renderTeamDossier(this.value)" class="bg-slate-950 border border-slate-700 text-amber-400 font-bold text-sm rounded-xl px-4 py-2 cursor-pointer focus:outline-none focus:border-amber-500">
+              <option value="1">Equipo 1: Santiago (Chile) — Ibarra (Ecuador)</option>
+              <option value="2">Equipo 2: Valparaíso (Chile) — Quito (Ecuador)</option>
+              <option value="3">Equipo 3: Concepción (Chile) — Cuenca (Ecuador)</option>
+              <option value="4">Equipo 4: Antofagasta (Chile) — Guayaquil (Ecuador)</option>
+              <option value="5">Equipo 5: La Serena (Chile) — Ambato (Ecuador)</option>
+              <option value="6">Equipo 6: Temuco (Chile) — Loja (Ecuador)</option>
+              <option value="7">Equipo 7: Rancagua (Chile) — Riobamba (Ecuador)</option>
+              <option value="8">Equipo 8: Talca (Chile) — Manta (Ecuador)</option>
+              <option value="9">Equipo 9: Valdivia (Chile) — Santo Domingo (Ecuador)</option>
+              <option value="10">Equipo 10: Puerto Montt (Chile) — Machala (Ecuador)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="dossier-card-container">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA 3: GRAFICADOR POR TRAMOS Y EMPALMES -->
+    <section id="tab-simulator" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <h2 class="text-xl sm:text-2xl font-black text-white mb-2">Laboratorio de Continuidad y Empalmes $C(x)$</h2>
+        <p class="text-xs text-slate-400 mb-6">Comprueba cómo la función continua acumulativa evita saltos dislocados en los puntos de cambio de tramo.</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+            <h3 class="text-sm font-bold text-amber-400">Calibración de Parámetros:</h3>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Cargo Fijo ($/mes):</label>
+              <input type="number" id="sim-cf" value="1350" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white font-mono" oninput="plotPiecewise()">
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Precio Tramo 1 (0 a 15 m³):</label>
+              <input type="number" id="sim-p1" value="580" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white font-mono" oninput="plotPiecewise()">
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Precio Tramo 2 (15 a 30 m³):</label>
+              <input type="number" id="sim-p2" value="820" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white font-mono" oninput="plotPiecewise()">
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Precio Tramo 3 (> 30 m³):</label>
+              <input type="number" id="sim-p3" value="1350" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white font-mono" oninput="plotPiecewise()">
+            </div>
+            <div class="p-3 bg-slate-900 rounded-xl border border-emerald-500/30 text-xs text-emerald-300 font-mono">
+              ✓ Empalme en x=15: $10.050 CLP<br>
+              ✓ Empalme en x=30: $22.350 CLP
+            </div>
+          </div>
+
+          <div class="lg:col-span-2 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+            <div id="plot-container" style="height: 420px; width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA 4: GUÍA SITES, RÚBRICA Y FORMS -->
+    <section id="tab-methodology" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <h2 class="text-xl sm:text-2xl font-black text-white">Guía de Estructuración en Google Sites y Formulario Forms</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+            <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+              🌐 Estructura del Google Sites Binacional
+            </h3>
+            <ul class="text-xs text-slate-300 space-y-2 list-disc pl-4">
+              <li><strong>Página Principal:</strong> Integrantes (4 UTEM + 2 PUCE), fotos y acuerdos de trabajo.</li>
+              <li><strong>Página Chile:</strong> Cita formal del Decreto BCN, tabla de parámetros y función continua $C_{\text{CH}}(x)$.</li>
+              <li><strong>Página Ecuador:</strong> Cita formal de la Ordenanza GAD, tabla y función continua $C_{\text{EC}}(x)$.</li>
+              <li><strong>Página Síntesis:</strong> Gráfico interactivo Desmos, tabla de sensibilidad (+20%), conclusiones y video de 5 min.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+            <h3 class="text-sm font-bold text-blue-400 flex items-center gap-2">
+              📝 Formulario Oficial y Consentimiento
+            </h3>
+            <p class="text-xs text-slate-300">
+              Formulario de inscripción de Google Forms con consentimiento informado ético para investigación formativa SoTL:
+            </p>
+            <div class="p-3 bg-slate-900 rounded-xl border border-blue-500/30 text-xs text-blue-300">
+              ✓ Captura de correo institucional (@utem.cl y @pucesi.edu.ec)<br>
+              ✓ Disponibilidad horaria y canal preferido (WhatsApp/Teams)<br>
+              ✓ Ponderación formal del 15%
+            </div>
+            <a href="https://docs.google.com/forms/d/1O-U0kNUSj5a7lo3c9bRBz-K50IIBMOXdzG4VbCaxFyc/edit" target="_blank" class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition">
+              Abrir Formulario de Google Forms ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 bg-slate-950">
+    Universidad Tecnológica Metropolitana (UTEM, Chile) & Pontificia Universidad Católica del Ecuador (PUCE Ibarra) · Proyecto COIL
+  </footer>
+
+  <script>
+    // Diapositivas
+    const slides = [
+      {
+        title: "Proyecto Internacional COIL: Modelamiento Matemático de Tarifas de Agua",
+        subtitle: "Colaboración Binacional UTEM (Chile) & PUCE Ibarra (Ecuador)",
+        badge: "Diapositiva 1 · Portada",
+        content: `
+          <div class="space-y-4 my-auto">
+            <div class="inline-block px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold rounded-full">Taller de Matemática / Modelación</div>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Modelamiento Matemático y Análisis Comparativo de Tarifas Sanitarias</h3>
+            <p class="text-slate-300 text-sm max-w-2xl leading-relaxed">
+              Una experiencia de internacionalización en casa para estudiantes de ingeniería de Chile y Ecuador, aplicando funciones por tramos a problemas reales de sostenibilidad y economía familiar.
+            </p>
+            <div class="pt-4 flex flex-wrap gap-3 text-xs text-slate-400">
+              <span class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">Docente UTEM: Prof. Norma Bustos Cerda</span>
+              <span class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">Docente PUCE: Prof. Diego</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "¿Qué es la experiencia COIL?",
+        subtitle: "Collaborative Online International Learning",
+        badge: "Diapositiva 2 · Contexto",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+              <div class="text-2xl mb-2">🌎</div>
+              <h4 class="font-bold text-white text-sm mb-1">Internacionalización en Casa</h4>
+              <p class="text-xs text-slate-400">Trabajo en equipo binacional sin costos de traslado, desarrollando competencias interculturales.</p>
+            </div>
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+              <div class="text-2xl mb-2">👥</div>
+              <h4 class="font-bold text-white text-sm mb-1">Equipos Binacionales</h4>
+              <p class="text-xs text-slate-400">Grupos de 6 integrantes: 4 estudiantes UTEM y 2 estudiantes PUCE Ibarra.</p>
+            </div>
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+              <div class="text-2xl mb-2">📐</div>
+              <h4 class="font-bold text-white text-sm mb-1">Problema de Ingeniería Real</h4>
+              <p class="text-xs text-slate-400">Modelar, graficar y comparar las tarifas reales de agua en ciudades de ambos países.</p>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Los 10 Equipos y sus Dossiers Oficiales",
+        subtitle: "Obligación: Chequear y validar en fuentes oficiales",
+        badge: "Diapositiva 3 · Fuentes Primarias",
+        content: `
+          <div class="space-y-4 my-auto">
+            <p class="text-xs sm:text-sm text-slate-300">A cada equipo se le asigna un <strong>Dossier Oficial Binacional</strong> con una pareja de ciudades (ej. Santiago - Ibarra, Valdivia - Santo Domingo). Su primera tarea es verificar las fuentes de ley:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div class="p-4 bg-blue-950/40 border border-blue-500/40 rounded-xl">
+                <h4 class="font-bold text-blue-300 text-sm mb-1">🇨🇱 Chile: Biblioteca del Congreso Nacional (BCN)</h4>
+                <p class="text-slate-300">Verificar Decretos Tarifarios de la Superintendencia de Servicios Sanitarios (SISS).</p>
+              </div>
+              <div class="p-4 bg-amber-950/40 border border-amber-500/40 rounded-xl">
+                <h4 class="font-bold text-amber-300 text-sm mb-1">🇪🇨 Ecuador: Gacetas Oficiales GAD Municipal</h4>
+                <p class="text-slate-300">Verificar las Ordenanzas de Pliegos Tarifarios del Municipio y Empresas de Agua.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "La Matemática: Funciones Definidas por Tramos",
+        subtitle: "Estructura progresiva para desincentivar el derroche",
+        badge: "Diapositiva 4 · Modelamiento",
+        content: `
+          <div class="space-y-3 my-auto text-xs sm:text-sm">
+            <p class="text-slate-300">El servicio sanitario no es una recta simple; se cobra por bloques acumulativos para castigar el sobreconsumo:</p>
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl font-mono text-slate-200">
+              C(x) = Cargo Fijo + Valor Consumo Acumulado(x)
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="p-2.5 bg-slate-900 rounded-lg border border-slate-800">
+                <span class="text-slate-400 block">Tramo 1 (Base)</span>
+                <strong class="text-white">0 a 15 m³</strong>
+              </div>
+              <div class="p-2.5 bg-slate-900 rounded-lg border border-slate-800">
+                <span class="text-slate-400 block">Tramo 2 (Medio)</span>
+                <strong class="text-white">15 a 30 m³</strong>
+              </div>
+              <div class="p-2.5 bg-slate-900 rounded-lg border border-slate-800">
+                <span class="text-slate-400 block">Tramo 3 (Punta/Alto)</span>
+                <strong class="text-white">&gt; 30 m³</strong>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "El Desafío Central: 'El Empalme Perfecto' (Continuidad)",
+        subtitle: "Demostración algebraica de límites laterales",
+        badge: "Diapositiva 5 · Rigor Matemático",
+        content: `
+          <div class="space-y-3 my-auto text-xs sm:text-sm">
+            <p class="text-slate-300">El equipo debe demostrar formalmente que al cambiar de tramo la función <strong>no presenta saltos dislocados</strong>:</p>
+            <div class="p-4 bg-emerald-950/40 border border-emerald-500/40 rounded-xl font-mono text-emerald-300 text-xs sm:text-sm">
+              lim (x → x_k⁻) C(x) = lim (x → x_k⁺) C(x) = C(x_k)
+            </div>
+            <p class="text-slate-400 text-xs">El modelo debe construirse con la acumulación del tramo anterior para asegurar la continuidad en el laboratorio interactivo y en Desmos.</p>
+          </div>
+        `
+      },
+      {
+        title: "Análisis de Sensibilidad (+20%) y Divisas (CLP ↔ USD)",
+        subtitle: "Impacto económico en el presupuesto familiar",
+        badge: "Diapositiva 6 · Análisis Binacional",
+        content: `
+          <div class="space-y-3 my-auto text-xs sm:text-sm">
+            <p class="text-slate-300">Los estudiantes aplican el modelo a consumos reales y calculan qué ocurre si una familia aumenta su consumo en un <strong>+20%</strong>:</p>
+            <ul class="space-y-2 list-disc pl-5 text-slate-300 text-xs">
+              <li>¿Cuánto sube la cuenta en pesos chilenos (CLP) y en dólares (USD)?</li>
+              <li>¿Qué estructura tarifaria castiga más fuerte el sobreconsumo en periodos de sequía?</li>
+              <li>¿Qué porcentaje del presupuesto familiar básico representa el Cargo Fijo en cada país?</li>
+            </ul>
+          </div>
+        `
+      },
+      {
+        title: "Google Sites: El Portafolio Digital del Equipo",
+        subtitle: "Publicación web del trabajo colaborativo",
+        badge: "Diapositiva 7 · Portafolio",
+        content: `
+          <div class="space-y-3 my-auto text-xs">
+            <p class="text-slate-300">Cada equipo documentará todo su proceso en un sitio web gratuito estructurado en 4 secciones:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+              <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                <strong class="text-white block mb-1">1. Portada</strong>
+                <span class="text-slate-400 text-[11px]">Integrantes y acuerdos</span>
+              </div>
+              <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                <strong class="text-blue-400 block mb-1">2. Chile</strong>
+                <span class="text-slate-400 text-[11px]">Decreto y C_CH(x)</span>
+              </div>
+              <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                <strong class="text-amber-400 block mb-1">3. Ecuador</strong>
+                <span class="text-slate-400 text-[11px]">Ordenanza y C_EC(x)</span>
+              </div>
+              <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                <strong class="text-emerald-400 block mb-1">4. Síntesis</strong>
+                <span class="text-slate-400 text-[11px]">Desmos + Video 5m</span>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Ruta de Trabajo en 4 Semanas (4 Hitos)",
+        subtitle: "Entregas procesales para trabajo continuo",
+        badge: "Diapositiva 8 · Cronograma",
+        content: `
+          <div class="space-y-2 my-auto text-xs">
+            <div class="p-2.5 bg-slate-900 border-l-4 border-blue-500 rounded-r-lg">
+              <strong class="text-white">Semana 1 (Hito 1):</strong> Contacto binacional (WhatsApp/Meet) + verificación de fuentes oficiales BCN/GAD.
+            </div>
+            <div class="p-2.5 bg-slate-900 border-l-4 border-amber-500 rounded-r-lg">
+              <strong class="text-white">Semana 2 (Hito 2):</strong> Construcción de funciones por tramos y validación del empalme continuo en Desmos.
+            </div>
+            <div class="p-2.5 bg-slate-900 border-l-4 border-purple-500 rounded-r-lg">
+              <strong class="text-white">Semana 3 (Hito 3):</strong> Análisis de sensibilidad (+20%) y comparación económica en CLP y USD.
+            </div>
+            <div class="p-2.5 bg-slate-900 border-l-4 border-emerald-500 rounded-r-lg">
+              <strong class="text-white">Semana 4 (Hito 4):</strong> Publicación de Google Sites, grabación del video de 5 min y encuesta de satisfacción.
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Evaluación y Reconocimiento Institucional",
+        subtitle: "Impacto académico para los estudiantes",
+        badge: "Diapositiva 9 · Beneficios",
+        content: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-auto text-xs">
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+              <h4 class="font-bold text-amber-400 text-sm mb-2">📊 Ponderación Curricular</h4>
+              <p class="text-slate-300">Ponderación formal del <strong>15%</strong> en la evaluación de la asignatura Taller de Matemática.</p>
+            </div>
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+              <h4 class="font-bold text-blue-400 text-sm mb-2">📜 Certificación Internacional</h4>
+              <p class="text-slate-300">Constancia / Certificado Oficial de Participación en Proyecto COIL emitido por la Dirección de Relaciones Internacionales de la UTEM.</p>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Inscripción y Formulario Oficial",
+        subtitle: "Consentimiento informado para investigación formativa",
+        badge: "Diapositiva 10 · Registro",
+        content: `
+          <div class="space-y-4 my-auto text-center">
+            <p class="text-xs sm:text-sm text-slate-300">Todos los estudiantes deben completar el formulario de registro y disponibilidad horaria:</p>
+            <div class="inline-block p-4 bg-slate-900 border-2 border-amber-500/40 rounded-2xl">
+              <a href="https://docs.google.com/forms/d/1O-U0kNUSj5a7lo3c9bRBz-K50IIBMOXdzG4VbCaxFyc/edit" target="_blank" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl transition inline-flex items-center gap-2">
+                Abrir Formulario de Registro Google Forms ↗
+              </a>
+            </div>
+            <p class="text-[11px] text-slate-500">Incluye consentimiento informado para la investigación pedagógica SoTL.</p>
+          </div>
+        `
+      }
+    ];
+
+    let currentSlide = 0;
+
+    function renderSlide(index) {
+      const s = slides[index];
+      document.getElementById('slide-num-badge').innerText = `Diapositiva ${index + 1} / ${slides.length}`;
+      document.getElementById('slide-body').innerHTML = `
+        <div class="mb-4">
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-500/30 px-2.5 py-0.5 rounded-full">${s.badge}</span>
+          <h3 class="text-xl sm:text-2xl font-black text-white mt-2">${s.title}</h3>
+          <p class="text-xs text-slate-400">${s.subtitle}</p>
+        </div>
+        <div class="py-2">${s.content}</div>
+      `;
+
+      // Render dots
+      const dotsContainer = document.getElementById('slide-dots');
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = `w-2.5 h-2.5 rounded-full transition ${i === index ? 'bg-amber-500 w-6' : 'bg-slate-700 hover:bg-slate-500'}`;
+        dot.onclick = () => { currentSlide = i; renderSlide(currentSlide); };
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        renderSlide(currentSlide);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderSlide(currentSlide);
+      }
+    }
+
+    // Pestañas
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white";
+      });
+      document.getElementById('nav-' + tabId).className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow";
+
+      if (tabId === 'simulator') {
+        setTimeout(plotPiecewise, 100);
+      }
+    }
+
+    // Datos de los 10 Equipos
+    const teamsData = {
+      "1": {
+        team: "Equipo 1",
+        chileCity: "Santiago",
+        chileCompany: "Aguas Andinas S.A.",
+        chileDecreto: "Decreto MINECON N° 123/2021 (BCN)",
+        chileLink: "https://www.bcn.cl/leychile/navegar?idNorma=1168492",
+        chileCF: "$1.350 CLP",
+        chileP1: "$580 (0-15 m³)",
+        chileP2: "$820 (15-30 m³)",
+        chileP3: "$1.350 (>30 m³)",
+        ecuadorCity: "Ibarra",
+        ecuadorCompany: "EMAPA-I",
+        ecuadorDecreto: "Ordenanza Municipal N° 012-2022 (GAD)",
+        ecuadorLink: "https://www.ibarra.gob.ec",
+        ecuadorCF: "$1.50 USD",
+        ecuadorP1: "$0.35 (0-10 m³)",
+        ecuadorP2: "$0.55 (11-25 m³)",
+        ecuadorP3: "$0.85 (26-50 m³)"
+      },
+      "9": {
+        team: "Equipo 9",
+        chileCity: "Valdivia",
+        chileCompany: "Aguas Décima S.A.",
+        chileDecreto: "Decreto MINECON N° 92/2021 (BCN)",
+        chileLink: "https://www.bcn.cl/leychile/navegar?idNorma=1159981",
+        chileCF: "$1.380 CLP",
+        chileP1: "$590 (0-15 m³)",
+        chileP2: "$800 (15-30 m³)",
+        chileP3: "$1.250 (>30 m³)",
+        ecuadorCity: "Santo Domingo",
+        ecuadorCompany: "EPMAPA-SD",
+        ecuadorDecreto: "Ordenanza Tarifaria EPMAPA-SD 2022",
+        ecuadorLink: "https://www.epmapasd.gob.ec",
+        ecuadorCF: "$1.50 USD",
+        ecuadorP1: "$0.40 (0-12 m³)",
+        ecuadorP2: "$0.60 (13-25 m³)",
+        ecuadorP3: "$1.05 (>25 m³)"
+      }
+    };
+
+    function renderTeamDossier(teamId) {
+      const t = teamsData[teamId] || teamsData["1"];
+      document.getElementById('dossier-card-container').innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-5 bg-slate-950 border border-blue-500/40 rounded-2xl space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-blue-400 uppercase">Sección Chile</span>
+              <span class="px-2 py-0.5 bg-blue-950 text-blue-300 text-[10px] font-mono rounded">Decreto Oficial SISS</span>
+            </div>
+            <h3 class="text-lg font-black text-white">${t.chileCity} (${t.chileCompany})</h3>
+            <div class="space-y-1.5 text-xs text-slate-300">
+              <div><strong>Documento:</strong> ${t.chileDecreto}</div>
+              <div><strong>Cargo Fijo:</strong> ${t.chileCF} / mes</div>
+              <div><strong>Tarifa Base:</strong> ${t.chileP1}</div>
+              <div><strong>Tarifa Media:</strong> ${t.chileP2}</div>
+              <div><strong>Tarifa Alta:</strong> ${t.chileP3}</div>
+            </div>
+            <div class="pt-2">
+              <a href="${t.chileLink}" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold">
+                🔗 Abrir Decreto en BCN Ley Chile ↗
+              </a>
+            </div>
+          </div>
+
+          <div class="p-5 bg-slate-950 border border-amber-500/40 rounded-2xl space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-amber-400 uppercase">Sección Ecuador</span>
+              <span class="px-2 py-0.5 bg-amber-950 text-amber-300 text-[10px] font-mono rounded">Ordenanza GAD</span>
+            </div>
+            <h3 class="text-lg font-black text-white">${t.ecuadorCity} (${t.ecuadorCompany})</h3>
+            <div class="space-y-1.5 text-xs text-slate-300">
+              <div><strong>Documento:</strong> ${t.ecuadorDecreto}</div>
+              <div><strong>Cargo Fijo:</strong> ${t.ecuadorCF} / mes</div>
+              <div><strong>Bloque 1:</strong> ${t.ecuadorP1}</div>
+              <div><strong>Bloque 2:</strong> ${t.ecuadorP2}</div>
+              <div><strong>Bloque 3:</strong> ${t.ecuadorP3}</div>
+            </div>
+            <div class="pt-2">
+              <a href="${t.ecuadorLink}" target="_blank" class="text-xs text-amber-400 hover:underline flex items-center gap-1 font-semibold">
+                🔗 Abrir Portal Oficial GAD Ecuador ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Gráfico de Continuidad Plotly
+    function plotPiecewise() {
+      const cf = parseFloat(document.getElementById('sim-cf').value) || 1350;
+      const p1 = parseFloat(document.getElementById('sim-p1').value) || 580;
+      const p2 = parseFloat(document.getElementById('sim-p2').value) || 820;
+      const p3 = parseFloat(document.getElementById('sim-p3').value) || 1350;
+
+      const xVals = [];
+      const yVals = [];
+
+      for (let x = 0; x <= 45; x += 0.5) {
+        xVals.push(x);
+        let cost = cf;
+        if (x <= 15) {
+          cost += p1 * x;
+        } else if (x <= 30) {
+          cost += p1 * 15 + p2 * (x - 15);
+        } else {
+          cost += p1 * 15 + p2 * 15 + p3 * (x - 30);
+        }
+        yVals.push(cost);
+      }
+
+      const trace = {
+        x: xVals,
+        y: yVals,
+        mode: 'lines',
+        line: { color: '#f59e0b', width: 3.5 },
+        name: 'Costo Total C(x)'
+      };
+
+      const layout = {
+        title: { text: 'Función Continua por Tramos C(x)', font: { color: '#f8fafc', size: 14 } },
+        paper_bgcolor: '#020617',
+        plot_bgcolor: '#020617',
+        xaxis: { title: 'Consumo (m³)', color: '#94a3b8', gridcolor: '#1e293b' },
+        yaxis: { title: 'Costo Total ($ CLP)', color: '#94a3b8', gridcolor: '#1e293b' },
+        margin: { t: 40, r: 20, l: 60, b: 40 }
+      };
+
+      Plotly.newPlot('plot-container', [trace], layout, { responsive: true });
+    }
+
+    // Inicialización
+    renderSlide(0);
+    renderTeamDossier("1");
+  </script>
+</body>
+</html>

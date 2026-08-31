@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo IV: Modelamiento con Funciones Racionales - Vaciado de Estanque | UTEM MATC0001</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'Fira Code', monospace; }
+    @media print {
+      body { background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-amber-500 selection:text-slate-950 pb-20">
+
+  <!-- Header Institucional UTEM -->
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-lg no-print">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-600 to-amber-500 flex items-center justify-center font-black text-white shadow-lg text-sm border border-cyan-400/40">
+          UTEM
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 bg-cyan-950/70 border border-cyan-500/30 px-2 py-0.5 rounded-full">
+              MATC0001 · Módulo IV
+            </span>
+            <span class="text-xs font-medium text-slate-400 hidden sm:inline">Plan Común de Ingeniería y Ciencias</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-bold text-slate-100">
+            Modelamiento con Funciones Racionales · Vaciado de Estanque Industrial
+          </h1>
+        </div>
+      </div>
+      <button onclick="goToStep(1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg border border-slate-700 transition">
+        Reiniciar
+      </button>
+    </div>
+  </header>
+
+  <!-- Stepper de Navegación -->
+  <nav class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-[57px] z-20 no-print">
+    <div class="max-w-7xl mx-auto px-4 overflow-x-auto py-2.5 flex items-center gap-2">
+      <button onclick="goToStep(1)" id="tab-1" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950">1. Contexto</button>
+      <button onclick="goToStep(2)" id="tab-2" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">2. Modelo</button>
+      <button onclick="goToStep(3)" id="tab-3" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">3. Evaluación</button>
+      <button onclick="goToStep(4)" id="tab-4" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">4. Simulador</button>
+      <button onclick="goToStep(5)" id="tab-5" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">5. Asíntotas</button>
+      <button onclick="goToStep(6)" id="tab-6" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">6. Decisión</button>
+      <button onclick="goToStep(7)" id="tab-7" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">7. Evaluación</button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- PASO 1: Contexto -->
+    <section id="step-1" class="step-content space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase">
+          Guía de Trabajo UTEM · Módulo IV
+        </div>
+        <h2 class="text-2xl font-black text-white">¿Cuánto tiempo necesita para vaciarse un estanque?</h2>
+        <p class="text-slate-300 text-sm leading-relaxed">
+          En una planta industrial se utiliza un estanque para almacenar agua durante un proceso de producción. Al finalizar una jornada, el estanque debe vaciarse para labores de limpieza y mantenimiento.
+          Sea \(V\) la cantidad de agua inicialmente almacenada (en miles de litros) y \(T(V)\) el tiempo de vaciado (en minutos).
+        </p>
+
+        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 overflow-x-auto">
+          <table class="w-full text-xs font-mono">
+            <thead>
+              <tr class="text-slate-400 border-b border-slate-800">
+                <th class="p-2 text-left text-cyan-400">Volumen inicial V (miles de L)</th>
+                <th class="p-2 text-left text-amber-400">Tiempo de vaciado T (min)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60">
+              <tr><td class="p-2">10</td><td class="p-2 text-amber-300">10.0 min</td></tr>
+              <tr><td class="p-2">20</td><td class="p-2 text-amber-300">6.67 min</td></tr>
+              <tr><td class="p-2">30</td><td class="p-2 text-amber-300">6.00 min</td></tr>
+              <tr><td class="p-2">40</td><td class="p-2 text-amber-300">5.71 min</td></tr>
+              <tr><td class="p-2">50</td><td class="p-2 text-amber-300">5.56 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h3 class="text-base font-bold text-white">Antes de construir el modelo: Responde</h3>
+        <div class="space-y-3 text-xs">
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+            <label class="font-bold text-slate-200 block">a) ¿El tiempo de vaciado aumenta de manera proporcional con el volumen?</label>
+            <select id="p1-q1" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
+              <option value="">Selecciona...</option>
+              <option value="no">No, el tiempo disminuye hacia un valor límite debido a la presión hidrostática.</option>
+              <option value="si">Sí, aumenta proporcionalmente.</option>
+            </select>
+          </div>
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+            <label class="font-bold text-slate-200 block">b) ¿Qué representa la condición operacional V &gt; 5?</label>
+            <select id="p1-q2" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
+              <option value="">Selecciona...</option>
+              <option value="valvula">Límite de operación: en V=5 la descarga se estrangula y el tiempo se vuelve infinito.</option>
+              <option value="error">Un error de escritura.</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="goToStep(2)" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition">
+          Avanzar al Paso 2: Modelo Racional &rarr;
+        </button>
+      </div>
+    </section>
+
+    <!-- PASO 2: Modelo -->
+    <section id="step-2" class="step-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-xl font-black text-white">Modelo Racional: \(T(V) = \frac{5V}{V-5}\)</h2>
+        <p class="text-xs text-slate-300">
+          El modelo analítico corresponde al cociente entre \(P(V) = 5V\) y \(Q(V) = V - 5\), con dominio \(V > 5\).
+        </p>
+        <div class="p-6 bg-slate-950 border border-amber-500/40 rounded-2xl text-center">
+          <div class="text-2xl font-mono font-black text-amber-400">T(V) = \frac{5V}{V-5}</div>
+          <div class="text-xs font-mono text-cyan-300 mt-2">V &gt; 5 (miles de litros)</div>
+        </div>
+      </div>
+      <div class="flex justify-between">
+        <button onclick="goToStep(1)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
+        <button onclick="goToStep(3)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir al Paso 3 &rarr;</button>
+      </div>
+    </section>
+
+    <!-- PASO 3: Evaluación -->
+    <section id="step-3" class="step-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-xl font-black text-white">Evaluación Numérica del Modelo</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-cyan-400 font-bold">V = 10k L:</span>
+            <div class="text-slate-300 mt-1">T(10) = 5(10)/(10-5) = 50/5 = <strong>10.0 min</strong></div>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-cyan-400 font-bold">V = 20k L:</span>
+            <div class="text-slate-300 mt-1">T(20) = 5(20)/(20-5) = 100/15 &approx; <strong>6.67 min</strong></div>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-cyan-400 font-bold">V = 30k L:</span>
+            <div class="text-slate-300 mt-1">T(30) = 5(30)/(30-5) = 150/25 = <strong>6.00 min</strong></div>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-cyan-400 font-bold">V = 50k L:</span>
+            <div class="text-slate-300 mt-1">T(50) = 5(50)/(50-5) = 250/45 &approx; <strong>5.56 min</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between">
+        <button onclick="goToStep(2)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
+        <button onclick="goToStep(4)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir al Simulador &rarr;</button>
+      </div>
+    </section>
+
+    <!-- PASO 4: Simulador -->
+    <section id="step-4" class="step-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-xl font-black text-white">Simulador Dinámico de Vaciado</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="space-y-3">
+            <label class="text-xs font-bold text-slate-300">Volumen V (<span id="slider-val">25.0</span> mil L):</label>
+            <input type="range" id="v-slider" min="5.2" max="60" step="0.2" value="25" class="w-full accent-amber-500" oninput="updateSimulation(this.value)">
+            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs font-mono space-y-1">
+              <div>Tiempo calculado: <strong id="t-calc" class="text-amber-400 text-sm">6.25 min</strong></div>
+              <div>Holgura sobre 30 min: <strong id="margin-calc" class="text-emerald-400">+23.75 min</strong></div>
+            </div>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+            <div class="w-36 h-36 border-2 border-slate-700 rounded-b-xl relative bg-slate-900 flex flex-col justify-end overflow-hidden">
+              <div id="tank-water" class="w-full bg-gradient-to-t from-blue-600 to-cyan-400 transition-all duration-300" style="height: 50%;"></div>
+            </div>
+            <div class="w-4 h-4 bg-slate-800 border-x border-slate-700"></div>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between">
+        <button onclick="goToStep(3)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
+        <button onclick="goToStep(5)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir a Asíntotas &rarr;</button>
+      </div>
+    </section>
+
+    <!-- PASO 5: Asíntotas -->
+    <section id="step-5" class="step-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-xl font-black text-white">Interpretación de Asíntotas</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="p-4 bg-slate-950 rounded-xl border border-rose-500/40 space-y-2">
+            <span class="text-rose-400 font-bold uppercase">Asíntota Vertical: V = 5k L</span>
+            <p class="text-slate-300">Límite crítico donde el vaciado se estrangula y \(T \to +\infty\).</p>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-cyan-500/40 space-y-2">
+            <span class="text-cyan-400 font-bold uppercase">Asíntota Horizontal: T = 5 min</span>
+            <p class="text-slate-300">Tiempo mínimo físico teórico cuando \(V \to \infty\) impuesto por la tubería.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between">
+        <button onclick="goToStep(4)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
+        <button onclick="goToStep(6)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir a Decisión &rarr;</button>
+      </div>
+    </section>
+
+    <!-- PASO 6: Decisión y Desigualdad -->
+    <section id="step-6" class="step-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-xl font-black text-white">Decisión de Operación: \(T(V) \le 30\) min</h2>
+        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 font-mono text-xs text-slate-300 space-y-2">
+          <div>$$\frac{5V}{V-5} \le 30 \implies 5V \le 30V - 150 \implies 150 \le 25V \implies V \ge 6$$</div>
+          <div class="text-emerald-400 font-bold">Solución: V &ge; 6 mil litros (intervalo [6, &infin;)).</div>
+        </div>
+        <div class="p-4 bg-slate-950 rounded-xl border border-cyan-500/30 text-xs space-y-2">
+          <div class="text-cyan-300 font-bold">Caso V = 25 mil litros:</div>
+          <div>T(25) = 5(25)/(25-5) = 125/20 = <strong>6.25 minutos</strong> &le; 30 min.</div>
+          <div class="text-emerald-400 font-bold">DICTAMEN: Aprobado programar la limpieza 30 min tras iniciar el vaciado.</div>
+        </div>
+      </div>
+      <div class="flex justify-between">
+        <button onclick="goToStep(5)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
+        <button onclick="goToStep(7)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir a la Evaluación &rarr;</button>
+      </div>
+    </section>
+
+    <!-- PASO 7: Evaluación Formativa -->
+    <section id="step-7" class="step-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-xl font-black text-white">Evaluación Formativa UTEM (Escala 1.0 - 7.0)</h2>
+        <div class="space-y-4 text-xs">
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+            <p class="font-bold text-white">1. ¿Cuál es el dominio de la función T(V)?</p>
+            <select id="q1" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
+              <option value="">Selecciona...</option>
+              <option value="1">V &gt; 5 mil litros</option>
+              <option value="0">Todos los reales</option>
+            </select>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+            <p class="font-bold text-white">2. Para V = 25 mil litros, ¿cuánto tarda el vaciado?</p>
+            <select id="q2" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
+              <option value="">Selecciona...</option>
+              <option value="1">6.25 minutos (6 min 15 s)</option>
+              <option value="0">25 minutos</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="gradeQuiz()" class="px-6 py-2.5 bg-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-lg">
+          Calificar Evaluación
+        </button>
+        <div id="quiz-result" class="hidden p-4 bg-slate-950 border border-amber-500 rounded-xl font-mono text-xs"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function goToStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.step-tab').forEach(el => {
+        el.classList.remove('bg-amber-500', 'text-slate-950');
+        el.classList.add('text-slate-400');
+      });
+      const currentSection = document.getElementById('step-' + step);
+      if (currentSection) currentSection.classList.remove('hidden');
+      const currentTab = document.getElementById('tab-' + step);
+      if (currentTab) {
+        currentTab.classList.add('bg-amber-500', 'text-slate-950');
+        currentTab.classList.remove('text-slate-400');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateSimulation(val) {
+      const v = parseFloat(val);
+      document.getElementById('slider-val').innerText = v.toFixed(1);
+      const t = (5 * v) / (v - 5);
+      document.getElementById('t-calc').innerText = t.toFixed(2) + ' min';
+      const margin = 30 - t;
+      document.getElementById('margin-calc').innerText = (margin >= 0 ? '+' : '') + margin.toFixed(2) + ' min';
+      document.getElementById('tank-water').style.height = Math.min(100, Math.max(5, (v / 60) * 100)) + '%';
+    }
+
+    function gradeQuiz() {
+      const q1 = document.getElementById('q1').value;
+      const q2 = document.getElementById('q2').value;
+      let score = 0;
+      if (q1 === '1') score++;
+      if (q2 === '1') score++;
+      const grade = score === 2 ? 7.0 : score === 1 ? 4.0 : 1.0;
+      const resultDiv = document.getElementById('quiz-result');
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = '<span class="text-amber-400 font-bold">Puntaje: ' + score + '/2 | Nota UTEM: ' + grade.toFixed(1) + '</span><br>' + (grade >= 4.0 ? '<span class="text-emerald-400">¡Felicitaciones! Has aprobado el Módulo IV.</span>' : '<span class="text-rose-400">Revisa los conceptos y vuelve a intentar.</span>');
+      if (grade >= 6.0 && typeof confetti === 'function') {
+        confetti({ particleCount: 80, spread: 60 });
+      }
+    }
+  </script>
+</body>
+</html>

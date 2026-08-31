@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MATC0001 - Módulo I · Modelamiento Lineal UTEM (PCI)</title>
+  <title>Modelamiento Lineal UTEM - Suministro Eléctrico</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+    code, pre, .font-mono { font-family: 'Fira Code', ui-monospace, monospace; }
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       height: 22px;
@@ -38,35 +43,35 @@
             </span>
           </div>
           <h1 class="text-sm sm:text-base font-bold text-slate-100 mt-0.5">
-            Suministro Eléctrico para Faena Vial
+            Suministro Eléctrico para Faena Vial · Modelamiento Lineal
           </h1>
         </div>
       </div>
 
       <div class="flex items-center space-x-2">
-        <button onclick="goToStep(1)" class="flex items-center space-x-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-2 rounded-lg border border-slate-700 transition cursor-pointer">
+        <button onclick="goToStep(1)" class="flex items-center space-x-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-2 rounded-xl border border-slate-700 transition cursor-pointer">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-          <span>Reiniciar</span>
+          <span class="hidden sm:inline">Reiniciar</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- Stepper de Navegación -->
-  <nav class="bg-slate-900/95 border-b border-slate-800 sticky top-[69px] z-20 overflow-x-auto py-2.5 px-4 backdrop-blur-md">
+  <nav class="bg-slate-900/95 border-b border-slate-800 sticky top-[65px] z-20 overflow-x-auto py-2.5 px-4 backdrop-blur-md">
     <div class="max-w-7xl mx-auto flex items-center space-x-2 min-w-max">
       <button id="tab-1" onclick="goToStep(1)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 shadow-md">1. Caso y Datos</button>
       <button id="tab-2" onclick="goToStep(2)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">2. Álgebra C(x)</button>
       <button id="tab-3" onclick="goToStep(3)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">3. Tabla de Costos</button>
       <button id="tab-4" onclick="goToStep(4)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">4. Gráfico y Equilibrio</button>
-      <button id="tab-5" onclick="goToStep(5)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">5. Presupuesto</button>
+      <button id="tab-5" onclick="goToStep(5)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">5. Presupuesto ($1.000.000)</button>
       <button id="tab-6" onclick="goToStep(6)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">6. Decisión en Obra (30h)</button>
       <button id="tab-7" onclick="goToStep(7)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">7. Cuestionario Formativo</button>
     </div>
   </nav>
 
   <!-- Contenedor Principal -->
-  <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-1">
+  <main class="max-w-5xl w-full mx-auto px-4 py-8 flex-1">
     
     <!-- PASO 1 -->
     <div id="step-1" class="step-content space-y-6">
@@ -78,32 +83,47 @@
           Suministro de Generación Eléctrica para Faena Vial
         </h2>
         <p class="text-slate-300 mt-2 text-sm sm:text-base leading-relaxed">
-          Como responsable de logística en una obra vial, debes contratar el grupo electrógeno de faena entre dos alternativas técnico-económicas:
+          Como ingeniero(a) responsable de logística en una obra vial, debes contratar el grupo electrógeno de faena entre dos alternativas técnico-económicas para operar durante <strong class="text-amber-400">30 horas</strong> con un presupuesto tope de <strong class="text-emerald-400">$1.000.000 CLP</strong>:
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
-          <div class="bg-slate-800/90 border-2 border-blue-500/40 rounded-2xl p-5 shadow-lg">
+          <div class="bg-slate-850/90 border-2 border-blue-500/40 rounded-2xl p-5 shadow-lg">
             <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">α</span> Proveedor Alfa
             </h3>
             <div class="space-y-2 text-sm text-slate-200">
-              <div class="p-2.5 rounded-lg bg-slate-900/70">Costo Fijo Inicial (b<sub>A</sub>): <strong>$300.000 CLP</strong></div>
-              <div class="p-2.5 rounded-lg bg-slate-900/70">Costo Variable por Hora (m<sub>A</sub>): <strong>$15.000 CLP / hora</strong></div>
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
+                <span class="text-slate-400">Costo Fijo Inicial (b<sub>A</sub>):</span>
+                <strong class="text-blue-400 font-mono text-base">$300.000 CLP</strong>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
+                <span class="text-slate-400">Costo Operativo por Hora (m<sub>A</sub>):</span>
+                <strong class="text-white font-mono text-base">$15.000 CLP / hora</strong>
+              </div>
             </div>
+            <div class="mt-3 text-xs text-slate-400 font-mono">Fórmula: C_A(x) = 15.000 · x + 300.000</div>
           </div>
-          <div class="bg-slate-800/90 border-2 border-amber-500/40 rounded-2xl p-5 shadow-lg">
+
+          <div class="bg-slate-850/90 border-2 border-amber-500/40 rounded-2xl p-5 shadow-lg">
             <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-amber-600 flex items-center justify-center text-slate-950 font-bold">β</span> Proveedor Beta
             </h3>
             <div class="space-y-2 text-sm text-slate-200">
-              <div class="p-2.5 rounded-lg bg-slate-900/70">Costo Fijo Inicial (b<sub>B</sub>): <strong>$100.000 CLP</strong></div>
-              <div class="p-2.5 rounded-lg bg-slate-900/70">Costo Variable por Hora (m<sub>B</sub>): <strong>$25.000 CLP / hora</strong></div>
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
+                <span class="text-slate-400">Costo Fijo Inicial (b<sub>B</sub>):</span>
+                <strong class="text-amber-400 font-mono text-base">$100.000 CLP</strong>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
+                <span class="text-slate-400">Costo Operativo por Hora (m<sub>B</sub>):</span>
+                <strong class="text-white font-mono text-base">$25.000 CLP / hora</strong>
+              </div>
             </div>
+            <div class="mt-3 text-xs text-slate-400 font-mono">Fórmula: C_B(x) = 25.000 · x + 100.000</div>
           </div>
         </div>
 
         <div class="flex justify-end">
-          <button onclick="goToStep(2)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition">
+          <button onclick="goToStep(2)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer shadow-lg">
             Continuar a Paso 2: Álgebra C(x) →
           </button>
         </div>
@@ -113,23 +133,36 @@
     <!-- PASO 2 -->
     <div id="step-2" class="step-content hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl font-bold text-white mb-2">Paso 2: Modelación Algebraica y Funciones Lineales</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 2: Modelación Algebraica y Funciones Lineales</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 font-mono">
-          <div class="p-4 bg-blue-950/40 border border-blue-500/40 rounded-xl">
+          <div class="p-4 bg-blue-950/40 border-2 border-blue-500/40 rounded-xl">
             <span class="text-xs text-blue-300 font-bold uppercase">Proveedor Alfa</span>
             <div class="text-xl font-bold text-white mt-1">C_A(x) = 15.000 · x + 300.000</div>
+            <div class="text-xs text-slate-400 mt-2 font-sans">m = 15.000 CLP/h (pendiente) | b = 300.000 CLP (intercepto)</div>
           </div>
-          <div class="p-4 bg-amber-950/40 border border-amber-500/40 rounded-xl">
+          <div class="p-4 bg-amber-950/40 border-2 border-amber-500/40 rounded-xl">
             <span class="text-xs text-amber-300 font-bold uppercase">Proveedor Beta</span>
             <div class="text-xl font-bold text-white mt-1">C_B(x) = 25.000 · x + 100.000</div>
+            <div class="text-xs text-slate-400 mt-2 font-sans">m = 25.000 CLP/h (pendiente) | b = 100.000 CLP (intercepto)</div>
           </div>
         </div>
 
-        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 font-mono text-sm space-y-2">
-          <h3 class="text-amber-400 font-bold font-sans">Deducción del Punto de Equilibrio:</h3>
-          <div>1. 15.000·x + 300.000 = 25.000·x + 100.000</div>
-          <div>2. 200.000 = 10.000·x</div>
-          <div class="text-emerald-400 font-bold text-base">👉 x = 20 horas (Costo = $600.000 CLP)</div>
+        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 font-mono text-xs sm:text-sm space-y-3">
+          <h3 class="text-amber-400 font-bold font-sans text-base">Deducción Algebraica con Símbolos Bicondicionales:</h3>
+          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+            1. C_A(x) = C_B(x) <span class="text-amber-400 font-bold">⟺</span> 15.000 · x + 300.000 = 25.000 · x + 100.000
+          </div>
+          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+            2. 300.000 - 100.000 = 25.000 · x - 15.000 · x <span class="text-amber-400 font-bold">⟺</span> 200.000 = 10.000 · x
+          </div>
+          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+            3. x = 200.000 / 10.000 <span class="text-emerald-400 font-bold">⟺ x = 20 horas de faena</span>
+          </div>
+          <div class="p-3 bg-emerald-950/50 border border-emerald-500/40 rounded-xl text-emerald-300 font-sans text-xs">
+            👉 <strong>Comprobación del Costo en Equilibrio:</strong><br>
+            C_A(20) = 15.000(20) + 300.000 = <strong>$600.000 CLP</strong><br>
+            C_B(20) = 25.000(20) + 100.000 = <strong>$600.000 CLP</strong>
+          </div>
         </div>
 
         <div class="flex justify-between mt-6">
@@ -142,23 +175,44 @@
     <!-- PASO 3 -->
     <div id="step-3" class="step-content hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl font-bold text-white mb-2">Paso 3: Tabla Comparativa de Costos</h2>
-        <div class="overflow-x-auto rounded-xl border border-slate-800 my-4">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 3: Tabla Comparativa de Costos y Conveniencia</h2>
+        
+        <div class="overflow-x-auto rounded-xl border border-slate-800 my-4 shadow-lg">
           <table class="w-full text-left text-xs sm:text-sm text-slate-200">
-            <thead class="bg-slate-950 text-slate-400 uppercase text-[11px]">
+            <thead class="bg-slate-950 text-slate-400 uppercase text-[11px] font-mono">
               <tr>
-                <th class="p-3">Horas (x)</th>
-                <th class="p-3 text-blue-400">Alfa: C_A(x)</th>
-                <th class="p-3 text-amber-400">Beta: C_B(x)</th>
-                <th class="p-3">Conveniencia</th>
+                <th class="p-3.5">Horas de Faena (x)</th>
+                <th class="p-3.5 text-blue-400">Alfa: C_A(x)</th>
+                <th class="p-3.5 text-amber-400">Beta: C_B(x)</th>
+                <th class="p-3.5">Opción Más Económica</th>
+                <th class="p-3.5">Ahorro Neto (CLP)</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800 bg-slate-900/50">
-              <tr><td class="p-3 font-bold">0 hrs</td><td>$300.000</td><td>$100.000</td><td class="text-amber-400 font-bold">🏆 Gana Beta</td></tr>
-              <tr><td class="p-3 font-bold">10 hrs</td><td>$450.000</td><td>$350.000</td><td class="text-amber-400 font-bold">🏆 Gana Beta</td></tr>
-              <tr class="bg-emerald-950/40 border-l-4 border-emerald-500"><td class="p-3 font-bold">20 hrs (Equilibrio)</td><td>$600.000</td><td>$600.000</td><td class="text-emerald-400 font-bold">⚖️ Indiferente ($600k)</td></tr>
-              <tr class="bg-amber-950/40 border-l-4 border-amber-500"><td class="p-3 font-bold">30 hrs (Caso)</td><td>$750.000</td><td>$850.000</td><td class="text-blue-400 font-bold">🏆 Gana Alfa (-$100k)</td></tr>
-              <tr><td class="p-3 font-bold">40 hrs</td><td>$900.000</td><td>$1.100.000</td><td class="text-blue-400 font-bold">🏆 Gana Alfa (-$200k)</td></tr>
+            <tbody class="divide-y divide-slate-800 bg-slate-900/60 font-mono">
+              <tr>
+                <td class="p-3.5 font-bold">0 hrs</td><td>$300.000</td><td>$100.000</td>
+                <td class="text-amber-400 font-bold font-sans">🏆 Conviene Beta</td><td class="font-sans text-slate-300">Ahorras $200.000 con Beta</td>
+              </tr>
+              <tr>
+                <td class="p-3.5 font-bold">10 hrs</td><td>$450.000</td><td>$350.000</td>
+                <td class="text-amber-400 font-bold font-sans">🏆 Conviene Beta</td><td class="font-sans text-slate-300">Ahorras $100.000 con Beta</td>
+              </tr>
+              <tr class="bg-emerald-950/40 border-l-4 border-emerald-500 font-semibold">
+                <td class="p-3.5 font-bold">20 hrs (Equilibrio)</td><td>$600.000</td><td>$600.000</td>
+                <td class="text-emerald-400 font-bold font-sans">⚖️ Indiferente</td><td class="font-sans text-emerald-300">$0 (Mismo Costo de $600.000)</td>
+              </tr>
+              <tr class="bg-amber-950/40 border-l-4 border-amber-500 font-semibold">
+                <td class="p-3.5 font-bold">30 hrs (Caso Real)</td><td>$750.000</td><td>$850.000</td>
+                <td class="text-blue-400 font-bold font-sans">🏆 Conviene Alfa</td><td class="font-sans text-blue-300">Ahorras $100.000 con Alfa (11,8%)</td>
+              </tr>
+              <tr>
+                <td class="p-3.5 font-bold">40 hrs</td><td>$900.000</td><td>$1.100.000</td>
+                <td class="text-blue-400 font-bold font-sans">🏆 Conviene Alfa</td><td class="font-sans text-blue-300">Ahorras $200.000 con Alfa</td>
+              </tr>
+              <tr>
+                <td class="p-3.5 font-bold">50 hrs</td><td>$1.050.000</td><td>$1.350.000</td>
+                <td class="text-blue-400 font-bold font-sans">🏆 Conviene Alfa</td><td class="font-sans text-blue-300">Ahorras $300.000 con Alfa</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -170,31 +224,74 @@
       </div>
     </div>
 
-    <!-- PASO 4 -->
+    <!-- PASO 4: GRÁFICO CARTESIANO INTERACTIVO -->
     <div id="step-4" class="step-content hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl font-bold text-white mb-2">Paso 4: Gráfico Interactivo de Costos</h2>
-        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 my-4">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-sm text-slate-300">Ajustar horas de faena:</span>
-            <span id="chart-hours-display" class="font-bold text-amber-400 font-mono text-lg">30 horas</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 4: Gráfico Interactivo de Costos y Punto de Equilibrio</h2>
+        
+        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 my-4">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-slate-300">Ajustar horas de faena en el gráfico (x):</span>
+            <span id="chart-hours-display" class="font-bold text-amber-400 font-mono text-xl bg-amber-500/10 border border-amber-500/30 px-3 py-0.5 rounded-lg">30 horas</span>
           </div>
-          <input type="range" id="hours-slider" min="0" max="50" value="30" oninput="updateChart(this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer mb-6">
+          <input type="range" id="hours-slider" min="0" max="55" step="0.5" value="30" oninput="updateChart(this.value)" class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer mb-5">
           
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-            <div class="p-3 bg-slate-900 rounded-lg border border-blue-500/30">
-              <div class="text-xs text-blue-400">Costo Alfa</div>
-              <div id="val-alfa" class="text-xl font-bold text-white mt-1">$750.000</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+            <div class="p-3.5 bg-slate-900 rounded-xl border border-blue-500/40">
+              <div class="text-xs text-blue-400 font-semibold">Costo Proveedor Alfa</div>
+              <div id="val-alfa" class="text-xl font-bold text-white mt-1 font-mono">$750.000</div>
+              <div class="text-[11px] text-slate-400 font-mono mt-0.5">15.000 · x + 300.000</div>
             </div>
-            <div class="p-3 bg-slate-900 rounded-lg border border-amber-500/30">
-              <div class="text-xs text-amber-400">Costo Beta</div>
-              <div id="val-beta" class="text-xl font-bold text-white mt-1">$850.000</div>
+            <div class="p-3.5 bg-slate-900 rounded-xl border border-amber-500/40">
+              <div class="text-xs text-amber-400 font-semibold">Costo Proveedor Beta</div>
+              <div id="val-beta" class="text-xl font-bold text-white mt-1 font-mono">$850.000</div>
+              <div class="text-[11px] text-slate-400 font-mono mt-0.5">25.000 · x + 100.000</div>
             </div>
-            <div class="p-3 bg-slate-900 rounded-lg border border-emerald-500/30">
-              <div class="text-xs text-emerald-400">Opción Óptima</div>
-              <div id="val-winner" class="text-sm font-bold text-white mt-2">🏆 Gana Alfa (Ahorro $100.000)</div>
+            <div class="p-3.5 bg-slate-900 rounded-xl border border-emerald-500/40 flex flex-col justify-center">
+              <div class="text-xs text-emerald-400 font-semibold">Decisión Óptima</div>
+              <div id="val-winner" class="text-sm font-bold text-white mt-1">🏆 Conviene Alfa (Ahorro $100.000)</div>
             </div>
           </div>
+        </div>
+
+        <!-- SVG CARTESIANO REAL -->
+        <div class="w-full overflow-hidden bg-slate-950 rounded-2xl border border-slate-800 p-2 sm:p-4 shadow-2xl">
+          <svg id="cartesian-svg" viewBox="0 0 800 460" class="w-full h-auto select-none font-sans">
+            <!-- Ejes y Grilla -->
+            <g id="grid-lines"></g>
+            <!-- Recta Presupuesto $1.000.000 -->
+            <line x1="110" y1="147" x2="760" y2="147" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6 4"></line>
+            <text x="660" y="138" fill="#fca5a5" font-size="10" font-weight="bold" text-anchor="middle">Tope Presupuesto: $1.000.000</text>
+
+            <!-- Recta Alfa -->
+            <line id="line-alfa" x1="110" y1="367" x2="760" y2="128" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round"></line>
+            <text x="118" y="360" fill="#93c5fd" font-size="10" font-family="monospace">b_A = $300.000</text>
+            <text x="750" y="118" fill="#60a5fa" font-size="11" font-weight="bold" text-anchor="end">C_A(x) = 15.000x + 300.000</text>
+
+            <!-- Recta Beta -->
+            <line id="line-beta" x1="110" y1="418" x2="760" y2="39" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"></line>
+            <text x="118" y="412" fill="#fcd34d" font-size="10" font-family="monospace">b_B = $100.000</text>
+            <text x="750" y="30" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="end">C_B(x) = 25.000x + 100.000</text>
+
+            <!-- Punto de Equilibrio (20h, $600.000) -->
+            <line x1="346" y1="250" x2="346" y2="400" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 3"></line>
+            <line x1="110" y1="250" x2="346" y2="250" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 3"></line>
+            <circle cx="346" cy="250" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2"></circle>
+            <rect x="358" y="222" width="160" height="32" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"></rect>
+            <text x="366" y="236" fill="#a7f3d0" font-size="11" font-weight="bold">Punto de Equilibrio</text>
+            <text x="366" y="249" fill="#ffffff" font-size="11" font-family="monospace" font-weight="bold">(20 hrs, $600.000)</text>
+
+            <!-- Aguja Dinámica -->
+            <g id="dynamic-cursor">
+              <line id="cursor-needle" x1="464" y1="40" x2="464" y2="400" stroke="#ffffff" stroke-width="2" stroke-dasharray="2 2" opacity="0.8"></line>
+              <circle id="cursor-alfa-pt" cx="464" cy="212" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2"></circle>
+              <circle id="cursor-beta-pt" cx="464" cy="186" r="6" fill="#f59e0b" stroke="#ffffff" stroke-width="2"></circle>
+            </g>
+
+            <!-- Etiquetas de Ejes -->
+            <text x="435" y="445" fill="#94a3b8" font-size="12" font-weight="bold" text-anchor="middle">Horas de Operación en Faena (x)</text>
+            <text x="-220" y="24" transform="rotate(-90)" fill="#94a3b8" font-size="12" font-weight="bold" text-anchor="middle">Costo Total C(x) en Pesos ($)</text>
+          </svg>
         </div>
 
         <div class="flex justify-between mt-6">
@@ -207,17 +304,25 @@
     <!-- PASO 5 -->
     <div id="step-5" class="step-content hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl font-bold text-white mb-2">Paso 5: Restricción Presupuestaria ($1.000.000 CLP)</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 5: Restricción Presupuestaria ($1.000.000)</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 font-mono text-xs sm:text-sm">
-          <div class="p-4 bg-slate-950 rounded-xl border border-blue-500/40">
-            <h3 class="text-blue-300 font-bold font-sans mb-2">Alfa: 15.000x + 300.000 ≤ 1.000.000</h3>
-            <div>15.000x ≤ 700.000</div>
-            <div class="text-blue-400 font-bold text-base mt-2">👉 x ≤ 46,67 horas (46h 40min)</div>
+          <div class="p-5 bg-slate-950 rounded-2xl border-2 border-blue-500/40 shadow-lg">
+            <h3 class="text-blue-300 font-bold font-sans mb-2">Proveedor Alfa: 15.000x + 300.000 ≤ 1.000.000</h3>
+            <div class="space-y-1.5 text-slate-300">
+              <div>15.000 · x ≤ 1.000.000 - 300.000</div>
+              <div>15.000 · x ≤ 700.000</div>
+              <div class="text-blue-400 font-bold text-base mt-2">👉 x ≤ 46,67 horas (46 h 40 min)</div>
+              <div class="text-xs text-emerald-400 font-sans mt-2">✓ Para 30h de faena sobra una holgura de $250.000 CLP.</div>
+            </div>
           </div>
-          <div class="p-4 bg-slate-950 rounded-xl border border-amber-500/40">
-            <h3 class="text-amber-300 font-bold font-sans mb-2">Beta: 25.000x + 100.000 ≤ 1.000.000</h3>
-            <div>25.000x ≤ 900.000</div>
-            <div class="text-amber-400 font-bold text-base mt-2">👉 x ≤ 36,00 horas exactas</div>
+          <div class="p-5 bg-slate-950 rounded-2xl border-2 border-amber-500/40 shadow-lg">
+            <h3 class="text-amber-300 font-bold font-sans mb-2">Proveedor Beta: 25.000x + 100.000 ≤ 1.000.000</h3>
+            <div class="space-y-1.5 text-slate-300">
+              <div>25.000 · x ≤ 1.000.000 - 100.000</div>
+              <div>25.000 · x ≤ 900.000</div>
+              <div class="text-amber-400 font-bold text-base mt-2">👉 x ≤ 36,00 horas exactas</div>
+              <div class="text-xs text-amber-300 font-sans mt-2">✓ Para 30h de faena sobra una holgura de $150.000 CLP.</div>
+            </div>
           </div>
         </div>
 
@@ -231,27 +336,32 @@
     <!-- PASO 6 -->
     <div id="step-6" class="step-content hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl font-bold text-white mb-2">Paso 6: Decisión en Obra y Generación de Informe</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 6: Decisión en Obra y Generación de Informe</h2>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
           <div>
             <label class="text-xs text-slate-400 block mb-1">Nombre del Estudiante:</label>
-            <input type="text" id="report-name" placeholder="Tu Nombre Completo" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-sm text-white" oninput="generateReport()">
+            <input type="text" id="report-name" placeholder="Tu Nombre Completo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white" oninput="generateReport()">
           </div>
           <div>
             <label class="text-xs text-slate-400 block mb-1">RUT:</label>
-            <input type="text" id="report-rut" placeholder="Ej: 19.876.543-2" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-sm text-white" oninput="generateReport()">
+            <input type="text" id="report-rut" placeholder="Ej: 19.876.543-2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white" oninput="generateReport()">
           </div>
         </div>
 
-        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 my-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-xs text-slate-400 font-bold">Vista Previa del Informe Técnico (30 Horas):</span>
-            <button onclick="copyReport()" id="btn-copy" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition">
-              Copiar Informe
-            </button>
+        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 my-4 space-y-3">
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <span class="text-xs text-slate-300 font-bold">Vista Previa del Informe Técnico (30 Horas):</span>
+            <div class="flex gap-2">
+              <button onclick="downloadReportTxt()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-lg border border-slate-600 transition cursor-pointer">
+                Descargar .TXT
+              </button>
+              <button onclick="copyReport()" id="btn-copy" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition cursor-pointer shadow-md">
+                Copiar Informe
+              </button>
+            </div>
           </div>
-          <pre id="report-text" class="text-xs font-mono text-slate-300 whitespace-pre-wrap max-h-60 overflow-y-auto bg-slate-900 p-3 rounded-lg border border-slate-800"></pre>
+          <pre id="report-text" class="text-xs font-mono text-slate-300 whitespace-pre-wrap max-h-64 overflow-y-auto bg-slate-900 p-4 rounded-xl border border-slate-800"></pre>
         </div>
 
         <div class="flex justify-between mt-6">
@@ -264,87 +374,87 @@
     <!-- PASO 7 -->
     <div id="step-7" class="step-content hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl font-bold text-white mb-2">Paso 7: Cuestionario Formativo Interactivo</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 7: Cuestionario Formativo Interactivo</h2>
         <p class="text-slate-400 text-sm mb-6">Responde las 4 preguntas para validar tu aprendizaje con retroalimentación inmediata:</p>
 
         <div id="quiz-result-box" class="hidden p-5 rounded-xl mb-6"></div>
 
         <div class="space-y-6" id="quiz-container">
           <!-- Q1 -->
-          <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 q-block" id="qb-1">
-            <h3 class="text-sm font-bold text-white mb-3">1. ¿A cuántas horas de faena los costos de ambos proveedores son exactamente iguales ($600.000 CLP)?</h3>
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-1">
+            <h3 class="text-sm sm:text-base font-bold text-white mb-3">1. ¿A cuántas horas de faena los costos de ambos proveedores son exactamente iguales ($600.000)?</h3>
             <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q1" value="0" class="text-amber-500"> <span>15 horas</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q1" value="1" class="text-amber-500"> <span>20 horas (Punto de Equilibrio)</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q1" value="2" class="text-amber-500"> <span>25 horas</span>
               </label>
             </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-lg text-xs leading-relaxed"></div>
+            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
           </div>
 
           <!-- Q2 -->
-          <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 q-block" id="qb-2">
-            <h3 class="text-sm font-bold text-white mb-3">2. Para 30 horas continuas de generador, ¿qué opción es técnicamente correcta y cuál es su ahorro?</h3>
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-2">
+            <h3 class="text-sm sm:text-base font-bold text-white mb-3">2. Para 30 horas continuas de generador, ¿qué opción es técnicamente correcta y cuál es su ahorro?</h3>
             <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q2" value="0" class="text-amber-500"> <span>Proveedor Beta, ahorrando $50.000 CLP</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q2" value="1" class="text-amber-500"> <span>Proveedor Alfa, con un ahorro neto de $100.000 CLP</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q2" value="2" class="text-amber-500"> <span>Ambos tienen el mismo costo a 30 horas</span>
               </label>
             </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-lg text-xs leading-relaxed"></div>
+            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
           </div>
 
           <!-- Q3 -->
-          <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 q-block" id="qb-3">
-            <h3 class="text-sm font-bold text-white mb-3">3. Con el presupuesto de $1.000.000 CLP, ¿cuál es la autonomía máxima del Proveedor Alfa?</h3>
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-3">
+            <h3 class="text-sm sm:text-base font-bold text-white mb-3">3. Con el presupuesto de $1.000.000, ¿cuál es la autonomía máxima del Proveedor Alfa?</h3>
             <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q3" value="0" class="text-amber-500"> <span>36 horas exactas</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q3" value="1" class="text-amber-500"> <span>46,67 horas (aprox. 46 h 40 min)</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q3" value="2" class="text-amber-500"> <span>50 horas</span>
               </label>
             </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-lg text-xs leading-relaxed"></div>
+            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
           </div>
 
           <!-- Q4 -->
-          <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 q-block" id="qb-4">
-            <h3 class="text-sm font-bold text-white mb-3">4. ¿Qué significado físico tiene la pendiente (m) en el modelo de faena?</h3>
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-4">
+            <h3 class="text-sm sm:text-base font-bold text-white mb-3">4. ¿Qué significado físico tiene la pendiente (m) en el modelo de faena?</h3>
             <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q4" value="0" class="text-amber-500"> <span>El costo inicial de traslado e instalación</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
                 <input type="radio" name="q4" value="1" class="text-amber-500"> <span>El costo operativo y combustible por cada hora de uso continuo</span>
               </label>
-              <label class="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q4" value="2" class="text-amber-500"> <span>La ganancia neta de la constructora</span>
+              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
+                <input type="radio" name="q4" value="2" class="text-amber-500"> <span>La ganancia bruta del contratista</span>
               </label>
             </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-lg text-xs leading-relaxed"></div>
+            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-4 border-t border-slate-800">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-slate-800">
           <button onclick="goToStep(6)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold">
             ← Volver a Paso 6: Informe
           </button>
           
-          <button onclick="checkQuiz()" id="btn-check-quiz" class="px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg">
+          <button onclick="checkQuiz()" id="btn-check-quiz" class="px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg cursor-pointer">
             Comprobar Respuestas
           </button>
         </div>
@@ -353,22 +463,55 @@
 
   </main>
 
-  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 bg-slate-950">
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 bg-slate-950 mt-auto">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Universidad Tecnológica Metropolitana (UTEM) · Plan Común de Ingeniería y Ciencias </div>
+      <div>Universidad Tecnológica Metropolitana (UTEM) · Plan Común de Ingeniería y Ciencias</div>
       <div class="text-amber-400/80 font-mono">MATC0001 — Modelamiento Lineal en Obras Viales</div>
     </div>
   </footer>
 
   <script>
+    function initSvgGrid() {
+      const grid = document.getElementById('grid-lines');
+      if (!grid) return;
+      grid.innerHTML = '';
+      
+      const yValues = [0, 200000, 400000, 600000, 800000, 1000000, 1200000, 1400000];
+      yValues.forEach(val => {
+        const y = 40 + (360 - (val / 1500000) * 360);
+        grid.innerHTML += `
+          <line x1="110" y1="${y}" x2="760" y2="${y}" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"></line>
+          <text x="100" y="${y + 4}" fill="${val === 600000 ? '#34d399' : val === 1000000 ? '#f87171' : '#64748b'}" font-size="11" font-family="monospace" text-anchor="end" font-weight="${val === 600000 || val === 1000000 ? 'bold' : 'normal'}">$${val.toLocaleString('es-CL')}</text>
+        `;
+      });
+
+      const xValues = [0, 10, 20, 30, 40, 50];
+      xValues.forEach(val => {
+        const x = 110 + (val / 55) * 650;
+        grid.innerHTML += `
+          <line x1="${x}" y1="40" x2="${x}" y2="400" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"></line>
+          <text x="${x}" y="420" fill="${val === 20 ? '#34d399' : val === 30 ? '#f59e0b' : '#64748b'}" font-size="12" font-family="monospace" text-anchor="middle" font-weight="${val === 20 || val === 30 ? 'bold' : 'normal'}">${val}h</text>
+        `;
+      });
+    }
+
     function goToStep(num) {
       document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('step-' + num).classList.remove('hidden');
+      const activeEl = document.getElementById('step-' + num);
+      if (activeEl) activeEl.classList.remove('hidden');
       
       document.querySelectorAll('.step-btn').forEach(btn => {
         btn.className = "step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white";
       });
-      document.getElementById('tab-' + num).className = "step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 shadow-md";
+      const activeTab = document.getElementById('tab-' + num);
+      if (activeTab) {
+        activeTab.className = "step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 shadow-md";
+      }
+      
+      if (num === 4) {
+        initSvgGrid();
+        updateChart(document.getElementById('hours-slider').value);
+      }
       if (num === 6) generateReport();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -382,11 +525,32 @@
       document.getElementById('val-beta').innerText = '$' + cB.toLocaleString('es-CL');
       const diff = Math.abs(cA - cB);
       if (cA < cB) {
-        document.getElementById('val-winner').innerText = '🏆 Gana Alfa (Ahorro $' + diff.toLocaleString('es-CL') + ')';
+        document.getElementById('val-winner').innerText = '🏆 Conviene Alfa (Ahorro $' + diff.toLocaleString('es-CL') + ')';
       } else if (cB < cA) {
-        document.getElementById('val-winner').innerText = '🏆 Gana Beta (Ahorro $' + diff.toLocaleString('es-CL') + ')';
+        document.getElementById('val-winner').innerText = '🏆 Conviene Beta (Ahorro $' + diff.toLocaleString('es-CL') + ')';
       } else {
         document.getElementById('val-winner').innerText = '⚖️ Indiferente ($600.000)';
+      }
+
+      const curX = 110 + (h / 55) * 650;
+      const curAlfaY = 40 + (360 - (cA / 1500000) * 360);
+      const curBetaY = 40 + (360 - (cB / 1500000) * 360);
+
+      const needle = document.getElementById('cursor-needle');
+      const alfaPt = document.getElementById('cursor-alfa-pt');
+      const betaPt = document.getElementById('cursor-beta-pt');
+
+      if (needle) {
+        needle.setAttribute('x1', curX);
+        needle.setAttribute('x2', curX);
+      }
+      if (alfaPt) {
+        alfaPt.setAttribute('cx', curX);
+        alfaPt.setAttribute('cy', curAlfaY);
+      }
+      if (betaPt) {
+        betaPt.setAttribute('cx', curX);
+        betaPt.setAttribute('cy', curBetaY);
       }
     }
 
@@ -395,8 +559,8 @@
       const rut = document.getElementById('report-rut').value.trim() || '[RUT]';
       const text = `================================================================================
 INFORME TÉCNICO DE DECISIÓN Y MODELAMIENTO LINEAL
-UNIVERSIDAD TECNOLÓGICA METROPOLITANA (UTEM) - Plan Común de Ingeniería y Ciencias
-MATC0001: Modelamiento Lineal para la Toma de Decisiones en Obras Viales
+UNIVERSIDAD TECNOLÓGICA METROPOLITANA (UTEM)
+Plan Común de Ingeniería y Ciencias — MATC0001
 ================================================================================
 
 DATOS DEL ALUMNO / RESPONSABLE TÉCNICO:
@@ -427,15 +591,38 @@ Se recomienda formalmente contratar al PROVEEDOR ALFA.
 
     function copyReport() {
       const txt = document.getElementById('report-text').innerText;
-      navigator.clipboard.writeText(txt).then(() => {
+      const textArea = document.createElement("textarea");
+      textArea.value = txt;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
         const btn = document.getElementById('btn-copy');
-        btn.innerText = '¡Copiado!';
+        btn.innerText = '¡Copiado al Portapapeles!';
         btn.className = 'px-4 py-1.5 bg-emerald-500 text-slate-950 font-bold text-xs rounded-lg transition';
         setTimeout(() => {
           btn.innerText = 'Copiar Informe';
           btn.className = 'px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition';
         }, 2000);
-      });
+      } catch (err) {
+        console.error('Error al copiar', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function downloadReportTxt() {
+      const txt = document.getElementById('report-text').innerText;
+      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Informe_Tecnico_UTEM_MATC0001.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     const correctAnswers = { q1: 1, q2: 1, q3: 1, q4: 1 };
@@ -472,6 +659,9 @@ Se recomienda formalmente contratar al PROVEEDOR ALFA.
       const resBox = document.getElementById('quiz-result-box');
       resBox.classList.remove('hidden', 'bg-emerald-950/60', 'border-emerald-500', 'bg-amber-950/60', 'border-amber-500');
       if (score === 4) {
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+        }
         resBox.classList.add('bg-emerald-950/60', 'border-2', 'border-emerald-500', 'text-emerald-200');
         resBox.innerHTML = "<h3 class='font-bold text-lg text-white'>🏆 ¡Felicitaciones! Has obtenido 4/4 (100%)</h3><p class='text-xs mt-1'>Has demostrado dominio total del modelamiento lineal y la toma de decisiones en obras viales.</p>";
       } else {
@@ -481,6 +671,7 @@ Se recomienda formalmente contratar al PROVEEDOR ALFA.
       resBox.scrollIntoView({ behavior: 'smooth' });
     }
 
+    initSvgGrid();
     updateChart(30);
   </script>
 </body>

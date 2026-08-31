@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo III: Modelamiento por Tramos - Robot de Inspección | UTEM MATC0001</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'Fira Code', monospace; }
+    @media print {
+      body { background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-amber-500 selection:text-slate-950 pb-20">
+
+  <!-- Header Institucional UTEM -->
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-lg no-print">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-blue-600 flex items-center justify-center font-black text-white shadow-lg text-sm border border-amber-400/40">
+          UTEM
+        </div>
+        <div>
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
+            MATC0001 · Módulo III: Funciones por Tramos
+          </div>
+          <h1 class="text-sm sm:text-base font-bold text-white">
+            ¿Cómo modelar el movimiento de un robot de inspección?
+          </h1>
+        </div>
+      </div>
+      <div class="text-xs text-slate-400 hidden md:block">
+        Plan Común de Ingeniería y Ciencias
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-5xl mx-auto px-4 py-8 space-y-10">
+
+    <!-- 1. Contexto e Identificación de Tramos -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+      <div class="inline-block text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full mb-3">
+        Paso 1 · Contexto Operacional
+      </div>
+      <h2 class="text-xl sm:text-2xl font-black text-white mb-3">
+        El Robot de Inspección en el Almacén Industrial
+      </h2>
+      <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+        En una planta automatizada, un robot móvil recorre un pasillo rectilíneo de 29 metros durante 11 segundos para verificar sensores críticos. El recorrido se compone de 3 etapas cinemáticas consecutivas:
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="p-4 rounded-xl bg-slate-950 border border-blue-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-400">Tramo 1</span>
+            <span class="text-[11px] font-mono text-slate-400">0 ≤ t ≤ 4 s</span>
+          </div>
+          <h3 class="font-bold text-white text-sm">Velocidad Constante</h3>
+          <p class="text-xs text-slate-300">Parte del reposo inicial en el origen ($s=0$) y avanza a $2\text{ m/s}$ constante. Al finalizar este tramo ($t=4$), alcanza $s = 8\text{ m}$.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-amber-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-400">Tramo 2</span>
+            <span class="text-[11px] font-mono text-slate-400">4 &lt; t ≤ 8 s</span>
+          </div>
+          <h3 class="font-bold text-white text-sm">Aceleración Uniforme</h3>
+          <p class="text-xs text-slate-300">Parte de $s=8\text{ m}$ con rapidez inicial $v_0 = 2\text{ m/s}$ y acelera a $1\text{ m/s}^2$. En $t=8\text{ s}$, alcanza $s = 20\text{ m}$ con rapidez de $6\text{ m/s}$.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400">Tramo 3</span>
+            <span class="text-[11px] font-mono text-slate-400">8 &lt; t ≤ 11 s</span>
+          </div>
+          <h3 class="font-bold text-white text-sm">Frenado Progresivo</h3>
+          <p class="text-xs text-slate-300">Aplica frenado regenerativo desde $s=20\text{ m}$ con $v_0=6\text{ m/s}$ y desaceleración de $-2\text{ m/s}^2$, deteniéndose en $t=11\text{ s}$ a los $29\text{ m}$.</p>
+        </div>
+      </div>
+
+      <div class="p-5 bg-slate-950 rounded-xl border border-amber-500/30 text-center font-mono text-amber-300 text-sm overflow-x-auto">
+        $$s(t) = \begin{cases} 2t, & 0 \le t \le 4 \\ 8 + 2(t-4) + \frac{1}{2}(t-4)^2, & 4 < t \le 8 \\ 20 + 6(t-8) - (t-8)^2, & 8 < t \le 11 \end{cases}$$
+      </div>
+    </section>
+
+    <!-- 2. Simulador Cinemático Interactivo -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <span class="text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
+            Paso 4 · Laboratorio Virtual
+          </span>
+          <h2 class="text-lg sm:text-xl font-bold text-white mt-2">Simulador de Trayectoria del Robot en el Pasillo</h2>
+        </div>
+        <div id="simBadge" class="text-xs font-bold font-mono px-3 py-1.5 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-500/30">
+          Etapa 1: Velocidad Constante
+        </div>
+      </div>
+
+      <!-- Pasillo de Planta -->
+      <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div class="flex justify-between text-[11px] font-mono text-slate-400">
+          <span>0m (Origen)</span>
+          <span class="text-blue-400">8m (Nodo A)</span>
+          <span class="text-amber-400">20m (Nodo B)</span>
+          <span class="text-rose-400 font-bold">25m (Zona Inspección)</span>
+          <span class="text-emerald-400">29m (Meta Final)</span>
+        </div>
+
+        <div class="w-full bg-slate-800 h-4 rounded-full relative">
+          <div id="simProgress" class="bg-gradient-to-r from-blue-500 via-amber-500 to-emerald-500 h-full rounded-full w-0 transition-all duration-75"></div>
+          <div id="simRobot" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-0 transition-all duration-75 text-amber-400 font-bold text-xs bg-slate-900 border border-amber-400 px-2 py-0.5 rounded shadow-lg whitespace-nowrap">
+            🤖 s = <span id="simPosRobot">0.00</span> m
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 text-center text-xs font-mono pt-2">
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">Tiempo transcurrido</span>
+            <span id="simTimeText" class="text-amber-400 font-black text-base sm:text-lg">0.0 s</span>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">Posición s(t)</span>
+            <span id="simPosText" class="text-white font-black text-base sm:text-lg">0.00 m</span>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">Velocidad instantánea</span>
+            <span id="simVelText" class="text-cyan-400 font-black text-base sm:text-lg">2.00 m/s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controles de Simulación -->
+      <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
+        <button id="simPlayBtn" onclick="toggleSim()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-lg transition cursor-pointer">
+          Reproducir
+        </button>
+        <button onclick="resetSim()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition cursor-pointer">
+          Reiniciar
+        </button>
+        <input id="simSlider" type="range" min="0" max="11" step="0.05" value="0" oninput="onSimSlider(this.value)" class="flex-1 accent-amber-500 cursor-pointer">
+      </div>
+    </section>
+
+    <!-- 3. Análisis de Continuidad -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-5">
+      <div class="inline-block text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
+        Paso 5 · Continuidad del Movimiento
+      </div>
+      <h2 class="text-xl font-black text-white">
+        Verificación de Continuidad en los Nodos de Transición
+      </h2>
+      <p class="text-slate-300 text-sm leading-relaxed">
+        Para que el modelo sea físicamente admisible en robótica, el robot no puede teletransportarse (la función de posición debe ser continua):
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-blue-400 font-bold text-sm">
+            <span>Transición en t = 4 s</span>
+            <span class="bg-blue-950 px-2 py-0.5 rounded text-xs">s = 8 m</span>
+          </div>
+          <div class="font-mono text-xs text-slate-300 space-y-1">
+            <div>Tramo 1 (por izquierda): $s_1(4) = 2(4) = 8\text{ m}$</div>
+            <div>Tramo 2 (por derecha): $s_2(4) = 8 + 2(0) + 0.5(0)^2 = 8\text{ m}$</div>
+            <div class="text-emerald-400 font-bold pt-1">✓ $\lim_{t \to 4^-} s(t) = \lim_{t \to 4^+} s(t) = s(4) = 8\text{ m}$ (Continuo)</div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-amber-400 font-bold text-sm">
+            <span>Transición en t = 8 s</span>
+            <span class="bg-amber-950 px-2 py-0.5 rounded text-xs">s = 20 m</span>
+          </div>
+          <div class="font-mono text-xs text-slate-300 space-y-1">
+            <div>Tramo 2 (por izquierda): $s_2(8) = 8 + 2(4) + 0.5(16) = 20\text{ m}$</div>
+            <div>Tramo 3 (por derecha): $s_3(8) = 20 + 6(0) - 0^2 = 20\text{ m}$</div>
+            <div class="text-emerald-400 font-bold pt-1">✓ $\lim_{t \to 8^-} s(t) = \lim_{t \to 8^+} s(t) = s(8) = 20\text{ m}$ (Continuo)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Desafío de Ingeniería e Informe Técnico -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div class="inline-block text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
+        Paso 6 · Desafío de Ingeniería
+      </div>
+      <h2 class="text-xl font-black text-white">
+        ¿Cumple el Robot el Requerimiento Operacional de Inspección?
+      </h2>
+      <div class="p-4 rounded-xl bg-amber-950/20 border border-amber-500/40 text-sm text-slate-200">
+        <strong>Exigencia del Jefe de Operaciones:</strong> "El robot debe alcanzar la zona de inspección (posición $s = 25\text{ m}$) antes de los 10 segundos ($t < 10\text{ s}$)."
+      </div>
+
+      <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm space-y-3 text-slate-300">
+        <div class="text-amber-400 font-bold">Resolución Analítica:</div>
+        <div>1. Dado que $s=25\text{ m}$ se encuentra entre $20\text{ m}$ y $29\text{ m}$, corresponde a la <strong>Etapa 3</strong> ($8 < t \le 11$).</div>
+        <div class="p-2 rounded bg-slate-900 border border-slate-800 text-white font-bold">
+          $$20 + 6(t - 8) - (t - 8)^2 = 25$$
+        </div>
+        <div>2. Aplicando cambio de variable $u = t - 8$ (con $0 < u \le 3$):</div>
+        <div class="pl-4 space-y-1">
+          <div>$20 + 6u - u^2 = 25$</div>
+          <div>$u^2 - 6u + 5 = 0$</div>
+          <div>$(u - 1)(u - 5) = 0 \implies u_1 = 1, \; u_2 = 5$</div>
+        </div>
+        <div>3. La solución física válida dentro del tramo es $u = 1$:</div>
+        <div class="text-amber-400 font-bold">
+          $$t - 8 = 1 \implies \mathbf{t = 9.00\text{ segundos}}$$
+        </div>
+        <div class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 font-bold">
+          ✓ DICTAMEN TÉCNICO: Como $9\text{ s} < 10\text{ s}$, el robot CUMPLE satisfactoriamente con la meta operacional de la planta, con 1.0 segundo de holgura.
+        </div>
+      </div>
+
+      <!-- Botón Imprimir Dictamen -->
+      <div class="flex justify-end no-print">
+        <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl border border-slate-700 transition cursor-pointer">
+          🖨️ Imprimir / Guardar PDF del Dictamen
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. Cuestionario de Evaluación Formativa -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 no-print">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <span class="text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
+            Paso 7 · Evaluación
+          </span>
+          <h2 class="text-xl font-black text-white mt-2">Evaluación Formativa (Escala 1.0 a 7.0)</h2>
+        </div>
+        <div id="gradeBadge" class="hidden text-xs font-mono font-bold px-3 py-1 rounded-full bg-slate-800 text-amber-400 border border-amber-500/40">
+          Nota: <span id="gradeVal">--</span>
+        </div>
+      </div>
+
+      <div class="space-y-4" id="quizContainer">
+        <!-- P1 -->
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <label class="text-xs font-bold text-slate-200 block">1. ¿Qué forma tiene la gráfica de $s(t)$ en el intervalo $[0, 4]$?</label>
+          <select id="q1" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
+            <option value="">Selecciona...</option>
+            <option value="correct">Recta de pendiente positiva constante</option>
+            <option value="wrong1">Parábola cóncava hacia arriba</option>
+            <option value="wrong2">Parábola cóncava hacia abajo</option>
+          </select>
+        </div>
+
+        <!-- P2 -->
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <label class="text-xs font-bold text-slate-200 block">2. ¿Por qué el Tramo 2 incluye el término $(t-4)$?</label>
+          <select id="q2" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
+            <option value="">Selecciona...</option>
+            <option value="wrong1">Porque la aceleración es de 4 m/s²</option>
+            <option value="correct">Para medir el tiempo transcurrido desde el inicio de esa etapa en t = 4</option>
+            <option value="wrong2">Porque el robot retrocede 4 metros</option>
+          </select>
+        </div>
+
+        <!-- P3 -->
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <label class="text-xs font-bold text-slate-200 block">3. ¿Cuál es la posición del robot al finalizar el segundo tramo en $t = 8\text{ s}$?</label>
+          <select id="q3" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
+            <option value="">Selecciona...</option>
+            <option value="wrong1">16 metros</option>
+            <option value="correct">20 metros</option>
+            <option value="wrong2">25 metros</option>
+          </select>
+        </div>
+
+        <!-- P4 -->
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <label class="text-xs font-bold text-slate-200 block">4. ¿En qué instante $t$ el robot alcanza exactamente los 25 metros?</label>
+          <select id="q4" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
+            <option value="">Selecciona...</option>
+            <option value="correct">t = 9 segundos</option>
+            <option value="wrong1">t = 10 segundos</option>
+            <option value="wrong2">t = 11 segundos</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <button onclick="evaluateQuiz()" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl transition cursor-pointer">
+          Calificar Evaluación
+        </button>
+        <div id="quizResult" class="text-xs font-bold text-slate-300"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500 no-print">
+    Universidad Tecnológica Metropolitana (UTEM) · Departamento de Matemática · MATC0001
+  </footer>
+
+  <script>
+    // Cinemática
+    let simT = 0;
+    let simPlaying = false;
+    let simTimer = null;
+
+    function calcKinematics(currT) {
+      currT = Math.max(0, Math.min(11, currT));
+      let s = 0, v = 0, stage = '';
+      if (currT <= 4) {
+        s = 2 * currT;
+        v = 2;
+        stage = 'Etapa 1: Velocidad Constante (2 m/s)';
+      } else if (currT <= 8) {
+        let dt = currT - 4;
+        s = 8 + 2 * dt + 0.5 * dt * dt;
+        v = 2 + dt;
+        stage = 'Etapa 2: Aceleración Uniforme (+1 m/s²)';
+      } else {
+        let dt = currT - 8;
+        s = 20 + 6 * dt - dt * dt;
+        v = Math.max(0, 6 - 2 * dt);
+        stage = 'Etapa 3: Frenado hasta Detención (-2 m/s²)';
+      }
+      return { s, v, stage };
+    }
+
+    function updateSimUI() {
+      const data = calcKinematics(simT);
+      document.getElementById('simTimeText').innerText = simT.toFixed(1) + ' s';
+      document.getElementById('simPosText').innerText = data.s.toFixed(2) + ' m';
+      document.getElementById('simPosRobot').innerText = data.s.toFixed(1);
+      document.getElementById('simVelText').innerText = data.v.toFixed(2) + ' m/s';
+      document.getElementById('simBadge').innerText = data.stage;
+      document.getElementById('simSlider').value = simT;
+
+      const pct = (data.s / 29) * 100;
+      document.getElementById('simProgress').style.width = Math.min(100, pct) + '%';
+      document.getElementById('simRobot').style.left = Math.min(94, Math.max(2, pct)) + '%';
+    }
+
+    function toggleSim() {
+      simPlaying = !simPlaying;
+      document.getElementById('simPlayBtn').innerText = simPlaying ? 'Pausar' : 'Reproducir';
+      if (simPlaying) {
+        if (simT >= 11) simT = 0;
+        simTimer = setInterval(() => {
+          simT += 0.05;
+          if (simT >= 11) {
+            simT = 11;
+            toggleSim();
+          }
+          updateSimUI();
+        }, 50);
+      } else {
+        clearInterval(simTimer);
+      }
+    }
+
+    function resetSim() {
+      simPlaying = false;
+      clearInterval(simTimer);
+      document.getElementById('simPlayBtn').innerText = 'Reproducir';
+      simT = 0;
+      updateSimUI();
+    }
+
+    function onSimSlider(val) {
+      if (simPlaying) toggleSim();
+      simT = parseFloat(val);
+      updateSimUI();
+    }
+
+    // Quiz
+    function evaluateQuiz() {
+      const answers = [
+        document.getElementById('q1').value === 'correct',
+        document.getElementById('q2').value === 'correct',
+        document.getElementById('q3').value === 'correct',
+        document.getElementById('q4').value === 'correct',
+      ];
+      const correctCount = answers.filter(Boolean).length;
+      const grade = (1.0 + (correctCount / 4) * 6.0).toFixed(1);
+
+      document.getElementById('gradeBadge').classList.remove('hidden');
+      document.getElementById('gradeVal').innerText = grade;
+
+      const resDiv = document.getElementById('quizResult');
+      if (correctCount === 4) {
+        resDiv.innerHTML = '<span class="text-emerald-400 font-bold">¡Excelente! 4/4 correctas. Nota: 7.0</span>';
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 80, spread: 60, origin: { y: 0.85 } });
+        }
+      } else {
+        resDiv.innerHTML = '<span class="text-amber-400 font-bold">' + correctCount + '/4 correctas. Revisa tus respuestas.</span>';
+      }
+    }
+
+    updateSimUI();
+  </script>
+</body>
+</html>

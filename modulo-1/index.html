@@ -1,678 +1,243 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelamiento Lineal UTEM - Suministro Eléctrico</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-    code, pre, .font-mono { font-family: 'Fira Code', ui-monospace, monospace; }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 22px;
-      width: 22px;
-      border-radius: 50%;
-      background: #f59e0b;
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
-      border: 2px solid #ffffff;
-    }
-  </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950 antialiased">
-
-  <!-- Header Institucional UTEM -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-      <div class="flex items-center space-x-3 sm:space-x-4">
-        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-blue-700 flex items-center justify-center font-black text-white shadow-lg shadow-amber-500/20 text-base sm:text-lg border border-amber-400/40">
-          UTEM
-        </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-950/70 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
-              MATC0001 · Módulo I
-            </span>
-            <span class="hidden md:inline-block text-xs font-medium text-slate-400">
-              Plan Común de Ingeniería y Ciencias
-            </span>
-          </div>
-          <h1 class="text-sm sm:text-base font-bold text-slate-100 mt-0.5">
-            Suministro Eléctrico para Faena Vial · Modelamiento Lineal
-          </h1>
-        </div>
-      </div>
-
-      <div class="flex items-center space-x-2">
-        <button onclick="goToStep(1)" class="flex items-center space-x-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-2 rounded-xl border border-slate-700 transition cursor-pointer">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-          <span class="hidden sm:inline">Reiniciar</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Stepper de Navegación -->
-  <nav class="bg-slate-900/95 border-b border-slate-800 sticky top-[65px] z-20 overflow-x-auto py-2.5 px-4 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto flex items-center space-x-2 min-w-max">
-      <button id="tab-1" onclick="goToStep(1)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 shadow-md">1. Caso y Datos</button>
-      <button id="tab-2" onclick="goToStep(2)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">2. Álgebra C(x)</button>
-      <button id="tab-3" onclick="goToStep(3)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">3. Tabla de Costos</button>
-      <button id="tab-4" onclick="goToStep(4)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">4. Gráfico y Equilibrio</button>
-      <button id="tab-5" onclick="goToStep(5)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">5. Presupuesto ($1.000.000)</button>
-      <button id="tab-6" onclick="goToStep(6)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">6. Decisión en Obra (30h)</button>
-      <button id="tab-7" onclick="goToStep(7)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">7. Cuestionario Formativo</button>
-    </div>
-  </nav>
-
-  <!-- Contenedor Principal -->
-  <main class="max-w-5xl w-full mx-auto px-4 py-8 flex-1">
-    
-    <!-- PASO 1 -->
-    <div id="step-1" class="step-content space-y-6">
-      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/70 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <span class="text-amber-400 text-xs font-bold uppercase tracking-wider bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">
-          Contexto Profesional en Obra Civil
-        </span>
-        <h2 class="text-xl sm:text-3xl font-extrabold text-white mt-3">
-          Suministro de Generación Eléctrica para Faena Vial
-        </h2>
-        <p class="text-slate-300 mt-2 text-sm sm:text-base leading-relaxed">
-          Como ingeniero(a) responsable de logística en una obra vial, debes contratar el grupo electrógeno de faena entre dos alternativas técnico-económicas para operar durante <strong class="text-amber-400">30 horas</strong> con un presupuesto tope de <strong class="text-emerald-400">$1.000.000 CLP</strong>:
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
-          <div class="bg-slate-850/90 border-2 border-blue-500/40 rounded-2xl p-5 shadow-lg">
-            <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">α</span> Proveedor Alfa
-            </h3>
-            <div class="space-y-2 text-sm text-slate-200">
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
-                <span class="text-slate-400">Costo Fijo Inicial (b<sub>A</sub>):</span>
-                <strong class="text-blue-400 font-mono text-base">$300.000 CLP</strong>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
-                <span class="text-slate-400">Costo Operativo por Hora (m<sub>A</sub>):</span>
-                <strong class="text-white font-mono text-base">$15.000 CLP / hora</strong>
-              </div>
-            </div>
-            <div class="mt-3 text-xs text-slate-400 font-mono">Fórmula: C_A(x) = 15.000 · x + 300.000</div>
-          </div>
-
-          <div class="bg-slate-850/90 border-2 border-amber-500/40 rounded-2xl p-5 shadow-lg">
-            <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-amber-600 flex items-center justify-center text-slate-950 font-bold">β</span> Proveedor Beta
-            </h3>
-            <div class="space-y-2 text-sm text-slate-200">
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
-                <span class="text-slate-400">Costo Fijo Inicial (b<sub>B</sub>):</span>
-                <strong class="text-amber-400 font-mono text-base">$100.000 CLP</strong>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex justify-between">
-                <span class="text-slate-400">Costo Operativo por Hora (m<sub>B</sub>):</span>
-                <strong class="text-white font-mono text-base">$25.000 CLP / hora</strong>
-              </div>
-            </div>
-            <div class="mt-3 text-xs text-slate-400 font-mono">Fórmula: C_B(x) = 25.000 · x + 100.000</div>
-          </div>
-        </div>
-
-        <div class="flex justify-end">
-          <button onclick="goToStep(2)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer shadow-lg">
-            Continuar a Paso 2: Álgebra C(x) →
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 2 -->
-    <div id="step-2" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 2: Modelación Algebraica y Funciones Lineales</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 font-mono">
-          <div class="p-4 bg-blue-950/40 border-2 border-blue-500/40 rounded-xl">
-            <span class="text-xs text-blue-300 font-bold uppercase">Proveedor Alfa</span>
-            <div class="text-xl font-bold text-white mt-1">C_A(x) = 15.000 · x + 300.000</div>
-            <div class="text-xs text-slate-400 mt-2 font-sans">m = 15.000 CLP/h (pendiente) | b = 300.000 CLP (intercepto)</div>
-          </div>
-          <div class="p-4 bg-amber-950/40 border-2 border-amber-500/40 rounded-xl">
-            <span class="text-xs text-amber-300 font-bold uppercase">Proveedor Beta</span>
-            <div class="text-xl font-bold text-white mt-1">C_B(x) = 25.000 · x + 100.000</div>
-            <div class="text-xs text-slate-400 mt-2 font-sans">m = 25.000 CLP/h (pendiente) | b = 100.000 CLP (intercepto)</div>
-          </div>
-        </div>
-
-        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 font-mono text-xs sm:text-sm space-y-3">
-          <h3 class="text-amber-400 font-bold font-sans text-base">Deducción Algebraica con Símbolos Bicondicionales:</h3>
-          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-            1. C_A(x) = C_B(x) <span class="text-amber-400 font-bold">⟺</span> 15.000 · x + 300.000 = 25.000 · x + 100.000
-          </div>
-          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-            2. 300.000 - 100.000 = 25.000 · x - 15.000 · x <span class="text-amber-400 font-bold">⟺</span> 200.000 = 10.000 · x
-          </div>
-          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-            3. x = 200.000 / 10.000 <span class="text-emerald-400 font-bold">⟺ x = 20 horas de faena</span>
-          </div>
-          <div class="p-3 bg-emerald-950/50 border border-emerald-500/40 rounded-xl text-emerald-300 font-sans text-xs">
-            👉 <strong>Comprobación del Costo en Equilibrio:</strong><br>
-            C_A(20) = 15.000(20) + 300.000 = <strong>$600.000 CLP</strong><br>
-            C_B(20) = 25.000(20) + 100.000 = <strong>$600.000 CLP</strong>
-          </div>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(1)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 1</button>
-          <button onclick="goToStep(3)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 3: Tabla →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 3 -->
-    <div id="step-3" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 3: Tabla Comparativa de Costos y Conveniencia</h2>
-        
-        <div class="overflow-x-auto rounded-xl border border-slate-800 my-4 shadow-lg">
-          <table class="w-full text-left text-xs sm:text-sm text-slate-200">
-            <thead class="bg-slate-950 text-slate-400 uppercase text-[11px] font-mono">
-              <tr>
-                <th class="p-3.5">Horas de Faena (x)</th>
-                <th class="p-3.5 text-blue-400">Alfa: C_A(x)</th>
-                <th class="p-3.5 text-amber-400">Beta: C_B(x)</th>
-                <th class="p-3.5">Opción Más Económica</th>
-                <th class="p-3.5">Ahorro Neto (CLP)</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800 bg-slate-900/60 font-mono">
-              <tr>
-                <td class="p-3.5 font-bold">0 hrs</td><td>$300.000</td><td>$100.000</td>
-                <td class="text-amber-400 font-bold font-sans">🏆 Conviene Beta</td><td class="font-sans text-slate-300">Ahorras $200.000 con Beta</td>
-              </tr>
-              <tr>
-                <td class="p-3.5 font-bold">10 hrs</td><td>$450.000</td><td>$350.000</td>
-                <td class="text-amber-400 font-bold font-sans">🏆 Conviene Beta</td><td class="font-sans text-slate-300">Ahorras $100.000 con Beta</td>
-              </tr>
-              <tr class="bg-emerald-950/40 border-l-4 border-emerald-500 font-semibold">
-                <td class="p-3.5 font-bold">20 hrs (Equilibrio)</td><td>$600.000</td><td>$600.000</td>
-                <td class="text-emerald-400 font-bold font-sans">⚖️ Indiferente</td><td class="font-sans text-emerald-300">$0 (Mismo Costo de $600.000)</td>
-              </tr>
-              <tr class="bg-amber-950/40 border-l-4 border-amber-500 font-semibold">
-                <td class="p-3.5 font-bold">30 hrs (Caso Real)</td><td>$750.000</td><td>$850.000</td>
-                <td class="text-blue-400 font-bold font-sans">🏆 Conviene Alfa</td><td class="font-sans text-blue-300">Ahorras $100.000 con Alfa (11,8%)</td>
-              </tr>
-              <tr>
-                <td class="p-3.5 font-bold">40 hrs</td><td>$900.000</td><td>$1.100.000</td>
-                <td class="text-blue-400 font-bold font-sans">🏆 Conviene Alfa</td><td class="font-sans text-blue-300">Ahorras $200.000 con Alfa</td>
-              </tr>
-              <tr>
-                <td class="p-3.5 font-bold">50 hrs</td><td>$1.050.000</td><td>$1.350.000</td>
-                <td class="text-blue-400 font-bold font-sans">🏆 Conviene Alfa</td><td class="font-sans text-blue-300">Ahorras $300.000 con Alfa</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(2)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 2</button>
-          <button onclick="goToStep(4)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 4: Gráfico →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 4: GRÁFICO CARTESIANO INTERACTIVO -->
-    <div id="step-4" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 4: Gráfico Interactivo de Costos y Punto de Equilibrio</h2>
-        
-        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 my-4">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-sm text-slate-300">Ajustar horas de faena en el gráfico (x):</span>
-            <span id="chart-hours-display" class="font-bold text-amber-400 font-mono text-xl bg-amber-500/10 border border-amber-500/30 px-3 py-0.5 rounded-lg">30 horas</span>
-          </div>
-          <input type="range" id="hours-slider" min="0" max="55" step="0.5" value="30" oninput="updateChart(this.value)" class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer mb-5">
-          
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-            <div class="p-3.5 bg-slate-900 rounded-xl border border-blue-500/40">
-              <div class="text-xs text-blue-400 font-semibold">Costo Proveedor Alfa</div>
-              <div id="val-alfa" class="text-xl font-bold text-white mt-1 font-mono">$750.000</div>
-              <div class="text-[11px] text-slate-400 font-mono mt-0.5">15.000 · x + 300.000</div>
-            </div>
-            <div class="p-3.5 bg-slate-900 rounded-xl border border-amber-500/40">
-              <div class="text-xs text-amber-400 font-semibold">Costo Proveedor Beta</div>
-              <div id="val-beta" class="text-xl font-bold text-white mt-1 font-mono">$850.000</div>
-              <div class="text-[11px] text-slate-400 font-mono mt-0.5">25.000 · x + 100.000</div>
-            </div>
-            <div class="p-3.5 bg-slate-900 rounded-xl border border-emerald-500/40 flex flex-col justify-center">
-              <div class="text-xs text-emerald-400 font-semibold">Decisión Óptima</div>
-              <div id="val-winner" class="text-sm font-bold text-white mt-1">🏆 Conviene Alfa (Ahorro $100.000)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SVG CARTESIANO REAL -->
-        <div class="w-full overflow-hidden bg-slate-950 rounded-2xl border border-slate-800 p-2 sm:p-4 shadow-2xl">
-          <svg id="cartesian-svg" viewBox="0 0 800 460" class="w-full h-auto select-none font-sans">
-            <!-- Ejes y Grilla -->
-            <g id="grid-lines"></g>
-            <!-- Recta Presupuesto $1.000.000 -->
-            <line x1="110" y1="147" x2="760" y2="147" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6 4"></line>
-            <text x="660" y="138" fill="#fca5a5" font-size="10" font-weight="bold" text-anchor="middle">Tope Presupuesto: $1.000.000</text>
-
-            <!-- Recta Alfa -->
-            <line id="line-alfa" x1="110" y1="367" x2="760" y2="128" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round"></line>
-            <text x="118" y="360" fill="#93c5fd" font-size="10" font-family="monospace">b_A = $300.000</text>
-            <text x="750" y="118" fill="#60a5fa" font-size="11" font-weight="bold" text-anchor="end">C_A(x) = 15.000x + 300.000</text>
-
-            <!-- Recta Beta -->
-            <line id="line-beta" x1="110" y1="418" x2="760" y2="39" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"></line>
-            <text x="118" y="412" fill="#fcd34d" font-size="10" font-family="monospace">b_B = $100.000</text>
-            <text x="750" y="30" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="end">C_B(x) = 25.000x + 100.000</text>
-
-            <!-- Punto de Equilibrio (20h, $600.000) -->
-            <line x1="346" y1="250" x2="346" y2="400" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 3"></line>
-            <line x1="110" y1="250" x2="346" y2="250" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 3"></line>
-            <circle cx="346" cy="250" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2"></circle>
-            <rect x="358" y="222" width="160" height="32" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"></rect>
-            <text x="366" y="236" fill="#a7f3d0" font-size="11" font-weight="bold">Punto de Equilibrio</text>
-            <text x="366" y="249" fill="#ffffff" font-size="11" font-family="monospace" font-weight="bold">(20 hrs, $600.000)</text>
-
-            <!-- Aguja Dinámica -->
-            <g id="dynamic-cursor">
-              <line id="cursor-needle" x1="464" y1="40" x2="464" y2="400" stroke="#ffffff" stroke-width="2" stroke-dasharray="2 2" opacity="0.8"></line>
-              <circle id="cursor-alfa-pt" cx="464" cy="212" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2"></circle>
-              <circle id="cursor-beta-pt" cx="464" cy="186" r="6" fill="#f59e0b" stroke="#ffffff" stroke-width="2"></circle>
-            </g>
-
-            <!-- Etiquetas de Ejes -->
-            <text x="435" y="445" fill="#94a3b8" font-size="12" font-weight="bold" text-anchor="middle">Horas de Operación en Faena (x)</text>
-            <text x="-220" y="24" transform="rotate(-90)" fill="#94a3b8" font-size="12" font-weight="bold" text-anchor="middle">Costo Total C(x) en Pesos ($)</text>
-          </svg>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(3)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 3</button>
-          <button onclick="goToStep(5)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 5: Presupuesto →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 5 -->
-    <div id="step-5" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 5: Restricción Presupuestaria ($1.000.000)</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 font-mono text-xs sm:text-sm">
-          <div class="p-5 bg-slate-950 rounded-2xl border-2 border-blue-500/40 shadow-lg">
-            <h3 class="text-blue-300 font-bold font-sans mb-2">Proveedor Alfa: 15.000x + 300.000 ≤ 1.000.000</h3>
-            <div class="space-y-1.5 text-slate-300">
-              <div>15.000 · x ≤ 1.000.000 - 300.000</div>
-              <div>15.000 · x ≤ 700.000</div>
-              <div class="text-blue-400 font-bold text-base mt-2">👉 x ≤ 46,67 horas (46 h 40 min)</div>
-              <div class="text-xs text-emerald-400 font-sans mt-2">✓ Para 30h de faena sobra una holgura de $250.000 CLP.</div>
-            </div>
-          </div>
-          <div class="p-5 bg-slate-950 rounded-2xl border-2 border-amber-500/40 shadow-lg">
-            <h3 class="text-amber-300 font-bold font-sans mb-2">Proveedor Beta: 25.000x + 100.000 ≤ 1.000.000</h3>
-            <div class="space-y-1.5 text-slate-300">
-              <div>25.000 · x ≤ 1.000.000 - 100.000</div>
-              <div>25.000 · x ≤ 900.000</div>
-              <div class="text-amber-400 font-bold text-base mt-2">👉 x ≤ 36,00 horas exactas</div>
-              <div class="text-xs text-amber-300 font-sans mt-2">✓ Para 30h de faena sobra una holgura de $150.000 CLP.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(4)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 4</button>
-          <button onclick="goToStep(6)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 6: Informe Técnico →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 6 -->
-    <div id="step-6" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 6: Decisión en Obra y Generación de Informe</h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
-          <div>
-            <label class="text-xs text-slate-400 block mb-1">Nombre del Estudiante:</label>
-            <input type="text" id="report-name" placeholder="Tu Nombre Completo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white" oninput="generateReport()">
-          </div>
-          <div>
-            <label class="text-xs text-slate-400 block mb-1">RUT:</label>
-            <input type="text" id="report-rut" placeholder="Ej: 19.876.543-2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white" oninput="generateReport()">
-          </div>
-        </div>
-
-        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 my-4 space-y-3">
-          <div class="flex flex-wrap justify-between items-center gap-2">
-            <span class="text-xs text-slate-300 font-bold">Vista Previa del Informe Técnico (30 Horas):</span>
-            <div class="flex gap-2">
-              <button onclick="downloadReportTxt()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-lg border border-slate-600 transition cursor-pointer">
-                Descargar .TXT
-              </button>
-              <button onclick="copyReport()" id="btn-copy" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition cursor-pointer shadow-md">
-                Copiar Informe
-              </button>
-            </div>
-          </div>
-          <pre id="report-text" class="text-xs font-mono text-slate-300 whitespace-pre-wrap max-h-64 overflow-y-auto bg-slate-900 p-4 rounded-xl border border-slate-800"></pre>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(5)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 5</button>
-          <button onclick="goToStep(7)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 7: Cuestionario Formativo →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 7 -->
-    <div id="step-7" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 7: Cuestionario Formativo Interactivo</h2>
-        <p class="text-slate-400 text-sm mb-6">Responde las 4 preguntas para validar tu aprendizaje con retroalimentación inmediata:</p>
-
-        <div id="quiz-result-box" class="hidden p-5 rounded-xl mb-6"></div>
-
-        <div class="space-y-6" id="quiz-container">
-          <!-- Q1 -->
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-1">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">1. ¿A cuántas horas de faena los costos de ambos proveedores son exactamente iguales ($600.000)?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q1" value="0" class="text-amber-500"> <span>15 horas</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q1" value="1" class="text-amber-500"> <span>20 horas (Punto de Equilibrio)</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q1" value="2" class="text-amber-500"> <span>25 horas</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-
-          <!-- Q2 -->
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-2">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">2. Para 30 horas continuas de generador, ¿qué opción es técnicamente correcta y cuál es su ahorro?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q2" value="0" class="text-amber-500"> <span>Proveedor Beta, ahorrando $50.000 CLP</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q2" value="1" class="text-amber-500"> <span>Proveedor Alfa, con un ahorro neto de $100.000 CLP</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q2" value="2" class="text-amber-500"> <span>Ambos tienen el mismo costo a 30 horas</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-
-          <!-- Q3 -->
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-3">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">3. Con el presupuesto de $1.000.000, ¿cuál es la autonomía máxima del Proveedor Alfa?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q3" value="0" class="text-amber-500"> <span>36 horas exactas</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q3" value="1" class="text-amber-500"> <span>46,67 horas (aprox. 46 h 40 min)</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q3" value="2" class="text-amber-500"> <span>50 horas</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-
-          <!-- Q4 -->
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="qb-4">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">4. ¿Qué significado físico tiene la pendiente (m) en el modelo de faena?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q4" value="0" class="text-amber-500"> <span>El costo inicial de traslado e instalación</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q4" value="1" class="text-amber-500"> <span>El costo operativo y combustible por cada hora de uso continuo</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="q4" value="2" class="text-amber-500"> <span>La ganancia bruta del contratista</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-slate-800">
-          <button onclick="goToStep(6)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold">
-            ← Volver a Paso 6: Informe
-          </button>
-          
-          <button onclick="checkQuiz()" id="btn-check-quiz" class="px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg cursor-pointer">
-            Comprobar Respuestas
-          </button>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 bg-slate-950 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Universidad Tecnológica Metropolitana (UTEM) · Plan Común de Ingeniería y Ciencias</div>
-      <div class="text-amber-400/80 font-mono">MATC0001 — Modelamiento Lineal en Obras Viales</div>
-    </div>
-  </footer>
-
-  <script>
-    function initSvgGrid() {
-      const grid = document.getElementById('grid-lines');
-      if (!grid) return;
-      grid.innerHTML = '';
-      
-      const yValues = [0, 200000, 400000, 600000, 800000, 1000000, 1200000, 1400000];
-      yValues.forEach(val => {
-        const y = 40 + (360 - (val / 1500000) * 360);
-        grid.innerHTML += `
-          <line x1="110" y1="${y}" x2="760" y2="${y}" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"></line>
-          <text x="100" y="${y + 4}" fill="${val === 600000 ? '#34d399' : val === 1000000 ? '#f87171' : '#64748b'}" font-size="11" font-family="monospace" text-anchor="end" font-weight="${val === 600000 || val === 1000000 ? 'bold' : 'normal'}">$${val.toLocaleString('es-CL')}</text>
-        `;
-      });
-
-      const xValues = [0, 10, 20, 30, 40, 50];
-      xValues.forEach(val => {
-        const x = 110 + (val / 55) * 650;
-        grid.innerHTML += `
-          <line x1="${x}" y1="40" x2="${x}" y2="400" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"></line>
-          <text x="${x}" y="420" fill="${val === 20 ? '#34d399' : val === 30 ? '#f59e0b' : '#64748b'}" font-size="12" font-family="monospace" text-anchor="middle" font-weight="${val === 20 || val === 30 ? 'bold' : 'normal'}">${val}h</text>
-        `;
-      });
-    }
-
-    function goToStep(num) {
-      document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
-      const activeEl = document.getElementById('step-' + num);
-      if (activeEl) activeEl.classList.remove('hidden');
-      
-      document.querySelectorAll('.step-btn').forEach(btn => {
-        btn.className = "step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white";
-      });
-      const activeTab = document.getElementById('tab-' + num);
-      if (activeTab) {
-        activeTab.className = "step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 shadow-md";
-      }
-      
-      if (num === 4) {
-        initSvgGrid();
-        updateChart(document.getElementById('hours-slider').value);
-      }
-      if (num === 6) generateReport();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function updateChart(hours) {
-      const h = Number(hours);
-      document.getElementById('chart-hours-display').innerText = h + ' horas';
-      const cA = 15000 * h + 300000;
-      const cB = 25000 * h + 100000;
-      document.getElementById('val-alfa').innerText = '$' + cA.toLocaleString('es-CL');
-      document.getElementById('val-beta').innerText = '$' + cB.toLocaleString('es-CL');
-      const diff = Math.abs(cA - cB);
-      if (cA < cB) {
-        document.getElementById('val-winner').innerText = '🏆 Conviene Alfa (Ahorro $' + diff.toLocaleString('es-CL') + ')';
-      } else if (cB < cA) {
-        document.getElementById('val-winner').innerText = '🏆 Conviene Beta (Ahorro $' + diff.toLocaleString('es-CL') + ')';
-      } else {
-        document.getElementById('val-winner').innerText = '⚖️ Indiferente ($600.000)';
-      }
-
-      const curX = 110 + (h / 55) * 650;
-      const curAlfaY = 40 + (360 - (cA / 1500000) * 360);
-      const curBetaY = 40 + (360 - (cB / 1500000) * 360);
-
-      const needle = document.getElementById('cursor-needle');
-      const alfaPt = document.getElementById('cursor-alfa-pt');
-      const betaPt = document.getElementById('cursor-beta-pt');
-
-      if (needle) {
-        needle.setAttribute('x1', curX);
-        needle.setAttribute('x2', curX);
-      }
-      if (alfaPt) {
-        alfaPt.setAttribute('cx', curX);
-        alfaPt.setAttribute('cy', curAlfaY);
-      }
-      if (betaPt) {
-        betaPt.setAttribute('cx', curX);
-        betaPt.setAttribute('cy', curBetaY);
-      }
-    }
-
-    function generateReport() {
-      const name = document.getElementById('report-name').value.trim() || '[Nombre del Estudiante]';
-      const rut = document.getElementById('report-rut').value.trim() || '[RUT]';
-      const text = `================================================================================
-INFORME TÉCNICO DE DECISIÓN Y MODELAMIENTO LINEAL
-UNIVERSIDAD TECNOLÓGICA METROPOLITANA (UTEM)
-Plan Común de Ingeniería y Ciencias — MATC0001
-================================================================================
-
-DATOS DEL ALUMNO / RESPONSABLE TÉCNICO:
-• Nombre del Estudiante: ${name}
-• RUT: ${rut}
-• Fecha de Emisión: ${new Date().toLocaleDateString('es-CL')}
-• Caso: Suministro Eléctrico para Faena Vial (30 Horas de Operación)
-
-1. MODELO MATEMÁTICO FORMULADO:
-• Proveedor Alfa: C_A(x) = 15.000 · x + 300.000 CLP
-• Proveedor Beta: C_B(x) = 25.000 · x + 100.000 CLP
-• Punto de Equilibrio: x = 20 horas ($600.000 CLP)
-
-2. EVALUACIÓN ECONÓMICA PARA x = 30 HORAS:
-• Costo Alfa: $750.000 CLP
-• Costo Beta: $850.000 CLP
-• Ahorro neto: $100.000 CLP a favor de Alfa (11,76% de ahorro)
-
-3. EVALUACIÓN DE RESTRICCIÓN PRESUPUESTARIA ($1.000.000 CLP):
-• Proveedor Alfa cumple con holgura ($750.000 ≤ $1.000.000).
-• Autonomía máxima con Alfa: 46,67 horas (46 h 40 min).
-
-4. RECOMENDACIÓN FINAL:
-Se recomienda formalmente contratar al PROVEEDOR ALFA.
-================================================================================`;
-      document.getElementById('report-text').innerText = text;
-    }
-
-    function copyReport() {
-      const txt = document.getElementById('report-text').innerText;
-      const textArea = document.createElement("textarea");
-      textArea.value = txt;
-      textArea.style.position = "fixed";
-      textArea.style.opacity = "0";
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        const btn = document.getElementById('btn-copy');
-        btn.innerText = '¡Copiado al Portapapeles!';
-        btn.className = 'px-4 py-1.5 bg-emerald-500 text-slate-950 font-bold text-xs rounded-lg transition';
-        setTimeout(() => {
-          btn.innerText = 'Copiar Informe';
-          btn.className = 'px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition';
-        }, 2000);
-      } catch (err) {
-        console.error('Error al copiar', err);
-      }
-      document.body.removeChild(textArea);
-    }
-
-    function downloadReportTxt() {
-      const txt = document.getElementById('report-text').innerText;
-      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Informe_Tecnico_UTEM_MATC0001.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    const correctAnswers = { q1: 1, q2: 1, q3: 1, q4: 1 };
-    const explanations = {
-      q1: "¡Correcto! Resolviendo 15.000x + 300.000 = 25.000x + 100.000 se obtiene x = 20 horas ($600.000 CLP).",
-      q2: "¡Correcto! A 30 hrs: Alfa cuesta $750.000 y Beta $850.000, con un ahorro neto de $100.000 CLP para Alfa.",
-      q3: "¡Correcto! Resolviendo 15.000x + 300.000 ≤ 1.000.000 se tiene x ≤ 700.000/15.000 = 46,67 horas.",
-      q4: "¡Correcto! La pendiente m representa la tasa de gasto marginal en combustible y mantenimiento por hora."
-    };
-
-    function checkQuiz() {
-      let score = 0;
-      for (let i = 1; i <= 4; i++) {
-        const qKey = 'q' + i;
-        const selected = document.querySelector('input[name="' + qKey + '"]:checked');
-        const qb = document.getElementById('qb-' + i);
-        const fb = qb.querySelector('.q-feedback');
-        fb.classList.remove('hidden', 'bg-emerald-950/50', 'text-emerald-300', 'bg-rose-950/50', 'text-rose-300');
-        
-        if (selected && Number(selected.value) === correctAnswers[qKey]) {
-          score++;
-          qb.classList.remove('border-rose-500');
-          qb.classList.add('border-emerald-500');
-          fb.classList.add('bg-emerald-950/50', 'text-emerald-300', 'border', 'border-emerald-500/40');
-          fb.innerHTML = "✓ " + explanations[qKey];
-        } else {
-          qb.classList.remove('border-emerald-500');
-          qb.classList.add('border-rose-500');
-          fb.classList.add('bg-rose-950/50', 'text-rose-300', 'border', 'border-rose-500/40');
-          fb.innerHTML = "✗ Incorrecto. 💡 Solución: " + explanations[qKey];
-        }
-      }
-
-      const resBox = document.getElementById('quiz-result-box');
-      resBox.classList.remove('hidden', 'bg-emerald-950/60', 'border-emerald-500', 'bg-amber-950/60', 'border-amber-500');
-      if (score === 4) {
-        if (typeof confetti === 'function') {
-          confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-        }
-        resBox.classList.add('bg-emerald-950/60', 'border-2', 'border-emerald-500', 'text-emerald-200');
-        resBox.innerHTML = "<h3 class='font-bold text-lg text-white'>🏆 ¡Felicitaciones! Has obtenido 4/4 (100%)</h3><p class='text-xs mt-1'>Has demostrado dominio total del modelamiento lineal y la toma de decisiones en obras viales.</p>";
-      } else {
-        resBox.classList.add('bg-amber-950/60', 'border-2', 'border-amber-500', 'text-amber-200');
-        resBox.innerHTML = "<h3 class='font-bold text-lg text-white'>Puntaje: " + score + "/4 correctas</h3><p class='text-xs mt-1'>Revisa las explicaciones en los cuadros de retroalimentación para afianzar tus conceptos.</p>";
-      }
-      resBox.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    initSvgGrid();
-    updateChart(30);
-  </script>
-</body>
-</html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión Faena · Modelamiento Lineal UTEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root{--as:#20242a;--co:#ece9e2;--pa:#fbfaf6;--al:#1f5fd1;--be:#c44600;--li:#f5c518;--ok:#17803f;--no:#b3261e;--tx:#1d2126;--mu:#575e66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--co);color:var(--tx);font:17px/1.55 'Atkinson Hyperlegible',system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem)}h3{font-size:1.15rem}
+header{background:var(--as);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:5}
+.in{max-width:860px;margin:0 auto}
+header h1{font-size:1.15rem;margin:0}header small{color:#b9c0c8}
+.road{display:flex;gap:4px;margin:10px 0 0;padding:0;list-style:none}
+.road button{flex:1;background:none;border:0;color:#9aa3ad;font:700 .72rem 'Atkinson Hyperlegible';padding:8px 1px;cursor:pointer;border-bottom:3px solid transparent}
+.road button[aria-current=step]{color:#fff;border-color:var(--li)}
+.road button:disabled{opacity:.45;cursor:not-allowed}
+.lane{height:14px;position:relative;background:repeating-linear-gradient(90deg,var(--li) 0 22px,transparent 22px 40px) center/100% 3px no-repeat}
+.truck{position:absolute;top:-8px;font-size:20px;transition:left .6s ease;transform:translateX(-50%)}
+main{max-width:860px;margin:0 auto;padding:22px 16px 60px}
+section{background:var(--pa);border-radius:14px;padding:clamp(18px,4vw,34px);box-shadow:0 1px 0 #d8d4ca}
+.lead{font-size:1.1rem}.mu{color:var(--mu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.card{border-radius:10px;padding:14px 16px;border:2px solid}
+.a{border-color:var(--al)}.b{border-color:var(--be)}.ta{color:var(--al)}.tb{color:var(--be)}
+.big{font:800 1.6rem 'Bricolage Grotesque';display:block}
+button.bt{font:700 1rem 'Atkinson Hyperlegible';background:var(--as);color:#fff;border:0;border-radius:10px;padding:12px 20px;cursor:pointer;min-height:44px}
+button.bt.y{background:var(--li);color:var(--as)}button.bt.g{background:#e6e2d8;color:var(--as)}
+button.bt:disabled{opacity:.4;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--li);outline-offset:2px;box-shadow:0 0 0 5px var(--as)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0;align-items:center}
+input[type=range]{width:100%;accent-color:var(--as);height:32px}
+input[type=text],textarea{width:100%;font:inherit;padding:10px 12px;border:2px solid #c9c4b8;border-radius:8px;background:#fff}
+label{font-weight:700;display:block;margin:10px 0 4px}
+svg{width:100%;height:auto;background:#fff;border-radius:10px;border:1px solid #d8d4ca}
+svg text{font:11px 'Atkinson Hyperlegible';fill:var(--mu);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}svg .g{stroke:#e4e0d6}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;background:#eef3ff;min-height:20px}
+.fb.ok{background:#e4f5ea;color:#0f5a2b}.fb.no{background:#fdeceb;color:#8a1c15}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border:2px solid #c9c4b8;border-radius:10px;background:#fff;font:inherit;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){border-color:var(--as)}.opt.ok{border-color:var(--ok);background:#e4f5ea}.opt.no{border-color:var(--no);background:#fdeceb;opacity:.7}
+.bar{height:22px;border-radius:6px;margin:4px 0 12px;transition:width .3s;min-width:3px}
+pre{white-space:pre-wrap;background:var(--as);color:#e8ebef;padding:14px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;max-height:280px;overflow:auto}
+.m{font:700 1.05rem ui-monospace,monospace;background:#f1eee6;padding:10px 14px;border-radius:8px;margin:8px 0;overflow-x:auto}
+[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><div class="in"><h1>Misión Faena <small>· MATC0001 · Módulo I · UTEM</small></h1>
+<ol class="road" id="road"></ol><div class="lane"><span class="truck" id="truck">🚚</span></div></div></header>
+<main>
+<!-- 0 -->
+<section><h2>Llegó el primer día en la obra</h2>
+<p class="lead">Eres la ingeniera o el ingeniero de logística de una faena vial. Necesitas un generador eléctrico y dos empresas te hicieron una oferta. Tienes <b>$1.000.000</b> de presupuesto y la faena durará <b>30 horas</b>.</p>
+<div class="two"><div class="card a"><h3 class="ta">Proveedor Alfa</h3>Cobra <b>$300.000</b> por llegar e instalarse, y <b>$15.000</b> por cada hora de uso.</div>
+<div class="card b"><h3 class="tb">Proveedor Beta</h3>Cobra <b>$100.000</b> por llegar e instalarse, y <b>$25.000</b> por cada hora de uso.</div></div>
+<h3>Antes de calcular nada, ¿cuál te tinca más para 30 horas?</h3>
+<p class="mu">No hay respuesta mala: es tu hipótesis. Al final la comparamos con lo que descubras.</p>
+<div class="row"><button class="bt g" onclick="pick('Alfa')">Alfa</button><button class="bt g" onclick="pick('Beta')">Beta</button><button class="bt g" onclick="pick('No lo sé')">No lo sé aún</button></div>
+<div class="fb" id="fb0" hidden></div><div class="row"><button class="bt y" id="n0" hidden onclick="go(1)">Vamos a explorar</button></div></section>
+<!-- 1 -->
+<section hidden><h2>Explora: ¿dónde se cruzan?</h2>
+<p>Cada proveedor es una recta: el costo fijo es donde parte (intercepto) y el costo por hora es cuánto sube (pendiente). Mueve las horas y busca el punto donde <b>ambos cuestan lo mismo</b>.</p>
+<svg id="c1" viewBox="0 0 640 360" role="img" aria-label="Gráfico de costo total según horas para Alfa y Beta"></svg>
+<label for="h">Horas de faena: <span id="hv">30</span></label>
+<input type="range" id="h" min="0" max="55" step="0.5" value="30" aria-label="Horas de faena">
+<div class="two"><div class="card a"><span class="ta">Alfa</span><span class="big" id="ca"></span></div><div class="card b"><span class="tb">Beta</span><span class="big" id="cb"></span></div></div>
+<div class="fb" id="lead"></div>
+<div class="row"><button class="bt y" onclick="mark()">Aquí se cruzan</button></div>
+<div class="fb" id="fb1" hidden></div>
+<div id="aft1" hidden><h3>Una pregunta para pensar</h3><div id="mq1"></div></div></section>
+<!-- Modela -->
+<section hidden><h2>De las rectas al modelo</h2>
+<p>Lo que dibujaste son <b>modelos lineales</b>: <b>C(x) = m·x + b</b>, donde x son las horas de faena y C(x) el costo total en pesos. Mira en el gráfico dónde parte cada recta (b) y cuánto sube en 10 horas (m·10).</p>
+<svg id="c3" viewBox="0 0 640 360" role="img" aria-label="Gráfico con el costo fijo de cada recta y cuánto sube cada una en 10 horas"></svg>
+<div id="mq2a"></div><div id="mq2b" hidden></div><div id="mq2c" hidden></div>
+<div id="mod" hidden><h3>Así se escribe formalmente cada modelo</h3>
+<div class="two"><div class="card a"><h3 class="ta">Proveedor Alfa</h3><div class="m">C<sub>A</sub>(x) = 15.000·x + 300.000</div>
+<p><b>Costo fijo b = $300.000.</b> Es la llegada e instalación: se paga aunque x = 0 y es donde la recta corta el eje vertical.<br><b>Costo variable m = $15.000 por hora.</b> Es la pendiente; el costo variable total es 15.000·x.</p></div>
+<div class="card b"><h3 class="tb">Proveedor Beta</h3><div class="m">C<sub>B</sub>(x) = 25.000·x + 100.000</div>
+<p><b>Costo fijo b = $100.000.</b> Se paga aunque x = 0.<br><b>Costo variable m = $25.000 por hora.</b> Es la pendiente; el costo variable total es 25.000·x.</p></div></div>
+<ul style="padding-left:20px"><li><b>Pendiente:</b> m = ΔC ÷ Δx. Dice cuántos pesos sube el costo por cada hora adicional (unidad: $/h).</li>
+<li><b>Costo total = costo fijo + costo variable:</b> C(x) = b + m·x.</li>
+<li><b>A mayor valor de la pendiente, más empinada es la recta:</b> Beta (25.000) sube más rápido que Alfa (15.000), aunque parte más abajo.</li>
+<li>Como x son horas de uso, el modelo vale para x ≥ 0.</li></ul>
+<h3>Ahora escríbela tú</h3>
+<p>Un tercer proveedor, <b>Gamma</b>, cobra <b>$250.000</b> por llegar e instalarse y <b>$20.000</b> por cada hora de uso. Completa m y b, y mira cómo se arma la ecuación.</p>
+<div class="row"><label for="gm" style="margin:0">m =</label><input id="gm" type="text" inputmode="numeric" oninput="gprev()" style="max-width:130px"><label for="gb" style="margin:0">b =</label><input id="gb" type="text" inputmode="numeric" oninput="gprev()" style="max-width:130px"><button class="bt" onclick="chkg()">Comprobar</button></div>
+<div class="m" id="gv">C<sub>G</sub>(x) = m·x + b</div><div class="fb" id="fbG" hidden></div>
+<div class="row"><button class="bt y" id="ng" hidden onclick="unlock(3);go(3);reset2()">Calcular el cruce con álgebra</button></div></div></section>
+<!-- 2 -->
+<section hidden><h2>Confirma con álgebra</h2>
+<p>El gráfico te dio una pista. El álgebra la vuelve exacta. Avanza paso a paso.</p>
+<details class="card" style="margin:10px 0;border-color:#c9c4b8"><summary><b>Cómo escribir bien una ecuación</b></summary><ol><li>Nombra la función: C<sub>A</sub>(x), no solo C.</li><li>Una igualdad por línea y siempre en el mismo orden: costo variable + costo fijo (m·x + b).</li><li>Haz la misma operación en <b>ambos lados</b> y escribe cada paso; puedes unirlos con ⟺.</li><li>Al interpretar, escribe las unidades: horas (h), pesos ($) y pesos por hora ($/h).</li><li>"No puede pasarse de P" se escribe con ≤, no con =.</li></ol></details>
+<div id="steps"></div>
+<div class="row"><button class="bt" id="nx" onclick="step()">Mostrar siguiente paso</button></div>
+<div id="ask" hidden><label for="xa">Tu turno: x = 200.000 ÷ 10.000. ¿Cuántas horas?</label><input type="text" id="xa" inputmode="decimal" style="max-width:160px"> <button class="bt" onclick="chkx()">Comprobar</button></div>
+<div class="fb" id="fb2" hidden></div>
+<div id="ineq" hidden><div class="m">C<sub>A</sub>(20) = 600.000 = C<sub>B</sub>(20)</div>
+<p><b>Y ahora la decisión:</b> Alfa conviene cuando C<sub>A</sub>(x) &lt; C<sub>B</sub>(x).</p>
+<div class="m">15.000x + 300.000 &lt; 25.000x + 100.000 ⟺ 200.000 &lt; 10.000x ⟺ x &gt; 20</div>
+<p>Con menos de 20 horas conviene Beta, con más de 20 conviene Alfa. Tu faena dura 30 h, así que el modelo apunta a <b class="ta">Alfa</b>.</p>
+<button class="bt y" onclick="unlock(4);go(4)">Revisar el presupuesto</button></div></section>
+<!-- 3 -->
+<section hidden><h2>¿Cuántas horas alcanza el presupuesto?</h2>
+<p>El presupuesto P es un tope: lo que gastas, C(x), no puede pasarse de P. Por eso <b>P ocupa el lugar de C(x)</b> y lo que buscamos pasa a ser x, las horas.</p>
+<div class="m">C(x) ≤ P ⟺ m·x + b ≤ P ⟺ m·x ≤ P − b ⟺ x ≤ (P − b) ÷ m</div>
+<h3>1. Hazlo tú: Alfa con P = $1.000.000</h3>
+<div class="m">15.000·x + 300.000 ≤ 1.000.000</div>
+<label for="s1">Resta 300.000 a ambos lados: 15.000·x ≤</label><input type="text" id="s1" inputmode="numeric" style="max-width:200px">
+<label for="s2">Divide por 15.000 (usa 2 decimales): x ≤</label><input type="text" id="s2" inputmode="decimal" style="max-width:200px"> <button class="bt" onclick="chkA()">Comprobar</button>
+<div class="fb" id="fbA" hidden></div>
+<h3>2. Explora: cambia P y mira cómo se despeja x</h3>
+<svg id="c2" viewBox="0 0 640 360" role="img" aria-label="Gráfico de costos con la línea de presupuesto"></svg>
+<label for="P">Presupuesto P: <span id="pv"></span></label>
+<input type="range" id="P" min="500000" max="1500000" step="50000" value="1000000" aria-label="Presupuesto en pesos">
+<div class="two"><div class="card a"><span class="ta">Alfa aguanta hasta</span><span class="big" id="xa2"></span><div class="bar" id="ba" style="background:var(--al)"></div><div class="m" id="dA" style="font-size:.85rem"></div></div>
+<div class="card b"><span class="tb">Beta aguanta hasta</span><span class="big" id="xb2"></span><div class="bar" id="bb" style="background:var(--be)"></div><div class="m" id="dB" style="font-size:.85rem"></div></div></div>
+<p class="mu" id="p30"></p>
+<h3>3. Descubre una conexión</h3>
+<p>Mueve P hasta que Alfa y Beta aguanten <b>exactamente las mismas horas</b>. ¿Te suena ese número?</p>
+<div class="row"><button class="bt y" onclick="mark3()">Aquí aguantan lo mismo</button></div><div class="fb" id="fbC" hidden></div>
+<h3>4. Ahora al revés</h3>
+<p>Si ya sabes que necesitas x = 30 h, ¿qué hacemos? Reemplaza x por 30 en C(x) de Alfa.</p>
+<label for="pm">¿Cuál es el presupuesto mínimo P para operar 30 h con Alfa?</label>
+<input type="text" id="pm" inputmode="numeric" style="max-width:200px" placeholder="en pesos"> <button class="bt" onclick="chkp()">Comprobar</button>
+<div class="fb" id="fb3" hidden></div><div class="row"><button class="bt y" id="n3" hidden onclick="unlock(5);go(5)">Tomar la decisión</button></div>
+<p class="mu" id="gt"></p></section>
+<!-- 4 -->
+<section hidden><h2>Decide y justifica</h2>
+<p>Ahora el equipo espera tu decisión. En obra importa tanto elegir como explicar por qué.</p>
+<div class="row"><button class="bt g" id="oA" onclick="ch('Alfa')">Contrato a Alfa</button><button class="bt g" id="oB" onclick="ch('Beta')">Contrato a Beta</button></div>
+<div class="fb" id="fb4" hidden></div>
+<label for="ju">Tu justificación (con tus números)</label><textarea id="ju" rows="4" placeholder="Ej.: C_A(30) = 15.000·30 + 300.000 = $750.000 y C_B(30) = … Por lo tanto, conviene … porque …"></textarea>
+<label for="ju2">¿Qué cambiaría tu decisión? (opcional)</label><textarea id="ju2" rows="2" placeholder="Ej.: Si la faena durara 15 horas…"></textarea>
+<div class="two"><div><label for="nm">Nombre</label><input type="text" id="nm"></div><div><label for="rt">RUT (opcional)</label><input type="text" id="rt" placeholder="12.345.678-9"></div></div>
+<p class="mu">Estos datos se quedan en tu navegador y solo aparecen en lo que tú copias o descargas. El RUT es opcional: Canvas ya identifica quién entrega.</p>
+<pre id="rep" aria-live="polite"></pre>
+<div class="fb" id="chk" hidden></div>
+<div class="row"><button class="bt g" id="dl" onclick="dlr()" disabled>Descargar .txt</button><button class="bt g" id="cp" onclick="cpr()" disabled>Copiar informe</button><button class="bt y" id="n4" onclick="unlock(6);go(6);quiz()" disabled>Ir al reto final</button></div></section>
+<!-- 5 -->
+<section hidden><h2>Reto final</h2><div id="quiz"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),F=n=>'$'+Math.round(n).toLocaleString('es-CL'),N=v=>+String(v).replace(/\./g,'').replace(',','.').replace(/[^\d.]/g,'');
+const CA=x=>15000*x+300000,CB=x=>25000*x+100000,X=h=>96+h/55*524,Y=c=>320-c/1.5e6*300;
+const S={s:0,max:0,pred:null,found:false,ch:null,P:1e6},names=['Caso','Explora','Modela','Álgebra','Presupuesto','Decisión','Reto'];
+function road(){$('#road').innerHTML=names.map((n,i)=>`<li style="flex:1;display:flex"><button ${i>S.max?'disabled':''} ${i==S.s?'aria-current="step"':''} onclick="go(${i})">${n}</button></li>`).join('');$('#truck').style.left=(7+S.s*14.3)+'%'}
+function go(n){if(n>S.max)return;S.s=n;document.querySelectorAll('main section').forEach((e,i)=>e.hidden=i!==n);road();scrollTo({top:0,behavior:'smooth'});if(n==1)ex();if(n==2)draw('#c3',null,null,false,true);if(n==4)bud();if(n==5)rep()}
+function unlock(n){if(n>S.max)S.max=n;road()}
+function say(id,t,k){const e=$(id);e.hidden=false;e.className='fb '+(k||'');e.innerHTML=t}
+function draw(id,h,P,eq,par){const L=96,R=620;let s='';
+const tag=(y,v,c)=>`<rect x="22" y="${y-8}" width="72" height="16" rx="3" fill="${c}"/><text x="90" y="${y+4}" text-anchor="end" style="fill:#fff;font-weight:700;stroke:none">${v}</text>`;
+for(let c=0;c<=1.5e6;c+=25e4)s+=`<line class="g" x1="${L}" x2="${R}" y1="${Y(c)}" y2="${Y(c)}"/><text x="90" y="${Y(c)+4}" text-anchor="end">${F(c)}</text>`;
+for(let x=0;x<=50;x+=10)s+=`<line class="g" x1="${X(x)}" x2="${X(x)}" y1="20" y2="320"/><text x="${X(x)}" y="338" text-anchor="middle">${x} h</text>`;
+if(P!=null)s+=`<line x1="${L}" x2="${R}" y1="${Y(P)}" y2="${Y(P)}" stroke="#b3261e" stroke-width="2" stroke-dasharray="6 4"/><text x="${L+8}" y="${Y(P)<34?Y(P)+14:Y(P)-6}" style="fill:#b3261e;font-weight:700">Presupuesto P</text>`;
+s+=`<line x1="${X(0)}" y1="${Y(CA(0))}" x2="${X(55)}" y2="${Y(CA(55))}" stroke="#1f5fd1" stroke-width="3.5"/><line x1="${X(0)}" y1="${Y(CB(0))}" x2="${X(55)}" y2="${Y(CB(55))}" stroke="#c44600" stroke-width="3.5"/>`;
+s+=`<text x="${X(55)-4}" y="${Y(CA(55))+16}" text-anchor="end" style="fill:#1f5fd1;font-weight:700">Alfa</text><text x="${X(55)-4}" y="${Y(CB(55))-8}" text-anchor="end" style="fill:#c44600;font-weight:700">Beta</text>`;
+s+=`<text x="358" y="356" text-anchor="middle">Horas de faena (x)</text><text x="6" y="12">Costo total C(x) en pesos</text>`;
+if(par){[[CA(0),'#1f5fd1',10,-26],[CB(0),'#c44600',20,18]].forEach(([c,k,dx,dy])=>{s+=`<circle cx="${X(0)}" cy="${Y(c)}" r="6" fill="${k}" stroke="#fff" stroke-width="2"/><line x1="${X(0)}" y1="${Y(c)}" x2="${X(0)+12}" y2="${Y(c)+dy+(dy<0?3:-12)}" stroke="${k}"/><text x="${X(0)+dx}" y="${Y(c)+dy}" style="fill:${k};font-weight:700">b = ${F(c)}</text>`});
+[[40,CA,'#1f5fd1'],[40,CB,'#c44600']].forEach(([a,f,k])=>{const x1=X(a),x2=X(a+10),y1=Y(f(a)),y2=Y(f(a+10));s+=`<polyline points="${x1},${y1} ${x2},${y1} ${x2},${y2}" fill="none" stroke="${k}" stroke-width="2" stroke-dasharray="4 3"/><text x="${(x1+x2)/2}" y="${y1+14}" text-anchor="middle" style="fill:${k}">10 h</text><text x="${x2+5}" y="${(y1+y2)/2+4}" style="fill:${k};font-weight:700">+${F(f(a+10)-f(a))}</text>`})}
+if(eq)s+=`<line x1="${L}" x2="${X(20)}" y1="${Y(6e5)}" y2="${Y(6e5)}" stroke="#20242a" stroke-dasharray="3 3"/><line x1="${X(20)}" x2="${X(20)}" y1="${Y(6e5)}" y2="320" stroke="#20242a" stroke-dasharray="3 3"/><circle cx="${X(20)}" cy="${Y(6e5)}" r="7" fill="#f5c518" stroke="#20242a" stroke-width="2.5"/><text x="${X(20)+12}" y="${Y(6e5)+22}" style="fill:#20242a;font-weight:700">(20 h, $600.000)</text>${tag(Y(6e5),'$600.000','#20242a')}`;
+if(h!=null){const a=CA(h),b=CB(h);s+=`<line x1="${X(h)}" x2="${X(h)}" y1="20" y2="320" stroke="#20242a" stroke-dasharray="3 3"/><line x1="${L}" x2="${X(h)}" y1="${Y(a)}" y2="${Y(a)}" stroke="#1f5fd1" stroke-dasharray="3 3"/><line x1="${L}" x2="${X(h)}" y1="${Y(b)}" y2="${Y(b)}" stroke="#c44600" stroke-dasharray="3 3"/><circle cx="${X(h)}" cy="${Y(a)}" r="6" fill="#1f5fd1" stroke="#fff" stroke-width="2"/><circle cx="${X(h)}" cy="${Y(b)}" r="6" fill="#c44600" stroke="#fff" stroke-width="2"/>${tag(Y(a),F(a),'#1f5fd1')}${tag(Y(b),F(b),'#c44600')}`}
+$(id).innerHTML=s}
+function mcq(el,q,o,ok,hint,why,cb){let t=0;const idx=o.map((_,i)=>i).sort(()=>Math.random()-.5);
+el.innerHTML=`<p><b>${q}</b></p>`+idx.map(i=>`<button class="opt" data-i="${i}">${o[i]}</button>`).join('')+'<div class="fb" hidden></div>';
+const fb=el.querySelector('.fb');el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(+b.dataset.i===ok){b.classList.add('ok');el.querySelectorAll('.opt').forEach(x=>x.disabled=true);fb.hidden=false;fb.className='fb ok';fb.innerHTML=(t?'¡Eso! ':'¡Bien! ')+why;cb&&cb(t==0)}else{t++;b.classList.add('no');b.disabled=true;fb.hidden=false;fb.className='fb no';fb.innerHTML='Todavía no. '+hint}})}
+/* 0 */
+function pick(v){S.pred=v;say('#fb0',v=='No lo sé'?'Perfecto: vas a construir la respuesta desde cero.':`Tu hipótesis: <b>${v}</b>. La vamos a poner a prueba.`);$('#n0').hidden=false;unlock(1)}
+/* 1 */
+function ex(){const h=+$('#h').value;$('#hv').textContent=h;$('#ca').textContent=F(CA(h));$('#cb').textContent=F(CB(h));
+const d=CA(h)-CB(h);$('#lead').innerHTML=d<0?`Con <b>${h} h</b>, <b class="ta">Alfa</b> es más barato por ${F(-d)}.`:d>0?`Con <b>${h} h</b>, <b class="tb">Beta</b> es más barato por ${F(d)}.`:'Con estas horas cuestan exactamente lo mismo.';draw('#c1',h,1e6,S.found)}
+function mark(){const h=+$('#h').value,d=CA(h)-CB(h);
+if(Math.abs(h-20)<=.5){S.found=true;ex();say('#fb1','<b>¡Descubierto!</b> A las 20 horas ambos cuestan $600.000. Beta parte más abajo pero sube más rápido, y Alfa la alcanza justo ahí.','ok');$('#aft1').hidden=false;
+mcq($('#mq1'),'Beta es más barata con pocas horas aunque su hora sea más cara. ¿Por qué?',['Porque su costo fijo inicial es menor','Porque su pendiente es menor','Porque Alfa cobra más por cada hora de uso'],0,'Fíjate dónde parte cada recta cuando x = 0.','Con pocas horas pesa más el costo fijo (intercepto) y con muchas pesa más el costo por hora (pendiente).',()=>{$('#mq1').insertAdjacentHTML('beforeend','<div class="row"><button class="bt y" onclick="unlock(2);go(2);modelo()">Comprobarlo con álgebra</button></div>')})}
+else say('#fb1',d>0?'Todavía no. Aquí <b>Alfa</b> cuesta más: prueba con más horas.':'Todavía no. Aquí <b>Beta</b> cuesta más: prueba con menos horas.','no')}
+$('#h').oninput=ex;
+/* Modela */
+function modelo(){const q=[['#mq2a','Cuando x = 0 (aún no usas el generador) Alfa ya cuesta $300.000. ¿Cómo se llama ese valor?',['Costo fijo: el intercepto b','Costo variable: la pendiente m','El presupuesto P'],0,'Mira dónde parte la recta azul en el eje vertical.','Es el costo fijo b: se paga aunque x = 0 y es donde la recta corta el eje vertical.'],
+['#mq2b','Por cada hora más de uso, el costo de Alfa sube $15.000. ¿Qué parámetro es?',['El intercepto b','La pendiente m: el costo variable por hora','El punto de equilibrio'],1,'Piensa en cuánto sube la recta cuando x avanza 1 hora.','Es la pendiente m: el costo variable por hora. Mide cuántos pesos sube C(x) por cada hora adicional.'],
+['#mq2c','Si el uso de Beta pasa de 10 a 11 horas, ¿cuánto sube su costo?',['$25.000, su pendiente','$100.000, su costo fijo','$350.000, su costo a las 10 h'],0,'Calcula CB(11) − CB(10).','CB(11) − CB(10) = 375.000 − 350.000 = $25.000. La pendiente es el cambio de C por cada hora más.']];
+$('#mod').hidden=true;q.forEach((r,i)=>{$(r[0]).hidden=i>0;mcq($(r[0]),r[1],r[2],r[3],r[4],r[5],()=>{i<2?$(q[i+1][0]).hidden=false:$('#mod').hidden=false})})}
+/* 2 */
+const ST=['<b>Paso 1.</b> Igualamos los costos:<div class="m">15.000x + 300.000 = 25.000x + 100.000</div>','<b>Paso 2.</b> Pasamos las x a un lado y los números al otro:<div class="m">300.000 − 100.000 = 25.000x − 15.000x ⟺ 200.000 = 10.000x</div>'];let k=0;
+function reset2(){k=0;$('#steps').innerHTML='';$('#nx').hidden=false;$('#ask').hidden=true;step()}
+function step(){if(k<ST.length){$('#steps').insertAdjacentHTML('beforeend','<p>'+ST[k++]+'</p>')}if(k>=ST.length){$('#nx').hidden=true;$('#ask').hidden=false}}
+function chkx(){const v=N($('#xa').value);if(v===20){say('#fb2','¡Exacto! Coincide con lo que viste en el gráfico.','ok');$('#ineq').hidden=false}else say('#fb2','Revisa la división: 200.000 ÷ 10.000.','no')}
+/* 3 */
+const G=n=>Math.round(n).toLocaleString('es-CL'),D=v=>parseFloat(String(v).replace(',','.')),f2=n=>n.toFixed(2).replace('.',',');
+function bud(){const P=+$('#P').value,xa=(P-3e5)/15e3,xb=(P-1e5)/25e3;$('#pv').textContent=F(P);$('#xa2').textContent=f2(xa)+' h';$('#xb2').textContent=f2(xb)+' h';
+$('#dA').innerHTML=`15.000·x + 300.000 ≤ ${G(P)}<br>15.000·x ≤ ${G(P-3e5)}<br>x ≤ ${G(P-3e5)} ÷ 15.000 = <b>${f2(xa)}</b>`;
+$('#dB').innerHTML=`25.000·x + 100.000 ≤ ${G(P)}<br>25.000·x ≤ ${G(P-1e5)}<br>x ≤ ${G(P-1e5)} ÷ 25.000 = <b>${f2(xb)}</b>`;
+$('#ba').style.width=Math.min(100,xa/60*100)+'%';$('#bb').style.width=Math.min(100,xb/60*100)+'%';
+$('#p30').textContent=`Para 30 h: Alfa ${xa>=30?'alcanza':'no alcanza'} y Beta ${xb>=30?'alcanza':'no alcanza'}.`;draw('#c2',30,P,true)}
+$('#P').oninput=bud;
+function gate(){const n=(S.gA?1:0)+(S.gC?1:0)+(S.gB?1:0);$('#gt').textContent=n<3?`Retos completados: ${n} de 3`:'';if(n==3)$('#n3').hidden=false}
+function chkA(){if(N($('#s1').value)!==700000){say('#fbA','Resta 300.000 a ambos lados: 1.000.000 − 300.000.','no');return}
+const b=D($('#s2').value);if(!(Math.abs(b-46.67)<=.01)){say('#fbA','Bien el 700.000. Ahora divide 700.000 ÷ 15.000.','no');return}
+S.gA=1;say('#fbA','¡Eso! x ≤ 46,67 h, o sea 46 h 40 min. Con $1.000.000 Alfa te cubre hasta ahí.','ok');gate()}
+function mark3(){const P=+$('#P').value;if(P===6e5){S.gC=1;say('#fbC','<b>¡Lo encontraste!</b> Con P = $600.000 ambos aguantan 20 h: es el mismo punto de cruce de la misión 2. En el equilibrio, el costo de ambos es justo $600.000.','ok');gate()}
+else say('#fbC',P<6e5?'Aquí <b>Beta</b> aguanta más horas. Sube el presupuesto.':'Aquí <b>Alfa</b> aguanta más horas. Baja el presupuesto.','no')}
+function chkp(){const v=N($('#pm').value);if(v===750000){S.gB=1;say('#fb3','¡Correcto! P ≥ C(30) = 15.000·30 + 300.000 = $750.000. Con $1.000.000 te sobran $250.000.','ok');gate()}else say('#fb3','Pista: reemplaza x por 30 en 15.000·x + 300.000.','no')}
+/* 4 */
+function ch(c){S.ch=c;$('#oA').className='bt '+(c=='Alfa'?'':'g');$('#oB').className='bt '+(c=='Beta'?'':'g');
+say('#fb4',c=='Alfa'?'Con 30 h, Alfa cuesta $750.000 y Beta $850.000. El modelo respalda tu decisión.':'Con 30 h, Beta cuesta $100.000 más que Alfa. Si eliges Beta, tu justificación debe explicar otra razón.');rep()}
+function txt(){const n=$('#nm').value.trim()||'[nombre]',r=$('#rt').value.trim()||'(no indicado)';
+return `INFORME TÉCNICO · MISIÓN FAENA\nMATC0001 · Módulo I · UTEM\n\nResponsable: ${n}  RUT: ${r}\n\nMODELO\n  C_A(x) = 15.000·x + 300.000  (costo fijo $300.000; costo variable $15.000 por hora)\n  C_B(x) = 25.000·x + 100.000  (costo fijo $100.000; costo variable $25.000 por hora)\n  Pendiente m = costo que sube por cada hora adicional\n  Equilibrio: x = 20 h ($600.000)\n  Alfa conviene si x > 20 h\n\nCASO 30 HORAS\n  Alfa: ${F(CA(30))}  |  Beta: ${F(CB(30))}\n  Diferencia: ${F(CB(30)-CA(30))} a favor de Alfa\n  Máx. con $1.000.000: Alfa 46,67 h, Beta 36,00 h\n\nMI HIPÓTESIS INICIAL: ${S.pred||'-'}\nMI DECISIÓN: ${S.ch||'[sin elegir]'}\n\nJUSTIFICACIÓN\n${$('#ju').value.trim()||'[escribe tu justificación]'}\n\nPREGUNTA DE CIERRE: ¿QUÉ CAMBIARÍA MI DECISIÓN?\n${$('#ju2').value.trim()||'-'}\n`}
+function rep(){$('#rep').textContent=txt();const miss=[];if(!S.ch)miss.push('elige un proveedor');if($('#ju').value.trim().length<30)miss.push('escribe una justificación de al menos 30 caracteres');if(!$('#nm').value.trim())miss.push('escribe tu nombre');
+const ok=!miss.length;['#dl','#cp','#n4'].forEach(i=>$(i).disabled=!ok);if(ok){$('#chk').hidden=true}else say('#chk','Para continuar: '+miss.join(', ')+'.')}
+['#ju','#ju2','#nm','#rt'].forEach(i=>$(i).oninput=rep);
+function dlr(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt()],{type:'text/plain;charset=utf-8'}));a.download='Informe_Mision_Faena.txt';document.body.appendChild(a);a.click();a.remove()}
+async function cpr(){try{await navigator.clipboard.writeText(txt());$('#cp').textContent='¡Copiado!'}catch(e){const t=document.createElement('textarea');t.value=txt();document.body.appendChild(t);t.select();try{document.execCommand('copy');$('#cp').textContent='¡Copiado!'}catch(e2){$('#cp').textContent='No se pudo copiar: usa Descargar'}t.remove()}setTimeout(()=>$('#cp').textContent='Copiar informe',2500)}
+/* 5 */
+const Q=[
+['Con 12 horas de faena, ¿qué proveedor conviene y cuánto ahorras?',['Beta, ahorras $80.000','Alfa, ahorras $80.000','Cuestan lo mismo'],0,'Calcula CA(12) y CB(12). 12 es menor que 20.','CA(12) = $480.000 y CB(12) = $400.000. Antes del equilibrio gana Beta.'],
+['¿Qué significa la pendiente m en este modelo?',['El costo de llegar e instalar el generador','El costo de cada hora adicional de uso','La utilidad del contratista'],1,'La pendiente dice cuánto sube el costo al aumentar x en 1.','m es el costo por cada hora más de uso: $15.000/h en Alfa y $25.000/h en Beta.'],
+['Necesitas 36 horas con $1.000.000. ¿Qué pasa?',['Solo alcanza Alfa','Alfa alcanza con $160.000 de holgura y Beta justo con $0','No alcanza ninguno'],1,'Calcula CA(36) y CB(36).','CA(36) = $840.000 y CB(36) = $1.000.000 exactos.'],
+['Con 50 horas y $1.000.000, ¿qué ocurre?',['Alfa alcanza justo','Beta alcanza justo','Ninguno alcanza el presupuesto'],2,'Alfa aguanta hasta 46,67 h y Beta hasta 36 h.','CA(50) = $1.050.000 y CB(50) = $1.350.000: ambos superan el tope.'],
+['Si el presupuesto sube a $1.200.000, ¿cuántas horas máximas tiene Beta?',['36 h','40 h','44 h'],2,'Usa x ≤ (P − b) ÷ m con b = 100.000 y m = 25.000.','(1.200.000 − 100.000) ÷ 25.000 = 44 horas.'],
+['Si no se usa el generador de Beta ni una hora (x = 0), ¿cuánto se paga?',['$0','$100.000, el costo fijo','$25.000, el costo por hora'],1,'Reemplaza x por 0 en 25.000·x + 100.000.','CB(0) = $100.000: el costo fijo se paga aunque x = 0.']];
+let qi=0,sc=0;
+function quiz(){qi=0;sc=0;nq()}
+function nq(){const el=$('#quiz');if(qi>=Q.length)return fin();const q=Q[qi];el.innerHTML=`<p class="mu">Pregunta ${qi+1} de ${Q.length}</p><div id="qq"></div>`;
+mcq($('#qq'),q[0],q[1],q[2],q[3],q[4],f=>{if(f)sc++;$('#qq').insertAdjacentHTML('beforeend',`<div class="row"><button class="bt y" onclick="qi++;nq()">${qi+1<Q.length?'Siguiente pregunta':'Ver mi resultado'}</button></div>`)})}
+function fin(){S.cmp=cmp();const t=sc==Q.length?'Jefa o jefe de faena':sc>=3?'Ingeniera o ingeniero en terreno':'Aprendiz de obra';
+const c=S.pred&&S.pred!='No lo sé'?(S.pred=='Alfa'?'Tu hipótesis inicial era Alfa, y el modelo la confirmó.':'Tu hipótesis inicial era Beta: ahora sabes por qué a 30 h conviene Alfa.'):'Partiste sin hipótesis y llegaste a la respuesta con el modelo.';
+$('#quiz').innerHTML=`<h3 style="font-size:1.6rem">${sc} de ${Q.length} · ${t}</h3><p class="lead">${c}</p><p>Lo que te llevas: dos rectas, un cruce en 20 h y un presupuesto que decide cuántas horas puedes sostener. Eso es modelar linealmente.</p>
+<h3>Tu entrega de misión cumplida</h3><p>Incluye tu comprobante y tu informe con tu justificación. Cópialo y pégalo en la tarea de Canvas: así tu docente verá que completaste la misión, cuándo y con qué resultado.</p><pre id="cmp"></pre>
+<div class="row"><button class="bt y" onclick="cpt(S.cmp,this)">Copiar entrega</button><button class="bt g" onclick="dlt(S.cmp,'Entrega_Mision_Faena.txt')">Descargar entrega</button></div><div class="row"><button class="bt g" onclick="quiz()">Intentarlo de nuevo</button><button class="bt g" onclick="go(0)">Volver al inicio</button></div>`;
+$('#cmp').textContent=S.cmp;if(sc>=4&&typeof confetti=='function')confetti({particleCount:90,spread:70,origin:{y:.6}})}
+function gprev(){const m=N($('#gm').value),b=N($('#gb').value);$('#gv').innerHTML=`C<sub>G</sub>(x) = ${m?G(m):'m'}·x + ${b?G(b):'b'}`}
+function chkg(){const m=N($('#gm').value),b=N($('#gb').value);
+if(m===20000&&b===250000){say('#fbG','¡Bien escrito! C<sub>G</sub>(x) = 20.000·x + 250.000. Con x = 10 h cuesta 20.000·10 + 250.000 = <b>$450.000</b>.','ok');$('#ng').hidden=false}
+else if(m===250000&&b===20000)say('#fbG','Casi: invertiste los valores. m es lo que cobra <b>por hora</b> y b es lo que se paga <b>una sola vez</b>.','no');
+else say('#fbG','Revisa: m es el costo variable por hora y b es el costo fijo.','no')}
+function cmp(){const d=new Date(),p=n=>String(n).padStart(2,'0'),f=`${p(d.getDate())}-${p(d.getMonth()+1)}-${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`,n=$('#nm').value.trim(),r=$('#rt').value.trim();
+let h=5381;(n+r+f+sc).split('').forEach(c=>h=((h*33)^c.charCodeAt(0))>>>0);
+return `COMPROBANTE · MISIÓN FAENA · MATC0001 · UTEM\nEstudiante: ${n}${r?'  RUT: '+r:''}\nFecha y hora: ${f}\nResultado del reto: ${sc} de ${Q.length}\nDecisión tomada: ${S.ch}\nCódigo: MF-${sc}de${Q.length}-${h.toString(36).toUpperCase().slice(0,5)}\n\n------------------------------\n`+txt()}
+async function cpt(x,b){try{await navigator.clipboard.writeText(x)}catch(e){const a=document.createElement('textarea');a.value=x;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e2){}a.remove()}b.textContent='¡Copiado!';setTimeout(()=>b.textContent='Copiar entrega',2500)}
+function dlt(x,n){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([x],{type:'text/plain;charset=utf-8'}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+road();ex();bud();
+</script></body></html>

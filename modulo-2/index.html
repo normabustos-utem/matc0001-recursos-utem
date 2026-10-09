@@ -1,654 +1,211 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelamiento Cuadrático UTEM - Patio de Almacenamiento</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-    code, pre, .font-mono { font-family: 'Fira Code', ui-monospace, monospace; }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 22px;
-      width: 22px;
-      border-radius: 50%;
-      background: #f59e0b;
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
-      border: 2px solid #ffffff;
-    }
-  </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950 antialiased">
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión Patio · Modelamiento Cuadrático UTEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root{--as:#20242a;--co:#ece9e2;--pa:#fbfaf6;--al:#1f5fd1;--be:#c44600;--li:#f5c518;--ok:#17803f;--no:#b3261e;--tx:#1d2126;--mu:#575e66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--co);color:var(--tx);font:17px/1.55 'Atkinson Hyperlegible',system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem)}h3{font-size:1.15rem}
+header{background:var(--as);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:5}
+.in{max-width:860px;margin:0 auto}header h1{font-size:1.15rem;margin:0}header small{color:#b9c0c8}
+.road{display:flex;gap:4px;margin:10px 0 0;padding:0;list-style:none}
+.road button{flex:1;background:none;border:0;color:#9aa3ad;font:700 .72rem 'Atkinson Hyperlegible';padding:8px 1px;cursor:pointer;border-bottom:3px solid transparent}
+.road button[aria-current=step]{color:#fff;border-color:var(--li)}.road button:disabled{opacity:.45;cursor:not-allowed}
+.lane{height:14px;position:relative;background:repeating-linear-gradient(90deg,var(--li) 0 22px,transparent 22px 40px) center/100% 3px no-repeat}
+.truck{position:absolute;top:-8px;font-size:20px;transition:left .6s ease;transform:translateX(-50%)}
+main{max-width:860px;margin:0 auto;padding:22px 16px 60px}
+section{background:var(--pa);border-radius:14px;padding:clamp(18px,4vw,34px);box-shadow:0 1px 0 #d8d4ca}
+.lead{font-size:1.1rem}.mu{color:var(--mu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}@media(max-width:600px){.two{grid-template-columns:1fr}}
+.card{border-radius:10px;padding:14px 16px;border:2px solid}.a{border-color:var(--al)}.b{border-color:var(--be)}.ta{color:var(--al)}.tb{color:var(--be)}
+.big{font:800 1.6rem 'Bricolage Grotesque';display:block}
+button.bt{font:700 1rem 'Atkinson Hyperlegible';background:var(--as);color:#fff;border:0;border-radius:10px;padding:12px 20px;cursor:pointer;min-height:44px}
+button.bt.y{background:var(--li);color:var(--as)}button.bt.g{background:#e6e2d8;color:var(--as)}button.bt:disabled{opacity:.4;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--li);outline-offset:2px;box-shadow:0 0 0 5px var(--as)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0;align-items:center}
+input[type=range]{width:100%;accent-color:var(--as);height:32px}
+input[type=text],textarea{width:100%;font:inherit;padding:10px 12px;border:2px solid #c9c4b8;border-radius:8px;background:#fff}
+label{font-weight:700;display:block;margin:10px 0 4px}
+svg{width:100%;height:auto;background:#fff;border-radius:10px;border:1px solid #d8d4ca}
+svg text{font:11px 'Atkinson Hyperlegible';fill:var(--mu);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}svg .g{stroke:#e4e0d6}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;background:#eef3ff;min-height:20px}.fb.ok{background:#e4f5ea;color:#0f5a2b}.fb.no{background:#fdeceb;color:#8a1c15}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border:2px solid #c9c4b8;border-radius:10px;background:#fff;font:inherit;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){border-color:var(--as)}.opt.ok{border-color:var(--ok);background:#e4f5ea}.opt.no{border-color:var(--no);background:#fdeceb;opacity:.7}
+#box{height:130px;display:flex;align-items:flex-end;margin:10px 0}#rc{background:#ffe3cf;border:3px solid var(--be);display:flex;align-items:center;justify-content:center;font-weight:700;min-width:30px;min-height:24px}
+pre{white-space:pre-wrap;background:var(--as);color:#e8ebef;padding:14px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;max-height:280px;overflow:auto}
+.m{font:700 1.05rem ui-monospace,monospace;background:#f1eee6;padding:10px 14px;border-radius:8px;margin:8px 0;overflow-x:auto}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}.fr>span{display:block;padding:0 4px}.fr>span:first-child{border-bottom:2px solid currentColor}.rd{border-top:2px solid currentColor;padding:0 2px}
+[hidden]{display:none!important}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><div class="in"><h1>Misión Patio <small>· MATC0001 · Módulo II · UTEM</small></h1><ol class="road" id="road"></ol><div class="lane"><span class="truck" id="truck">🚚</span></div></div></header>
+<main>
+<!-- 0 -->
+<section><h2>Te entregan 120 metros de cerco</h2>
+<p class="lead">Eres la ingeniera o el ingeniero de obra. Debes cercar un <b>patio rectangular</b> para acopiar materiales y solo tienes <b>120 m de cerco</b>. Mientras más superficie, más material cabe.</p>
+<div class="two"><div class="card a"><h3 class="ta">Patio A</h3>10 m de ancho × 50 m de largo</div><div class="card b"><h3 class="tb">Patio B</h3>30 m de ancho × 30 m de largo</div></div>
+<div class="m" style="font-weight:400;font-size:.95rem"><b>Palabras clave.</b> <b>Perímetro:</b> suma de los lados (el cerco). <b>Área:</b> ancho × largo (la superficie). <b>Función cuadrática:</b> fórmula donde aparece x². <b>Vértice:</b> punto más alto (o más bajo) de la parábola.</div>
+<h3>Antes de calcular, ¿qué patio crees que encierra más superficie?</h3>
+<p class="mu">No hay respuesta mala: es tu hipótesis. Al final la comparamos con lo que descubras.</p>
+<div class="row"><button class="bt g" onclick="pick('Patio A')">El patio A (10 × 50)</button><button class="bt g" onclick="pick('Patio B')">El patio B (30 × 30)</button><button class="bt g" onclick="pick('Igual')">Da lo mismo</button></div>
+<div class="fb" id="fb0" hidden></div><div class="row"><button class="bt y" id="n0" hidden onclick="go(1)">Vamos a explorar</button></div></section>
+<!-- 1 -->
+<section hidden><h2>Explora: ¿dónde está el máximo?</h2>
+<p>El perímetro es fijo, así que al cambiar el ancho <b>x</b> cambia el largo, y también la superficie. Recuerda: <b>área = ancho × largo</b>, es decir <b>A = x·y</b>. Mueve x y busca el ancho con <b>mayor área</b>.</p>
+<svg id="c1" viewBox="0 0 640 350" role="img" aria-label="Gráfico del área según el ancho"></svg>
+<label for="h">Ancho del patio x: <span id="hv"></span> m</label><input type="range" id="h" min="1" max="59" step="1" value="10">
+<div id="box"><div id="rc"></div></div>
+<div class="two"><div class="card a"><span class="ta">Largo y</span><span class="big" id="sy"></span></div><div class="card b"><span class="tb">Área</span><span class="big" id="sa"></span></div></div>
+<div class="fb" id="lead"></div>
+<div class="row"><button class="bt y" onclick="mark()">Aquí está el máximo</button></div><div class="fb" id="fb1" hidden></div>
+<div id="aft1" hidden><h3>Una pregunta para pensar</h3><div id="mq1"></div></div></section>
+<!-- 2 -->
+<section hidden><h2>De la curva al modelo</h2>
+<p>Lo que dibujaste es un <b>modelo cuadrático</b>: la superficie depende de x elevado al cuadrado. Construyámoslo en tres pasos.</p>
+<div id="mq2a"></div><div id="mq2b" hidden></div><div id="mq2c" hidden></div>
+<div id="mod" hidden><h3>Así se escribe formalmente</h3>
+<div class="m">2x + 2y = 120 ⟺ y = 60 − x<br>Área = ancho × largo ⟹ A = x·y<br>A(x) = x·(60 − x) = −x² + 60x</div>
+<ul style="padding-left:20px"><li>Forma estándar <b>A(x) = ax² + bx + c</b>: aquí a = −1, b = 60 y c = 0.</li><li><b>Dominio:</b> 0 &lt; x &lt; 60, porque ambos lados deben ser positivos.</li><li>El signo de <b>a</b> manda: si a &lt; 0 la parábola abre hacia abajo y tiene un <b>máximo</b>.</li></ul>
+<h3>Ahora hazlo tú</h3><p>En otra faena hay <b>80 m de cerco</b>. Entonces x + y = 40 e y = 40 − x. Completa: A(x) = −x² + <i>b</i>·x.</p>
+<div class="row"><label for="gb" style="margin:0">b =</label><input id="gb" type="text" inputmode="numeric" style="max-width:130px"><button class="bt" onclick="chkg()">Comprobar</button></div><div class="fb" id="fbG" hidden></div>
+<div class="row"><button class="bt y" id="ng" hidden onclick="unlock(3);go(3);reset3()">Buscar el vértice con álgebra</button></div></div></section>
+<!-- 3 -->
+<section hidden><h2>Confirma con el vértice</h2>
+<p>El gráfico te dio una pista; el vértice la vuelve exacta. La fórmula es <b>x<sub>v</sub> = <span class="fr"><span>−b</span><span>2a</span></span></b>. Avanza paso a paso.</p>
+<svg id="c3" viewBox="0 0 640 350" role="img" aria-label="Parábola con su vértice en 30 metros"></svg>
+<div id="steps"></div><div class="row"><button class="bt" id="nx" onclick="step()">Mostrar siguiente paso</button></div>
+<div id="ask" hidden><label for="xv">Tu turno: x<sub>v</sub> = <span class="fr"><span>−60</span><span>−2</span></span>. ¿Cuántos metros?</label><input type="text" id="xv" inputmode="decimal" style="max-width:160px"> <button class="bt" onclick="chkv()">Comprobar</button></div><div class="fb" id="fb2" hidden></div>
+<div id="ask2" hidden><p>Si el ancho es 30 m, el largo es y = 60 − 30 = 30 m: el patio óptimo es un <b>cuadrado</b>.</p><label for="am">Calcula A(30) = 30 · 30. ¿Cuántos m²?</label><input type="text" id="am" inputmode="decimal" style="max-width:160px"> <button class="bt" onclick="chka()">Comprobar</button><div class="fb" id="fb2b" hidden></div></div>
+<div class="row"><button class="bt y" id="n3" hidden onclick="unlock(4);go(4)">Poner condiciones de obra</button></div></section>
+<!-- 4 -->
+<section hidden><h2>Condiciones de obra: ecuaciones e inecuaciones</h2>
+<p>La obra pone dos condiciones: el patio debe tener <b>al menos M m²</b> (M es el <b>área mínima exigida</b>) y la maquinaria exige un ancho <b>x ≤ 35 m</b>. Partimos con <b>M = 800</b>.</p>
+<div class="m">A(x) ≥ M ⟺ −x² + 60x ≥ M ⟺ −x² + 60x − M ≥ 0</div>
+<p class="mu">Para dejar x² positivo multiplicamos por −1. <b>Al multiplicar por un número negativo, la desigualdad se invierte:</b></p>
+<div class="m">x² − 60x + M ≤ 0</div>
+<h3>1. El borde: ¿cuándo el área es justo 800 m²?</h3>
+<p>El borde de la zona permitida es donde A(x) = M. Con M = 800 resolvemos <b>x² − 60x + 800 = 0</b> con la fórmula de segundo grado:</p>
+<div class="m">x = <span class="fr"><span>−b ± <span class="rd">√(b² − 4ac)</span></span><span>2a</span></span></div>
+<p>Aquí a = 1, b = −60 y c = 800. <b>Paso 1:</b> calcula el discriminante Δ = b² − 4ac = (−60)² − 4·1·800.</p>
+<div class="row"><label for="dd" style="margin:0">Δ =</label><input id="dd" type="text" inputmode="numeric" style="max-width:130px"><button class="bt" onclick="chkd()">Comprobar</button></div><div class="fb" id="fbD" hidden></div>
+<div id="rts" hidden><p><b>Paso 2:</b> reemplazamos (−b = −(−60) = 60):</p><div class="m">x = <span class="fr"><span>60 ± <span class="rd">√400</span></span><span>2</span></span> = <span class="fr"><span>60 ± 20</span><span>2</span></span></div><p><b>Paso 3:</b> calcula las dos soluciones (de menor a mayor).</p>
+<div class="row"><input type="text" id="r1" placeholder="x₁" style="max-width:110px"><input type="text" id="r2" placeholder="x₂" style="max-width:110px"><button class="bt" onclick="chkr()">Comprobar</button></div><div class="fb" id="fbR" hidden></div></div>
+<h3>2. Explora: cambia el área mínima M</h3>
+<p>La <b>zona verde</b> muestra los anchos x donde la parábola queda sobre la línea roja, es decir, donde A(x) ≥ M.</p>
+<svg id="c4" viewBox="0 0 640 350" role="img" aria-label="Zona factible según el área mínima y el tope de maquinaria"></svg>
+<label for="M">Área mínima M: <span id="mv"></span> m²</label><input type="range" id="M" min="400" max="900" step="50" value="800">
+<div class="two"><div class="card a"><span class="ta">Solo por área</span><span class="big" id="i1"></span></div><div class="card b"><span class="tb">Con tope x ≤ 35</span><span class="big" id="i2"></span></div></div>
+<div class="m" id="eq" style="font-size:.9rem"></div>
+<h3>3. Descubre una conexión</h3><p>Sube M hasta que solo quede <b>un único ancho posible</b>. ¿Te suena ese número?</p>
+<div class="row"><button class="bt y" onclick="mark3()">Queda un solo patio</button></div><div class="fb" id="fbC" hidden></div>
+<h3>4. Combina ambas condiciones</h3><p>Con M = 800 y x ≤ 35, ¿entre qué anchos puede estar x?</p>
+<div class="row"><input type="text" id="lo" placeholder="desde" style="max-width:110px"><span>≤ x ≤</span><input type="text" id="hi" placeholder="hasta" style="max-width:110px"><button class="bt" onclick="chki()">Comprobar</button></div><div class="fb" id="fbI" hidden></div>
+<div class="row"><button class="bt y" id="n4" hidden onclick="unlock(5);go(5)">Tomar la decisión</button></div><p class="mu" id="gt"></p></section>
+<!-- 5 -->
+<section hidden><h2>Decide y justifica</h2><p>Con M = 800 m² y x ≤ 35 m, el equipo espera tu decisión. Elegir y explicar importa por igual.</p>
+<div class="row"><button class="bt g" id="oA" onclick="ch('30 × 30')">Patio 30 × 30</button><button class="bt g" id="oB" onclick="ch('20 × 40')">Patio 20 × 40</button><button class="bt g" id="oC" onclick="ch('40 × 20')">Patio 40 × 20</button></div>
+<div class="fb" id="fb4" hidden></div>
+<label for="ju">Tu justificación (con tus números y el modelo)</label><textarea id="ju" rows="4" placeholder="Ej.: A(x) = −x² + 60x, vértice en x = 30, A(30) = … Cumple A ≥ 800 porque … y x ≤ 35 porque …"></textarea>
+<label for="ju2">¿Qué cambiaría tu decisión? (opcional)</label><textarea id="ju2" rows="2" placeholder="Ej.: Si el tope fuera x ≤ 25…"></textarea>
+<div class="two"><div><label for="nm">Nombre</label><input type="text" id="nm"></div><div><label for="rt">RUT (opcional)</label><input type="text" id="rt" placeholder="12.345.678-9"></div></div>
+<p class="mu">Estos datos se quedan en tu navegador y solo aparecen en lo que tú copias o descargas.</p>
+<pre id="rep" aria-live="polite"></pre><div class="fb" id="chk" hidden></div>
+<div class="row"><button class="bt g" id="dl" onclick="dlt(txt(),'Informe_Mision_Patio.txt')" disabled>Descargar .txt</button><button class="bt g" id="cp" onclick="cpt(txt(),this,'Copiar informe')" disabled>Copiar informe</button><button class="bt y" id="n5" onclick="unlock(6);go(6);quiz()" disabled>Ir al reto final</button></div></section>
+<!-- 6 -->
+<section hidden><h2>Reto final</h2><div id="quiz"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),F=n=>Math.round(n).toLocaleString('es-CL'),N=v=>parseFloat(String(v).replace(',','.'));
+const A=x=>x*(60-x),X=x=>70+x/60*540,Y=a=>310-a/1000*290;
+const S={s:0,max:0,pred:null,ch:null,pt:0,tries:{},g:{}},names=['Caso','Explora','Modela','Vértice','Condiciones','Decisión','Reto'],TOT=15;
+function road(){$('#road').innerHTML=names.map((n,i)=>`<li style="flex:1;display:flex"><button ${i>S.max?'disabled':''} ${i==S.s?'aria-current="step"':''} onclick="go(${i})">${n}</button></li>`).join('');$('#truck').style.left=(7+S.s*14.3)+'%'}
+function go(n){if(n>S.max)return;S.s=n;document.querySelectorAll('main section').forEach((e,i)=>e.hidden=i!==n);road();scrollTo({top:0,behavior:'smooth'});if(n==1)ex();if(n==3)draw('#c3',{v:1});if(n==4)rst();if(n==5)rep()}
+function unlock(n){if(n>S.max)S.max=n;road()}
+function say(id,t,k){const e=$(id);e.hidden=false;e.className='fb '+(k||'');e.innerHTML=t}
+function chk(k,ok,id,hint,good){const t=S.tries[k]=(S.tries[k]||0)+1;if(ok){if(t==1)S.pt++;say(id,good,'ok')}else say(id,hint,'no');return ok}
+function draw(id,o){let s='';
+for(let a=0;a<=1000;a+=200)s+=`<line class="g" x1="70" x2="610" y1="${Y(a)}" y2="${Y(a)}"/><text x="64" y="${Y(a)+4}" text-anchor="end">${a}</text>`;
+for(let x=0;x<=60;x+=10)s+=`<line class="g" x1="${X(x)}" x2="${X(x)}" y1="20" y2="310"/><text x="${X(x)}" y="328" text-anchor="middle">${x} m</text>`;
+if(o.lo!=null&&o.lo<=o.hi)s+=`<rect x="${X(o.lo)}" y="20" width="${X(o.hi)-X(o.lo)}" height="290" fill="#17803f" fill-opacity=".14"/>`;
+if(o.m)s+=`<line x1="70" x2="610" y1="${Y(o.m)}" y2="${Y(o.m)}" stroke="#b3261e" stroke-width="2" stroke-dasharray="6 4"/><text x="76" y="${Y(o.m)-6}" style="fill:#b3261e;font-weight:700">Área mínima M = ${o.m}</text>`;
+if(o.lim)s+=`<line x1="${X(o.lim)}" x2="${X(o.lim)}" y1="20" y2="310" stroke="#1f5fd1" stroke-width="2" stroke-dasharray="4 3"/><text x="${X(o.lim)+5}" y="34" style="fill:#1f5fd1;font-weight:700">Tope x ≤ ${o.lim}</text>`;
+let d='';for(let x=0;x<=60;x+=.5)d+=(x?'L':'M')+X(x).toFixed(1)+' '+Y(A(x)).toFixed(1);
+s+=`<path d="${d}" fill="none" stroke="#c44600" stroke-width="3.5"/>`;
+if(o.v)s+=`<circle cx="${X(30)}" cy="${Y(900)}" r="7" fill="#f5c518" stroke="#20242a" stroke-width="2.5"/><text x="${X(30)}" y="${Y(900)-14}" text-anchor="middle" style="fill:#20242a;font-weight:700">Vértice (30 m, 900 m²)</text>`;
+if(o.x!=null)s+=`<line x1="${X(o.x)}" x2="${X(o.x)}" y1="20" y2="310" stroke="#20242a" stroke-dasharray="3 3"/><line x1="70" x2="${X(o.x)}" y1="${Y(A(o.x))}" y2="${Y(A(o.x))}" stroke="#20242a" stroke-dasharray="3 3"/><circle cx="${X(o.x)}" cy="${Y(A(o.x))}" r="7" fill="#1f5fd1" stroke="#fff" stroke-width="2.5"/><text x="${X(o.x)+10}" y="${Y(A(o.x))-8}" style="fill:#1f5fd1;font-weight:700">${F(A(o.x))} m²</text>`;
+$(id).innerHTML=s+`<text x="340" y="346" text-anchor="middle">Ancho del patio x (m)</text><text x="6" y="12">Área A(x) en m²</text>`}
+function mcq(el,q,o,ok,hint,why,cb){let t=0;const idx=o.map((_,i)=>i).sort(()=>Math.random()-.5);
+el.innerHTML=`<p><b>${q}</b></p>`+idx.map(i=>`<button class="opt" data-i="${i}">${o[i]}</button>`).join('')+'<div class="fb" hidden></div>';
+const fb=el.querySelector('.fb');el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(+b.dataset.i===ok){b.classList.add('ok');el.querySelectorAll('.opt').forEach(x=>x.disabled=true);fb.hidden=false;fb.className='fb ok';fb.innerHTML=(t?'¡Eso! ':'¡Bien! ')+why;if(t==0)S.pt++;cb&&cb()}else{t++;b.classList.add('no');b.disabled=true;fb.hidden=false;fb.className='fb no';fb.innerHTML='Todavía no. '+hint}})}
+function chain(q,done){q.forEach((r,i)=>{$(r[0]).hidden=i>0;mcq($(r[0]),r[1],r[2],r[3],r[4],r[5],()=>{i<q.length-1?$(q[i+1][0]).hidden=false:done()})})}
+/* 0 */
+function pick(v){S.pred=v;say('#fb0',`Tu hipótesis: <b>${v}</b>. La vamos a poner a prueba.`);$('#n0').hidden=false;unlock(1)}
+/* 1 */
+function ex(){const x=+$('#h').value,y=60-x,a=A(x);$('#hv').textContent=x;$('#sy').textContent=y+' m';$('#sa').textContent=F(a)+' m²';
+const r=$('#rc');r.style.width=(x/60*100)+'%';r.style.height=(y/60*100)+'%';r.textContent=x+'×'+y;
+$('#lead').innerHTML=x<30?`Con <b>x = ${x} m</b> el área es ${F(a)} m². Si aumentas x, el área <b>sigue subiendo</b>.`:x>30?`Con <b>x = ${x} m</b> el área es ${F(a)} m². Si aumentas x, el área <b>ya baja</b>.`:'Con <b>x = 30 m</b> el área es 900 m²: ni subir ni bajar mejora.';draw('#c1',{x})}
+$('#h').oninput=ex;
+function mark(){const x=+$('#h').value;
+if(x==30){say('#fb1','<b>¡Descubierto!</b> A 30 m (un patio cuadrado) el área llega a 900 m², el máximo.','ok');$('#aft1').hidden=false;
+mcq($('#mq1'),'Con x = 20 m y con x = 40 m el área es la misma (800 m²). ¿Por qué?',['Son el mismo rectángulo, girado 90°, y la parábola es simétrica respecto de x = 30','Es una coincidencia del cálculo','Porque ambos están lejos del máximo'],0,'Compara 20×40 con 40×20.','El patio 20×40 es el 40×20 girado. Como el largo es y = 60 − x, los anchos simétricos respecto de 30 dan igual área.',()=>$('#mq1').insertAdjacentHTML('beforeend','<div class="row"><button class="bt y" onclick="unlock(2);go(2);modelo()">Escribir el modelo</button></div>'))}
+else say('#fb1',x<30?'Todavía no. Aún puedes aumentar el área: prueba con un ancho mayor.':'Todavía no. Ya te pasaste: prueba con un ancho menor.','no')}
+/* 2 */
+function modelo(){const q=[['#mq2a','El perímetro es 2x + 2y = 120. ¿Cuánto vale el largo y en función de x?',['y = 60 − x','y = 120 − x','y = 120 − 2x'],0,'Divide la ecuación completa por 2.','Al dividir por 2: x + y = 60, luego y = 60 − x.'],
+['#mq2b','El área es A = x·y (ancho por largo). Como y = 60 − x, ¿qué función da el área solo en función de x?',['A(x) = x(60 − x) = −x² + 60x','A(x) = x + 60','A(x) = 60x − 2x'],0,'Reemplaza y por 60 − x en A = x·y.','A(x) = x(60 − x) = −x² + 60x: una función cuadrática con a = −1.'],
+['#mq2c','¿Qué valores de x tienen sentido para un patio real?',['x ≥ 0','0 < x < 60','0 ≤ x ≤ 120'],1,'Si x = 60, ¿cuánto vale y?','Con 0 < x < 60 ambos lados son positivos: el contexto restringe el dominio.']];
+$('#mod').hidden=true;chain(q,()=>$('#mod').hidden=false)}
+function chkg(){if(chk('g',N($('#gb').value)===40,'#fbG','Con 80 m: x + y = 40, luego A = x(40 − x). ¿Cuánto vale el coeficiente de x?','¡Bien! A(x) = x(40 − x) = −x² + 40x.'))$('#ng').hidden=false}
+/* 3 */
+const ST=['<b>Paso 1.</b> Identificamos los coeficientes:<div class="m">A(x) = −x² + 60x ⟹ a = −1, b = 60, c = 0</div>','<b>Paso 2.</b> Como a = −1 &lt; 0, la parábola abre hacia abajo y su vértice es un <b>máximo</b>.','<b>Paso 3.</b> Aplicamos la fórmula:<div class="m">x<sub>v</sub> = <span class="fr"><span>−b</span><span>2a</span></span> = <span class="fr"><span>−60</span><span>2·(−1)</span></span> = <span class="fr"><span>−60</span><span>−2</span></span></div>'];let k=0;
+function reset3(){k=0;$('#steps').innerHTML='';$('#nx').hidden=false;$('#ask').hidden=true;step()}
+function step(){if(k<ST.length)$('#steps').insertAdjacentHTML('beforeend','<p>'+ST[k++]+'</p>');if(k>=ST.length){$('#nx').hidden=true;$('#ask').hidden=false}}
+function chkv(){if(chk('xv',N($('#xv').value)===30,'#fb2','Revisa el signo: −60 ÷ (−2).','¡Exacto! Coincide con lo que viste en el gráfico.'))$('#ask2').hidden=false}
+function chka(){if(chk('am',N($('#am').value)===900,'#fb2b','Multiplica 30 · 30.','¡Correcto! Área máxima 900 m². Compara con tu hipótesis inicial.'))$('#n3').hidden=false}
+/* 4 */
+function rst(){const M=+$('#M').value,r=Math.sqrt(900-M),lo=30-r,hi=30+r,h2=Math.min(hi,35),f=n=>n.toFixed(2).replace('.',',').replace(',00','');
+$('#mv').textContent=M;$('#i1').textContent=`[${f(lo)} ; ${f(hi)}]`;$('#i2').textContent=lo<=35?`[${f(lo)} ; ${f(h2)}]`:'sin solución';
+$('#eq').innerHTML=`Borde: x² − 60x + ${M} = 0 ⟹ x = <span class="fr"><span>60 ± <span class="rd">√${3600-4*M}</span></span><span>2</span></span> = 30 ± ${f(r)}`;draw('#c4',{m:M,lo,hi:h2,lim:35})}
+$('#M').oninput=rst;
+function gate(){const n=Object.keys(S.g).length;$('#gt').textContent=n<3?`Retos completados: ${n} de 3`:'';if(n==3)$('#n4').hidden=false}
+function chkr(){const a=[N($('#r1').value),N($('#r2').value)].sort((p,q)=>p-q);if(chk('r',a[0]===20&&a[1]===40,'#fbR','Busca dos números que sumen 60 y multipliquen 800.','¡Eso! (x − 20)(x − 40) = 0, entonces x = 20 o x = 40. Son el mismo patio girado.')){S.g.r=1;gate()}}
+function chkd(){if(chk('d',N($('#dd').value)===400,'#fbD','Calcula (−60)² = 3600 y resta 4·1·800 = 3200.','¡Bien! Δ = 3600 − 3200 = 400 y √400 = 20.'))$('#rts').hidden=false}
+function mark3(){if(+$('#M').value===900){S.g.c=1;say('#fbC','<b>¡Lo encontraste!</b> Con M = 900 solo sirve x = 30: es el vértice. El área máxima es el único valor donde la inecuación tiene una sola solución.','ok');gate()}else say('#fbC','Todavía no. Aún hay varios anchos posibles: sube M.','no')}
+function chki(){if(chk('i',N($('#lo').value)===20&&N($('#hi').value)===35,'#fbI','Primero A(x) ≥ 800 da [20, 40]. Luego intersecta con x ≤ 35.','¡Correcto! [20, 40] ∩ (0, 35] = [20, 35] m.')){S.g.i=1;gate()}}
+/* 5 */
+function ch(c){S.ch=c;['A','B','C'].forEach(l=>$('#o'+l).className='bt '+(c==({A:'30 × 30',B:'20 × 40',C:'40 × 20'})[l]?'':'g'));
+say('#fb4',c=='30 × 30'?'Cumple: x = 30 ≤ 35 y su área es 900 m², la máxima posible.':c=='20 × 40'?'Cumple: x = 20 ≤ 35 y área 800 m² (justo el mínimo). Justifica por qué no elegir el cuadrado.':'No cumple: su ancho x = 40 supera el tope de 35 m. Tu justificación debe reconocerlo.');rep()}
+function txt(){const n=$('#nm').value.trim()||'[nombre]',r=$('#rt').value.trim()||'(no indicado)';
+return `INFORME TÉCNICO · MISIÓN PATIO\nMATC0001 · Módulo II · UTEM\n\nResponsable: ${n}  RUT: ${r}\n\nMODELO\n  Perímetro: 2x + 2y = 120 ⟹ y = 60 − x\n  A(x) = x(60 − x) = −x² + 60x  (a = −1, b = 60, c = 0)\n  Dominio: 0 < x < 60\n  Vértice: x = −b/(2a) = 30 m ⟹ patio 30×30, A = 900 m² (máximo)\n  A(x) = 800 ⟹ x = 20 o x = 40\n  A(x) ≥ 800 ⟹ 20 ≤ x ≤ 40; con x ≤ 35 ⟹ 20 ≤ x ≤ 35\n\nMI HIPÓTESIS INICIAL: ${S.pred||'-'}\nMI DECISIÓN: ${S.ch?'Patio '+S.ch:'[sin elegir]'}\n\nJUSTIFICACIÓN\n${$('#ju').value.trim()||'[escribe tu justificación]'}\n\nPREGUNTA DE CIERRE: ¿QUÉ CAMBIARÍA MI DECISIÓN?\n${$('#ju2').value.trim()||'-'}\n`}
+function rep(){$('#rep').textContent=txt();const m=[];if(!S.ch)m.push('elige un patio');if($('#ju').value.trim().length<30)m.push('escribe una justificación de al menos 30 caracteres');if(!$('#nm').value.trim())m.push('escribe tu nombre');
+['#dl','#cp','#n5'].forEach(i=>$(i).disabled=!!m.length);m.length?say('#chk','Para continuar: '+m.join(', ')+'.'):$('#chk').hidden=true}
+['#ju','#ju2','#nm','#rt'].forEach(i=>$(i).oninput=rep);
+async function cpt(x,b,l){try{await navigator.clipboard.writeText(x);b.textContent='¡Copiado!'}catch(e){b.textContent='No se pudo copiar: usa Descargar'}setTimeout(()=>b.textContent=l,2500)}
+function dlt(x,n){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([x],{type:'text/plain;charset=utf-8'}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+/* 6 */
+const Q=[['Un patio de 10 m de ancho con 120 m de cerco, ¿qué largo y qué área tiene?',['50 m y 500 m²','10 m y 100 m²','60 m y 600 m²'],0,'y = 60 − x con x = 10.','y = 50 m y A = 10·50 = 500 m².'],
+['¿Qué indica a = −1 en A(x) = −x² + 60x?',['Que el patio tiene costo negativo','Que la parábola abre hacia abajo y el vértice es un máximo','Que el patio no puede ser cuadrado'],1,'Mira el signo de a.','Con a &lt; 0 la parábola abre hacia abajo: el vértice es el máximo absoluto.'],
+['Con 100 m de cerco, A(x) = −x² + 50x. ¿Qué ancho maximiza el área?',['25 m','50 m','100 m'],0,'x<sub>v</sub> = <span class="fr"><span>−b</span><span>2a</span></span> con b = 50 y a = −1.','x<sub>v</sub> = <span class="fr"><span>−50</span><span>−2</span></span> = 25 m: otro patio cuadrado (25×25).'],
+['Con A ≥ 800 m² y x ≤ 35 m, ¿qué patio NO cumple?',['25 × 35','20 × 40','40 × 20'],2,'Revisa si el ancho x supera 35 m.','40 × 20 tiene x = 40 &gt; 35. Los otros dos tienen anchos en [20, 35].'],
+['Si la obra exigiera A ≥ 950 m², ¿qué ocurre?',['No existe ningún patio: el máximo posible es 900 m²','Sirve solo x = 30','Sirven los anchos entre 25 y 35'],0,'Compara 950 con el área máxima.','Como el máximo es 900 &lt; 950, la inecuación no tiene solución.']];
+let qi=0,sc=0;
+function quiz(){qi=0;nq()}
+function nq(){if(qi>=Q.length)return fin();const q=Q[qi];$('#quiz').innerHTML=`<p class="mu">Pregunta ${qi+1} de ${Q.length}</p><div id="qq"></div>`;
+mcq($('#qq'),q[0],q[1],q[2],q[3],q[4],()=>$('#qq').insertAdjacentHTML('beforeend',`<div class="row"><button class="bt y" onclick="qi++;nq()">${qi+1<Q.length?'Siguiente pregunta':'Ver mi resultado'}</button></div>`))}
+function fin(){const p=Math.min(S.pt,TOT),t=p>=14?'Jefa o jefe de obra':p>=10?'Ingeniera o ingeniero en terreno':'Aprendiz de obra';
+const c=S.pred=='Patio B'?'Tu hipótesis era el patio B (el cuadrado), y el modelo la confirmó.':S.pred?'Tu hipótesis era '+(S.pred=='Igual'?'que da lo mismo':'el '+S.pred.toLowerCase())+': ahora sabes que el máximo está en el cuadrado (patio B).':'Llegaste a la respuesta con el modelo.';
+S.cmp=cmp(p);$('#quiz').innerHTML=`<h3 style="font-size:1.6rem">${p} de ${TOT} · ${t}</h3><p class="lead">${c}</p><p>Lo que te llevas: un área que depende de x², un máximo en el vértice y condiciones que se resuelven con ecuaciones e inecuaciones. Eso es modelar cuadráticamente.</p>
+<h3>Tu entrega de misión cumplida</h3><p>Incluye tu comprobante y tu informe. Cópialo y pégalo en la tarea de Canvas: tu docente verá que completaste la misión y, con la rúbrica, retroalimentará tu justificación. El puntaje es formativo, no calificado.</p><pre id="cmp"></pre>
+<div class="row"><button class="bt y" onclick="cpt(S.cmp,this,'Copiar entrega')">Copiar entrega</button><button class="bt g" onclick="dlt(S.cmp,'Entrega_Mision_Patio.txt')">Descargar entrega</button></div><div class="row"><button class="bt g" onclick="go(0)">Volver al inicio</button></div>`;
+$('#cmp').textContent=S.cmp;if(p>=12&&typeof confetti=='function')confetti({particleCount:90,spread:70,origin:{y:.6}})}
+function cmp(p){const d=new Date(),z=n=>String(n).padStart(2,'0'),f=`${z(d.getDate())}-${z(d.getMonth()+1)}-${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}`,n=$('#nm').value.trim(),r=$('#rt').value.trim();
+let h=5381;(n+r+f+p).split('').forEach(c=>h=((h*33)^c.charCodeAt(0))>>>0);
+return `COMPROBANTE · MISIÓN PATIO · MATC0001 · UTEM\nEstudiante: ${n}${r?'  RUT: '+r:''}\nFecha y hora: ${f}\nPuntaje formativo automático: ${p} de ${TOT} (no calificado)\nDecisión tomada: Patio ${S.ch}\nCódigo: MP-${p}de${TOT}-${h.toString(36).toUpperCase().slice(0,5)}\n\n------------------------------\n`+txt()}
+road();ex();rst();
+</script></body></html>       
 
-  <!-- Header Institucional UTEM -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-      <div class="flex items-center space-x-3 sm:space-x-4">
-        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-blue-700 flex items-center justify-center font-black text-white shadow-lg shadow-amber-500/20 text-base sm:text-lg border border-amber-400/40">
-          UTEM
-        </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-950/70 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
-              MATC0001 · Módulo II
-            </span>
-            <span class="hidden md:inline-block text-xs font-medium text-slate-400">
-              Plan Común de Ingeniería y Ciencias
-            </span>
-          </div>
-          <h1 class="text-sm sm:text-base font-bold text-slate-100 mt-0.5">
-            Diseño de Patio de Almacenamiento (120m) · Modelamiento Cuadrático
-          </h1>
-        </div>
-      </div>
-
-      <div class="flex items-center space-x-2">
-        <button onclick="goToStep(1)" class="flex items-center space-x-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-2 rounded-xl border border-slate-700 transition cursor-pointer">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-          <span class="hidden sm:inline">Reiniciar</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Stepper de Navegación -->
-  <nav class="bg-slate-900/95 border-b border-slate-800 sticky top-[65px] z-20 overflow-x-auto py-2.5 px-4 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto flex items-center space-x-2 min-w-max">
-      <button id="tab-1" onclick="goToStep(1)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 shadow-md">1. Caso y Datos</button>
-      <button id="tab-2" onclick="goToStep(2)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">2. Modelo A(x)</button>
-      <button id="tab-3" onclick="goToStep(3)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">3. Vértice Óptimo</button>
-      <button id="tab-4" onclick="goToStep(4)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">4. Simulador y Curva</button>
-      <button id="tab-5" onclick="goToStep(5)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">5. Ecuaciones / Inec.</button>
-      <button id="tab-6" onclick="goToStep(6)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">6. Informe Técnico</button>
-      <button id="tab-7" onclick="goToStep(7)" class="step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">7. Cuestionario</button>
-    </div>
-  </nav>
-
-  <!-- Contenedor Principal -->
-  <main class="max-w-5xl w-full mx-auto px-4 py-8 flex-1">
-    
-    <!-- PASO 1 -->
-    <div id="step-1" class="step-content space-y-6">
-      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/70 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <span class="text-amber-400 text-xs font-bold uppercase tracking-wider bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">
-          Caso de Estudio: Logística y Obras
-        </span>
-        <h2 class="text-xl sm:text-3xl font-extrabold text-white mt-3">
-          Diseño y Optimización de un Patio Rectangular de Almacenamiento
-        </h2>
-        <p class="text-slate-300 mt-2 text-sm sm:text-base leading-relaxed">
-          Como ingeniero(a) responsable de la planificación de una obra, debes diseñar un patio rectangular para almacenamiento de materiales utilizando exactamente <strong class="text-amber-400">120 metros de cierre perimetral</strong>.
-        </p>
-
-        <div class="overflow-x-auto rounded-xl border border-slate-800 my-6 shadow-md">
-          <table class="w-full text-left text-xs sm:text-sm text-slate-200">
-            <thead class="bg-slate-950 text-slate-400 uppercase text-[11px] font-mono">
-              <tr>
-                <th class="p-3.5">Propuesta</th>
-                <th class="p-3.5">Ancho x (m)</th>
-                <th class="p-3.5">Largo y (m)</th>
-                <th class="p-3.5 text-right">Perímetro Total</th>
-                <th class="p-3.5 text-right text-amber-400">Superficie Área (m²)</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800 bg-slate-900/60 font-mono">
-              <tr>
-                <td class="p-3.5"><span class="w-6 h-6 rounded-md bg-slate-800 border border-slate-700 inline-flex items-center justify-center font-bold text-white">A</span></td>
-                <td class="p-3.5 text-amber-300 font-bold">10 m</td>
-                <td class="p-3.5 text-indigo-300">50 m</td>
-                <td class="p-3.5 text-right text-slate-400">2(10) + 2(50) = 120 m</td>
-                <td class="p-3.5 text-right font-bold text-white">500 m²</td>
-              </tr>
-              <tr>
-                <td class="p-3.5"><span class="w-6 h-6 rounded-md bg-slate-800 border border-slate-700 inline-flex items-center justify-center font-bold text-white">B</span></td>
-                <td class="p-3.5 text-amber-300 font-bold">20 m</td>
-                <td class="p-3.5 text-indigo-300">40 m</td>
-                <td class="p-3.5 text-right text-slate-400">2(20) + 2(40) = 120 m</td>
-                <td class="p-3.5 text-right font-bold text-white">800 m²</td>
-              </tr>
-              <tr class="bg-amber-500/10 border-l-4 border-amber-500 font-semibold">
-                <td class="p-3.5"><span class="w-6 h-6 rounded-md bg-amber-500 text-slate-950 inline-flex items-center justify-center font-bold">C</span></td>
-                <td class="p-3.5 text-amber-300 font-bold">30 m</td>
-                <td class="p-3.5 text-indigo-300">30 m</td>
-                <td class="p-3.5 text-right text-slate-400">2(30) + 2(30) = 120 m</td>
-                <td class="p-3.5 text-right font-bold text-base text-white">900 m² <span class="text-xs font-sans text-amber-400 font-normal">(Mayor de la tabla)</span></td>
-              </tr>
-              <tr>
-                <td class="p-3.5"><span class="w-6 h-6 rounded-md bg-slate-800 border border-slate-700 inline-flex items-center justify-center font-bold text-white">D</span></td>
-                <td class="p-3.5 text-amber-300 font-bold">40 m</td>
-                <td class="p-3.5 text-indigo-300">20 m</td>
-                <td class="p-3.5 text-right text-slate-400">2(40) + 2(20) = 120 m</td>
-                <td class="p-3.5 text-right font-bold text-white">800 m²</td>
-              </tr>
-              <tr>
-                <td class="p-3.5"><span class="w-6 h-6 rounded-md bg-slate-800 border border-slate-700 inline-flex items-center justify-center font-bold text-white">E</span></td>
-                <td class="p-3.5 text-amber-300 font-bold">50 m</td>
-                <td class="p-3.5 text-indigo-300">10 m</td>
-                <td class="p-3.5 text-right text-slate-400">2(50) + 2(10) = 120 m</td>
-                <td class="p-3.5 text-right font-bold text-white">500 m²</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="flex justify-end">
-          <button onclick="goToStep(2)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer shadow-lg">
-            Continuar a Paso 2: Modelo A(x) →
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 2 -->
-    <div id="step-2" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 2: Deducción Formal del Modelo Cuadrático</h2>
+         
+            
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-          <div class="p-5 rounded-2xl bg-slate-950 border-2 border-indigo-500/40 shadow-lg space-y-2">
-            <span class="text-xs font-bold uppercase text-indigo-400">1. Relación de Perímetro (Restricción)</span>
-            <div class="p-3 bg-slate-900 rounded-xl font-mono text-sm space-y-1">
-              <div>2x + 2y = 120</div>
-              <div class="text-indigo-300">x + y = 60</div>
-              <div class="text-emerald-400 font-bold">y = 60 − x</div>
-            </div>
-            <div class="text-xs text-slate-400">El largo y queda fijado en función de la elección del ancho x.</div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-950 border-2 border-amber-500/40 shadow-lg space-y-2">
-            <span class="text-xs font-bold uppercase text-amber-400">2. Función Objetivo: Superficie de Área</span>
-            <div class="p-3 bg-slate-900 rounded-xl font-mono text-sm space-y-1">
-              <div>Área = x · y</div>
-              <div>A(x) = x · (60 − x)</div>
-              <div class="text-amber-300 font-bold text-base">A(x) = −x² + 60x</div>
-            </div>
-            <div class="text-xs text-slate-400">Forma estándar ax² + bx + c con a = −1, b = 60, c = 0.</div>
-          </div>
-        </div>
-
-        <div class="p-4 bg-emerald-950/40 border border-emerald-500/40 rounded-xl flex items-center justify-between text-xs sm:text-sm">
-          <span class="text-emerald-300 font-bold">Dominio Contextual de Validez Física:</span>
-          <span class="font-mono font-bold text-white bg-slate-900 px-3 py-1 rounded-lg border border-emerald-500/30">
-            Dom(A) = (0, 60) metros
-          </span>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(1)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 1</button>
-          <button onclick="goToStep(3)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 3: Vértice →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 3 -->
-    <div id="step-3" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 3: Optimización y Vértice de la Parábola</h2>
-        
-        <div class="my-6 space-y-3 font-mono text-xs sm:text-sm">
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800">
-            1. Concavidad: Como a = −1 &lt; 0, la parábola abre hacia abajo (máximo absoluto en el vértice).
-          </div>
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800">
-            2. Coordenada del vértice: x_v = −b / (2a) = −60 / [2·(−1)] = −60 / −2 <span class="text-emerald-400 font-bold">⟺ x_v = 30 metros</span>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800">
-            3. Largo correspondiente: y = 60 − 30 <span class="text-indigo-400 font-bold">⟺ y = 30 metros</span>
-          </div>
-          <div class="p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/50 text-emerald-200">
-            👉 <strong>Área Máxima Absoluta:</strong> A(30) = 30 × 30 = <strong class="text-white text-base">900 m² (Patio Cuadrado)</strong>
-          </div>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(2)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 2</button>
-          <button onclick="goToStep(4)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 4: Simulador →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 4 -->
-    <div id="step-4" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 4: Simulador Interactivo 2D y Curva Cartesiana</h2>
-        
-        <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 my-4 space-y-4">
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-300 font-semibold">Ajustar Ancho del Patio (x):</span>
-            <span id="m2-width-display" class="font-bold text-amber-400 font-mono text-xl bg-amber-500/10 border border-amber-500/30 px-3 py-0.5 rounded-lg">30.0 metros</span>
-          </div>
-          <input type="range" id="m2-slider" min="1" max="59" step="0.5" value="30" oninput="updateM2Simulator(this.value)" class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer">
-          
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center font-mono">
-            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-              <div class="text-[10px] text-slate-400 uppercase font-sans">Ancho (x)</div>
-              <div id="m2-stat-x" class="text-lg font-bold text-amber-400">30.0 m</div>
-            </div>
-            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-              <div class="text-[10px] text-slate-400 uppercase font-sans">Largo (y)</div>
-              <div id="m2-stat-y" class="text-lg font-bold text-indigo-400">30.0 m</div>
-            </div>
-            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-              <div class="text-[10px] text-slate-400 uppercase font-sans">Perímetro Cierre</div>
-              <div class="text-lg font-bold text-white">120 m</div>
-            </div>
-            <div class="p-3 bg-slate-900 rounded-xl border border-emerald-500/40">
-              <div class="text-[10px] text-emerald-400 uppercase font-sans">Superficie Área A(x)</div>
-              <div id="m2-stat-area" class="text-lg font-bold text-white">900.0 m²</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="w-full overflow-hidden bg-slate-950 rounded-2xl border border-slate-800 p-2 sm:p-4 shadow-2xl">
-          <svg id="m2-svg" viewBox="0 0 800 460" class="w-full h-auto select-none font-sans">
-            <g id="m2-grid"></g>
-            <!-- Recta A = 800 -->
-            <line x1="100" y1="120" x2="740" y2="120" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4"></line>
-            <text x="650" y="112" fill="#fcd34d" font-size="10" font-weight="bold" text-anchor="middle">Requisito Mínimo: A ≥ 800 m²</text>
-
-            <!-- Zona Factible [20, 35] -->
-            <rect x="313" y="85" width="160" height="315" fill="#10b981" fill-opacity="0.08"></rect>
-            <line x1="473" y1="50" x2="473" y2="400" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 3"></line>
-            <text x="473" y="45" fill="#a5b4fc" font-size="10" font-weight="bold" text-anchor="middle">Tope Maquinaria (35m)</text>
-
-            <!-- Parábola -->
-            <path id="m2-parabola" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"></path>
-
-            <!-- Vértice -->
-            <circle cx="420" cy="85" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2"></circle>
-            <rect x="360" y="55" width="120" height="24" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1"></rect>
-            <text x="420" y="71" fill="#a7f3d0" font-size="10" font-weight="bold" text-anchor="middle" font-family="monospace">Vértice (30m, 900m²)</text>
-
-            <!-- Cursor dinámico -->
-            <line id="m2-needle" x1="420" y1="50" x2="420" y2="400" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.7"></line>
-            <circle id="m2-point" cx="420" cy="85" r="7" fill="#f59e0b" stroke="#ffffff" stroke-width="2.5"></circle>
-
-            <text x="420" y="445" fill="#94a3b8" font-size="12" font-weight="bold" text-anchor="middle">Ancho del Patio x (metros)</text>
-            <text x="-220" y="24" transform="rotate(-90)" fill="#94a3b8" font-size="12" font-weight="bold" text-anchor="middle">Superficie Área A(x) en m²</text>
-          </svg>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(3)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 3</button>
-          <button onclick="goToStep(5)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 5: Ecuaciones →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 5 -->
-    <div id="step-5" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 5: Ecuaciones e Inecuaciones en Ingeniería</h2>
-        
-        <div class="space-y-4 my-6 font-mono text-xs sm:text-sm">
-          <div class="p-5 rounded-2xl bg-slate-950 border-2 border-indigo-500/40 space-y-2">
-            <span class="text-xs font-bold uppercase text-indigo-300 font-sans">1. Condición Exacta: A = 800 m² (Ecuación Cuadrática)</span>
-            <div class="text-slate-300">
-              −x² + 60x = 800 ⟺ x² − 60x + 800 = 0 ⟺ (x − 20)(x − 40) = 0<br>
-              ⟹ <strong class="text-emerald-400">x₁ = 20 m</strong> (Patio 20×40) o <strong class="text-emerald-400">x₂ = 40 m</strong> (Patio 40×20).
-            </div>
-            <div class="text-xs text-slate-400 font-sans">Ambas representan el mismo patio rotado 90° debido a la simetría respecto a x = 30 m.</div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-950 border-2 border-emerald-500/40 space-y-2">
-            <span class="text-xs font-bold uppercase text-emerald-300 font-sans">2. Condición Mínima: A ≥ 800 m² (Inecuación Cuadrática)</span>
-            <div class="text-slate-300">
-              −x² + 60x ≥ 800 ⟺ x² − 60x + 800 ≤ 0 ⟺ (x − 20)(x − 40) ≤ 0<br>
-              ⟹ Intervalo admisible por área: <strong class="text-emerald-400">20 ≤ x ≤ 40 metros</strong>.
-            </div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-950 border-2 border-amber-500/40 space-y-2">
-            <span class="text-xs font-bold uppercase text-amber-300 font-sans">3. Restricción Operacional de Tránsito: x ≤ 35 m</span>
-            <div class="text-slate-300">
-              Intersección técnica: [20, 40] ∩ [0, 35] = <strong class="text-amber-400 font-bold">[20, 35] metros</strong>.
-            </div>
-          </div>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(4)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 4</button>
-          <button onclick="goToStep(6)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 6: Informe Técnico →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 6 -->
-    <div id="step-6" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 6: Decisión en Obra y Generación de Informe</h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
-          <div>
-            <label class="text-xs text-slate-400 block mb-1">Nombre del Estudiante:</label>
-            <input type="text" id="m2-report-name" placeholder="Tu Nombre Completo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white" oninput="generateM2Report()">
-          </div>
-          <div>
-            <label class="text-xs text-slate-400 block mb-1">RUT:</label>
-            <input type="text" id="m2-report-rut" placeholder="Ej: 19.876.543-2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white" oninput="generateM2Report()">
-          </div>
-        </div>
-
-        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 my-4 space-y-3">
-          <div class="flex flex-wrap justify-between items-center gap-2">
-            <span class="text-xs text-slate-300 font-bold">Vista Previa del Informe Técnico:</span>
-            <div class="flex gap-2">
-              <button onclick="downloadM2ReportTxt()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-lg border border-slate-600 transition cursor-pointer">
-                Descargar .TXT
-              </button>
-              <button onclick="copyM2Report()" id="btn-copy-m2" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition cursor-pointer shadow-md">
-                Copiar Informe
-              </button>
-            </div>
-          </div>
-          <pre id="m2-report-text" class="text-xs font-mono text-slate-300 whitespace-pre-wrap max-h-64 overflow-y-auto bg-slate-900 p-4 rounded-xl border border-slate-800"></pre>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <button onclick="goToStep(5)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm">← Paso 5</button>
-          <button onclick="goToStep(7)" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm">Paso 7: Cuestionario →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 7 -->
-    <div id="step-7" class="step-content hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Paso 7: Cuestionario Formativo Interactivo</h2>
-        <p class="text-slate-400 text-sm mb-6">Responde las 4 preguntas para validar tu aprendizaje con retroalimentación inmediata:</p>
-
-        <div id="m2-quiz-result-box" class="hidden p-5 rounded-xl mb-6"></div>
-
-        <div class="space-y-6" id="m2-quiz-container">
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="m2-qb-1">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">1. ¿Qué dimensiones físicas y qué área máxima absoluta se obtienen al optimizar el patio con los 120m de cierre?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q1" value="0" class="text-amber-500"> <span>Ancho = 20 m, Largo = 40 m, Área = 800 m²</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q1" value="1" class="text-amber-500"> <span>Ancho = 30 m, Largo = 30 m (Patio Cuadrado), Área Máxima = 900 m²</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q1" value="2" class="text-amber-500"> <span>Ancho = 25 m, Largo = 35 m, Área = 875 m²</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="m2-qb-2">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">2. ¿Por qué la ecuación cuadrática A(x) = 800 entrega dos soluciones matemáticas (x = 20 m y x = 40 m)?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q2" value="0" class="text-amber-500"> <span>Porque una de las soluciones es negativa y se debe descartar</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q2" value="1" class="text-amber-500"> <span>Porque representan el mismo patio rectangular rotado 90°, debido a la simetría de la parábola respecto al eje x = 30 m</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="m2-qb-3">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">3. Al combinar el requisito de área mínima A(x) ≥ 800 m² con la restricción operacional de tránsito (x ≤ 35 m), ¿cuál es el intervalo admisible?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q3" value="0" class="text-amber-500"> <span>x ∈ [0, 60] metros</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q3" value="1" class="text-amber-500"> <span>x ∈ [20, 35] metros</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q3" value="2" class="text-amber-500"> <span>x ∈ [20, 40] metros</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 q-block" id="m2-qb-4">
-            <h3 class="text-sm sm:text-base font-bold text-white mb-3">4. ¿Qué significado geométrico tiene que el coeficiente principal sea a = −1 en el modelo A(x) = −x² + 60x?</h3>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q4" value="0" class="text-amber-500"> <span>Indica que la parábola abre hacia abajo, garantizando que el vértice es un punto de MÁXIMO absoluto</span>
-              </label>
-              <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-850 cursor-pointer border border-slate-800 text-xs sm:text-sm">
-                <input type="radio" name="m2-q4" value="1" class="text-amber-500"> <span>Indica que el patio tiene un costo negativo</span>
-              </label>
-            </div>
-            <div class="q-feedback hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
-          </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-slate-800">
-          <button onclick="goToStep(6)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold">
-            ← Volver a Paso 6: Informe
-          </button>
-          
-          <button onclick="checkM2Quiz()" class="px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg cursor-pointer">
-            Comprobar Respuestas
-          </button>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 bg-slate-950 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Universidad Tecnológica Metropolitana (UTEM) · Plan Común de Ingeniería y Ciencias</div>
-      <div class="text-amber-400/80 font-mono">MATC0001 — Módulo II: Modelamiento Cuadrático</div>
-    </div>
-  </footer>
-
-  <script>
-    function initM2Grid() {
-      const grid = document.getElementById('m2-grid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      
-      const yValues = [0, 200, 400, 600, 800, 900, 1000];
-      yValues.forEach(val => {
-        const y = 400 - (val / 1000) * 350;
-        grid.innerHTML += `
-          <line x1="100" y1="${y}" x2="740" y2="${y}" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"></line>
-          <text x="90" y="${y + 4}" fill="${val === 900 ? '#34d399' : val === 800 ? '#fbbf24' : '#64748b'}" font-size="11" font-family="monospace" text-anchor="end" font-weight="${val === 900 || val === 800 ? 'bold' : 'normal'}">${val} m²</text>
-        `;
-      });
-
-      const xValues = [0, 10, 20, 30, 35, 40, 50, 60];
-      xValues.forEach(val => {
-        const x = 100 + (val / 60) * 640;
-        grid.innerHTML += `
-          <line x1="${x}" y1="50" x2="${x}" y2="400" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"></line>
-          <text x="${x}" y="420" fill="${val === 30 ? '#34d399' : val === 20 || val === 35 ? '#fbbf24' : '#64748b'}" font-size="11" font-family="monospace" text-anchor="middle" font-weight="${val === 30 || val === 20 || val === 35 ? 'bold' : 'normal'}">${val}m</text>
-        `;
-      });
-
-      // Generar curva
-      let pathD = '';
-      for (let i = 0; i <= 60; i++) {
-        const a = -i * i + 60 * i;
-        const x = 100 + (i / 60) * 640;
-        const y = 400 - (a / 1000) * 350;
-        pathD += (i === 0 ? 'M ' : ' L ') + x.toFixed(1) + ' ' + y.toFixed(1);
-      }
-      const pathEl = document.getElementById('m2-parabola');
-      if (pathEl) pathEl.setAttribute('d', pathD);
-    }
-
-    function goToStep(num) {
-      document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
-      const activeEl = document.getElementById('step-' + num);
-      if (activeEl) activeEl.classList.remove('hidden');
-      
-      document.querySelectorAll('.step-btn').forEach(btn => {
-        btn.className = "step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white";
-      });
-      const activeTab = document.getElementById('tab-' + num);
-      if (activeTab) {
-        activeTab.className = "step-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 border border-amber-400 shadow-md";
-      }
-      
-      if (num === 4) {
-        initM2Grid();
-        updateM2Simulator(document.getElementById('m2-slider').value);
-      }
-      if (num === 6) generateM2Report();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function updateM2Simulator(val) {
-      const x = Number(val);
-      const y = 60 - x;
-      const area = x * y;
-      
-      document.getElementById('m2-width-display').innerText = x.toFixed(1) + ' metros';
-      document.getElementById('m2-stat-x').innerText = x.toFixed(1) + ' m';
-      document.getElementById('m2-stat-y').innerText = y.toFixed(1) + ' m';
-      document.getElementById('m2-stat-area').innerText = area.toFixed(1) + ' m²';
-
-      const curX = 100 + (x / 60) * 640;
-      const curY = 400 - (area / 1000) * 350;
-
-      const needle = document.getElementById('m2-needle');
-      const point = document.getElementById('m2-point');
-
-      if (needle) {
-        needle.setAttribute('x1', curX);
-        needle.setAttribute('x2', curX);
-      }
-      if (point) {
-        point.setAttribute('cx', curX);
-        point.setAttribute('cy', curY);
-      }
-    }
-
-    function generateM2Report() {
-      const name = document.getElementById('m2-report-name').value.trim() || '[Nombre del Estudiante]';
-      const rut = document.getElementById('m2-report-rut').value.trim() || '[RUT]';
-      const text = `================================================================================
-INFORME TÉCNICO DE DECISIÓN Y MODELAMIENTO CUADRÁTICO
-UNIVERSIDAD TECNOLÓGICA METROPOLITANA (UTEM)
-Plan Común de Ingeniería y Ciencias — MATC0001
-================================================================================
-
-DATOS DEL ALUMNO / RESPONSABLE TÉCNICO:
-• Nombre del Estudiante: ${name}
-• RUT: ${rut}
-• Fecha de Emisión: ${new Date().toLocaleDateString('es-CL')}
-• Caso: Optimización de Patio de Almacenamiento (120 m de Cierre)
-
-1. MODELO MATEMÁTICO FORMULADO:
-• Perímetro Fijo: 2x + 2y = 120 ⟹ y = 60 − x
-• Función de Área: A(x) = x(60 − x) = −x² + 60x [m²]
-• Dominio Contextual: x ∈ (0, 60) metros
-
-2. VÉRTICE Y OPTIMIZACIÓN ABSOLUTA:
-• Concavidad: a = −1 < 0 (Máximo absoluto en el vértice).
-• Coordenada del vértice: x_v = −60 / [2·(−1)] = 30 metros.
-• Dimensiones óptimas: Ancho = 30 m, Largo = 30 m (Patio Cuadrado).
-• Área Máxima: A_max = 900 m².
-
-3. ANÁLISIS DE RESTRICCIONES DE OBRA:
-• Área Mínima (A ≥ 800 m²): x ∈ [20, 40] metros.
-• Tránsito de Maquinaria (x ≤ 35 m): [20, 40] ∩ [0, 35] = [20, 35] metros.
-
-4. RECOMENDACIÓN FINAL:
-Se recomienda construir el patio cuadrado de 30 m × 30 m, logrando 900 m² de capacidad máxima.
-================================================================================`;
-      document.getElementById('m2-report-text').innerText = text;
-    }
-
-    function copyM2Report() {
-      const txt = document.getElementById('m2-report-text').innerText;
-      const textArea = document.createElement("textarea");
-      textArea.value = txt;
-      textArea.style.position = "fixed";
-      textArea.style.opacity = "0";
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        const btn = document.getElementById('btn-copy-m2');
-        btn.innerText = '¡Copiado!';
-        btn.className = 'px-4 py-1.5 bg-emerald-500 text-slate-950 font-bold text-xs rounded-lg transition';
-        setTimeout(() => {
-          btn.innerText = 'Copiar Informe';
-          btn.className = 'px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition';
-        }, 2000);
-      } catch (err) {
-        console.error('Error al copiar', err);
-      }
-      document.body.removeChild(textArea);
-    }
-
-    function downloadM2ReportTxt() {
-      const txt = document.getElementById('m2-report-text').innerText;
-      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Informe_Tecnico_Cuadratico_UTEM_MATC0001.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    const correctM2Answers = { 'm2-q1': 1, 'm2-q2': 1, 'm2-q3': 1, 'm2-q4': 0 };
-    const m2Explanations = {
-      'm2-q1': "¡Correcto! El vértice de A(x) = −x² + 60x ocurre en x = 30 m, logrando un patio cuadrado de 30×30 con 900 m² de área máxima.",
-      'm2-q2': "¡Correcto! Representan el mismo rectángulo de 20×40 rotado 90°, simétricos respecto al eje x = 30 m.",
-      'm2-q3': "¡Correcto! La intersección de [20, 40] m con el límite de tránsito x ≤ 35 m resulta en el intervalo [20, 35] metros.",
-      'm2-q4': "¡Correcto! Como a = −1 < 0, la concavidad es hacia abajo, asegurando un punto de máximo absoluto en el vértice."
-    };
-
-    function checkM2Quiz() {
-      let score = 0;
-      for (let i = 1; i <= 4; i++) {
-        const qKey = 'm2-q' + i;
-        const selected = document.querySelector('input[name="' + qKey + '"]:checked');
-        const qb = document.getElementById('m2-qb-' + i);
-        const fb = qb.querySelector('.q-feedback');
-        fb.classList.remove('hidden', 'bg-emerald-950/50', 'text-emerald-300', 'bg-rose-950/50', 'text-rose-300');
-        
-        if (selected && Number(selected.value) === correctM2Answers[qKey]) {
-          score++;
-          qb.classList.remove('border-rose-500');
-          qb.classList.add('border-emerald-500');
-          fb.classList.add('bg-emerald-950/50', 'text-emerald-300', 'border', 'border-emerald-500/40');
-          fb.innerHTML = "✓ " + m2Explanations[qKey];
-        } else {
-          qb.classList.remove('border-emerald-500');
-          qb.classList.add('border-rose-500');
-          fb.classList.add('bg-rose-950/50', 'text-rose-300', 'border', 'border-rose-500/40');
-          fb.innerHTML = "✗ Incorrecto. 💡 Solución: " + m2Explanations[qKey];
-        }
-      }
-
-      const resBox = document.getElementById('m2-quiz-result-box');
-      resBox.classList.remove('hidden', 'bg-emerald-950/60', 'border-emerald-500', 'bg-amber-950/60', 'border-amber-500');
-      if (score === 4) {
-        if (typeof confetti === 'function') {
-          confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-        }
-        resBox.classList.add('bg-emerald-950/60', 'border-2', 'border-emerald-500', 'text-emerald-200');
-        resBox.innerHTML = "<h3 class='font-bold text-lg text-white'>🏆 ¡Felicitaciones! Has obtenido 4/4 (100%)</h3><p class='text-xs mt-1'>Has dominado el modelo cuadrático y la toma de decisiones en almacenamiento.</p>";
-      } else {
-        resBox.classList.add('bg-amber-950/60', 'border-2', 'border-amber-500', 'text-amber-200');
-        resBox.innerHTML = "<h3 class='font-bold text-lg text-white'>Puntaje: " + score + "/4 correctas</h3><p class='text-xs mt-1'>Revisa las explicaciones en los cuadros de retroalimentación.</p>";
-      }
-      resBox.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    initM2Grid();
-    updateM2Simulator(30);
-  </script>
-</body>
-</html>

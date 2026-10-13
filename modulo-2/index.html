@@ -38,7 +38,8 @@ svg text{font:11px 'Atkinson Hyperlegible';fill:var(--mu);paint-order:stroke;str
 #box{height:130px;display:flex;align-items:flex-end;margin:10px 0}#rc{background:#ffe3cf;border:3px solid var(--be);display:flex;align-items:center;justify-content:center;font-weight:700;min-width:30px;min-height:24px}
 pre{white-space:pre-wrap;background:var(--as);color:#e8ebef;padding:14px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;max-height:280px;overflow:auto}
 .m{font:700 1.05rem ui-monospace,monospace;background:#f1eee6;padding:10px 14px;border-radius:8px;margin:8px 0;overflow-x:auto}
-.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}.fr>span{display:block;padding:0 4px}.fr>span:first-child{border-bottom:2px solid currentColor}.rd{border-top:2px solid currentColor;padding:0 2px}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}.fr>span{display:block;padding:0 4px}.fr>span:first-child{border-bottom:2px solid currentColor}
+math{font-size:1.25em;font-family:'STIX Two Math','Cambria Math','Latin Modern Math',serif}
 [hidden]{display:none!important}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
 <header><div class="in"><h1>Misión Patio <small>· MATC0001 · Módulo II · UTEM</small></h1><ol class="road" id="road"></ol><div class="lane"><span class="truck" id="truck">🚚</span></div></div></header>
@@ -88,10 +89,10 @@ pre{white-space:pre-wrap;background:var(--as);color:#e8ebef;padding:14px;border-
 <div class="m">x² − 60x + M ≤ 0</div>
 <h3>1. El borde: ¿cuándo el área es justo 800 m²?</h3>
 <p>El borde de la zona permitida es donde A(x) = M. Con M = 800 resolvemos <b>x² − 60x + 800 = 0</b> con la fórmula de segundo grado:</p>
-<div class="m">x = <span class="fr"><span>−b ± <span class="rd">√(b² − 4ac)</span></span><span>2a</span></span></div>
+<div class="m">x = <span class="fr"><span>−b ± <math><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></msqrt></math></span><span>2a</span></span></div>
 <p>Aquí a = 1, b = −60 y c = 800. <b>Paso 1:</b> calcula el discriminante Δ = b² − 4ac = (−60)² − 4·1·800.</p>
 <div class="row"><label for="dd" style="margin:0">Δ =</label><input id="dd" type="text" inputmode="numeric" style="max-width:130px"><button class="bt" onclick="chkd()">Comprobar</button></div><div class="fb" id="fbD" hidden></div>
-<div id="rts" hidden><p><b>Paso 2:</b> reemplazamos (−b = −(−60) = 60):</p><div class="m">x = <span class="fr"><span>60 ± <span class="rd">√400</span></span><span>2</span></span> = <span class="fr"><span>60 ± 20</span><span>2</span></span></div><p><b>Paso 3:</b> calcula las dos soluciones (de menor a mayor).</p>
+<div id="rts" hidden><p><b>Paso 2:</b> reemplazamos (−b = −(−60) = 60):</p><div class="m">x = <span class="fr"><span>60 ± <math><msqrt><mn>400</mn></msqrt></math></span><span>2</span></span> = <span class="fr"><span>60 ± 20</span><span>2</span></span></div><p><b>Paso 3:</b> calcula las dos soluciones (de menor a mayor).</p>
 <div class="row"><input type="text" id="r1" placeholder="x₁" style="max-width:110px"><input type="text" id="r2" placeholder="x₂" style="max-width:110px"><button class="bt" onclick="chkr()">Comprobar</button></div><div class="fb" id="fbR" hidden></div></div>
 <h3>2. Explora: cambia el área mínima M</h3>
 <p>La <b>zona verde</b> muestra los anchos x donde la parábola queda sobre la línea roja, es decir, donde A(x) ≥ M.</p>
@@ -167,7 +168,7 @@ function chka(){if(chk('am',N($('#am').value)===900,'#fb2b','Multiplica 30 · 30
 /* 4 */
 function rst(){const M=+$('#M').value,r=Math.sqrt(900-M),lo=30-r,hi=30+r,h2=Math.min(hi,35),f=n=>n.toFixed(2).replace('.',',').replace(',00','');
 $('#mv').textContent=M;$('#i1').textContent=`[${f(lo)} ; ${f(hi)}]`;$('#i2').textContent=lo<=35?`[${f(lo)} ; ${f(h2)}]`:'sin solución';
-$('#eq').innerHTML=`Borde: x² − 60x + ${M} = 0 ⟹ x = <span class="fr"><span>60 ± <span class="rd">√${3600-4*M}</span></span><span>2</span></span> = 30 ± ${f(r)}`;draw('#c4',{m:M,lo,hi:h2,lim:35})}
+$('#eq').innerHTML=`Borde: x² − 60x + ${M} = 0 ⟹ x = <span class="fr"><span>60 ± <math><msqrt><mn>${3600-4*M}</mn></msqrt></math></span><span>2</span></span> = 30 ± ${f(r)}`;draw('#c4',{m:M,lo,hi:h2,lim:35})}
 $('#M').oninput=rst;
 function gate(){const n=Object.keys(S.g).length;$('#gt').textContent=n<3?`Retos completados: ${n} de 3`:'';if(n==3)$('#n4').hidden=false}
 function chkr(){const a=[N($('#r1').value),N($('#r2').value)].sort((p,q)=>p-q);if(chk('r',a[0]===20&&a[1]===40,'#fbR','Busca dos números que sumen 60 y multipliquen 800.','¡Eso! (x − 20)(x − 40) = 0, entonces x = 20 o x = 40. Son el mismo patio girado.')){S.g.r=1;gate()}}
@@ -204,8 +205,4 @@ function cmp(p){const d=new Date(),z=n=>String(n).padStart(2,'0'),f=`${z(d.getDa
 let h=5381;(n+r+f+p).split('').forEach(c=>h=((h*33)^c.charCodeAt(0))>>>0);
 return `COMPROBANTE · MISIÓN PATIO · MATC0001 · UTEM\nEstudiante: ${n}${r?'  RUT: '+r:''}\nFecha y hora: ${f}\nPuntaje formativo automático: ${p} de ${TOT} (no calificado)\nDecisión tomada: Patio ${S.ch}\nCódigo: MP-${p}de${TOT}-${h.toString(36).toUpperCase().slice(0,5)}\n\n------------------------------\n`+txt()}
 road();ex();rst();
-</script></body></html>       
-
-         
-            
-        
+</script></body></html>

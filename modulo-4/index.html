@@ -1,312 +1,206 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Módulo IV: Modelamiento con Funciones Racionales - Vaciado de Estanque | UTEM MATC0001</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-mono { font-family: 'Fira Code', monospace; }
-    @media print {
-      body { background: white !important; color: black !important; }
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
-    }
-  </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-amber-500 selection:text-slate-950 pb-20">
-
-  <!-- Header Institucional UTEM -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-lg no-print">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-600 to-amber-500 flex items-center justify-center font-black text-white shadow-lg text-sm border border-cyan-400/40">
-          UTEM
-        </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 bg-cyan-950/70 border border-cyan-500/30 px-2 py-0.5 rounded-full">
-              MATC0001 · Módulo IV
-            </span>
-            <span class="text-xs font-medium text-slate-400 hidden sm:inline">Plan Común de Ingeniería y Ciencias</span>
-          </div>
-          <h1 class="text-sm sm:text-base font-bold text-slate-100">
-            Modelamiento con Funciones Racionales · Vaciado de Estanque Industrial
-          </h1>
-        </div>
-      </div>
-      <button onclick="goToStep(1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg border border-slate-700 transition">
-        Reiniciar
-      </button>
-    </div>
-  </header>
-
-  <!-- Stepper de Navegación -->
-  <nav class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-[57px] z-20 no-print">
-    <div class="max-w-7xl mx-auto px-4 overflow-x-auto py-2.5 flex items-center gap-2">
-      <button onclick="goToStep(1)" id="tab-1" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950">1. Contexto</button>
-      <button onclick="goToStep(2)" id="tab-2" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">2. Modelo</button>
-      <button onclick="goToStep(3)" id="tab-3" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">3. Evaluación</button>
-      <button onclick="goToStep(4)" id="tab-4" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">4. Simulador</button>
-      <button onclick="goToStep(5)" id="tab-5" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">5. Asíntotas</button>
-      <button onclick="goToStep(6)" id="tab-6" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">6. Decisión</button>
-      <button onclick="goToStep(7)" id="tab-7" class="step-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-slate-800">7. Evaluación</button>
-    </div>
-  </nav>
-
-  <!-- Main Container -->
-  <main class="max-w-5xl mx-auto px-4 py-8">
-
-    <!-- PASO 1: Contexto -->
-    <section id="step-1" class="step-content space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase">
-          Guía de Trabajo UTEM · Módulo IV
-        </div>
-        <h2 class="text-2xl font-black text-white">¿Cuánto tiempo necesita para vaciarse un estanque?</h2>
-        <p class="text-slate-300 text-sm leading-relaxed">
-          En una planta industrial se utiliza un estanque para almacenar agua durante un proceso de producción. Al finalizar una jornada, el estanque debe vaciarse para labores de limpieza y mantenimiento.
-          Sea \(V\) la cantidad de agua inicialmente almacenada (en miles de litros) y \(T(V)\) el tiempo de vaciado (en minutos).
-        </p>
-
-        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 overflow-x-auto">
-          <table class="w-full text-xs font-mono">
-            <thead>
-              <tr class="text-slate-400 border-b border-slate-800">
-                <th class="p-2 text-left text-cyan-400">Volumen inicial V (miles de L)</th>
-                <th class="p-2 text-left text-amber-400">Tiempo de vaciado T (min)</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800/60">
-              <tr><td class="p-2">10</td><td class="p-2 text-amber-300">10.0 min</td></tr>
-              <tr><td class="p-2">20</td><td class="p-2 text-amber-300">6.67 min</td></tr>
-              <tr><td class="p-2">30</td><td class="p-2 text-amber-300">6.00 min</td></tr>
-              <tr><td class="p-2">40</td><td class="p-2 text-amber-300">5.71 min</td></tr>
-              <tr><td class="p-2">50</td><td class="p-2 text-amber-300">5.56 min</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h3 class="text-base font-bold text-white">Antes de construir el modelo: Responde</h3>
-        <div class="space-y-3 text-xs">
-          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
-            <label class="font-bold text-slate-200 block">a) ¿El tiempo de vaciado aumenta de manera proporcional con el volumen?</label>
-            <select id="p1-q1" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
-              <option value="">Selecciona...</option>
-              <option value="no">No, el tiempo disminuye hacia un valor límite debido a la presión hidrostática.</option>
-              <option value="si">Sí, aumenta proporcionalmente.</option>
-            </select>
-          </div>
-          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
-            <label class="font-bold text-slate-200 block">b) ¿Qué representa la condición operacional V &gt; 5?</label>
-            <select id="p1-q2" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
-              <option value="">Selecciona...</option>
-              <option value="valvula">Límite de operación: en V=5 la descarga se estrangula y el tiempo se vuelve infinito.</option>
-              <option value="error">Un error de escritura.</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="goToStep(2)" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition">
-          Avanzar al Paso 2: Modelo Racional &rarr;
-        </button>
-      </div>
-    </section>
-
-    <!-- PASO 2: Modelo -->
-    <section id="step-2" class="step-content space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h2 class="text-xl font-black text-white">Modelo Racional: \(T(V) = \frac{5V}{V-5}\)</h2>
-        <p class="text-xs text-slate-300">
-          El modelo analítico corresponde al cociente entre \(P(V) = 5V\) y \(Q(V) = V - 5\), con dominio \(V > 5\).
-        </p>
-        <div class="p-6 bg-slate-950 border border-amber-500/40 rounded-2xl text-center">
-          <div class="text-2xl font-mono font-black text-amber-400">T(V) = \frac{5V}{V-5}</div>
-          <div class="text-xs font-mono text-cyan-300 mt-2">V &gt; 5 (miles de litros)</div>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        <button onclick="goToStep(1)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
-        <button onclick="goToStep(3)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir al Paso 3 &rarr;</button>
-      </div>
-    </section>
-
-    <!-- PASO 3: Evaluación -->
-    <section id="step-3" class="step-content space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h2 class="text-xl font-black text-white">Evaluación Numérica del Modelo</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <span class="text-cyan-400 font-bold">V = 10k L:</span>
-            <div class="text-slate-300 mt-1">T(10) = 5(10)/(10-5) = 50/5 = <strong>10.0 min</strong></div>
-          </div>
-          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <span class="text-cyan-400 font-bold">V = 20k L:</span>
-            <div class="text-slate-300 mt-1">T(20) = 5(20)/(20-5) = 100/15 &approx; <strong>6.67 min</strong></div>
-          </div>
-          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <span class="text-cyan-400 font-bold">V = 30k L:</span>
-            <div class="text-slate-300 mt-1">T(30) = 5(30)/(30-5) = 150/25 = <strong>6.00 min</strong></div>
-          </div>
-          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <span class="text-cyan-400 font-bold">V = 50k L:</span>
-            <div class="text-slate-300 mt-1">T(50) = 5(50)/(50-5) = 250/45 &approx; <strong>5.56 min</strong></div>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        <button onclick="goToStep(2)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
-        <button onclick="goToStep(4)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir al Simulador &rarr;</button>
-      </div>
-    </section>
-
-    <!-- PASO 4: Simulador -->
-    <section id="step-4" class="step-content space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h2 class="text-xl font-black text-white">Simulador Dinámico de Vaciado</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-          <div class="space-y-3">
-            <label class="text-xs font-bold text-slate-300">Volumen V (<span id="slider-val">25.0</span> mil L):</label>
-            <input type="range" id="v-slider" min="5.2" max="60" step="0.2" value="25" class="w-full accent-amber-500" oninput="updateSimulation(this.value)">
-            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs font-mono space-y-1">
-              <div>Tiempo calculado: <strong id="t-calc" class="text-amber-400 text-sm">6.25 min</strong></div>
-              <div>Holgura sobre 30 min: <strong id="margin-calc" class="text-emerald-400">+23.75 min</strong></div>
-            </div>
-          </div>
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
-            <div class="w-36 h-36 border-2 border-slate-700 rounded-b-xl relative bg-slate-900 flex flex-col justify-end overflow-hidden">
-              <div id="tank-water" class="w-full bg-gradient-to-t from-blue-600 to-cyan-400 transition-all duration-300" style="height: 50%;"></div>
-            </div>
-            <div class="w-4 h-4 bg-slate-800 border-x border-slate-700"></div>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        <button onclick="goToStep(3)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
-        <button onclick="goToStep(5)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir a Asíntotas &rarr;</button>
-      </div>
-    </section>
-
-    <!-- PASO 5: Asíntotas -->
-    <section id="step-5" class="step-content space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h2 class="text-xl font-black text-white">Interpretación de Asíntotas</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          <div class="p-4 bg-slate-950 rounded-xl border border-rose-500/40 space-y-2">
-            <span class="text-rose-400 font-bold uppercase">Asíntota Vertical: V = 5k L</span>
-            <p class="text-slate-300">Límite crítico donde el vaciado se estrangula y \(T \to +\infty\).</p>
-          </div>
-          <div class="p-4 bg-slate-950 rounded-xl border border-cyan-500/40 space-y-2">
-            <span class="text-cyan-400 font-bold uppercase">Asíntota Horizontal: T = 5 min</span>
-            <p class="text-slate-300">Tiempo mínimo físico teórico cuando \(V \to \infty\) impuesto por la tubería.</p>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        <button onclick="goToStep(4)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
-        <button onclick="goToStep(6)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir a Decisión &rarr;</button>
-      </div>
-    </section>
-
-    <!-- PASO 6: Decisión y Desigualdad -->
-    <section id="step-6" class="step-content space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h2 class="text-xl font-black text-white">Decisión de Operación: \(T(V) \le 30\) min</h2>
-        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 font-mono text-xs text-slate-300 space-y-2">
-          <div>$$\frac{5V}{V-5} \le 30 \implies 5V \le 30V - 150 \implies 150 \le 25V \implies V \ge 6$$</div>
-          <div class="text-emerald-400 font-bold">Solución: V &ge; 6 mil litros (intervalo [6, &infin;)).</div>
-        </div>
-        <div class="p-4 bg-slate-950 rounded-xl border border-cyan-500/30 text-xs space-y-2">
-          <div class="text-cyan-300 font-bold">Caso V = 25 mil litros:</div>
-          <div>T(25) = 5(25)/(25-5) = 125/20 = <strong>6.25 minutos</strong> &le; 30 min.</div>
-          <div class="text-emerald-400 font-bold">DICTAMEN: Aprobado programar la limpieza 30 min tras iniciar el vaciado.</div>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        <button onclick="goToStep(5)" class="px-4 py-2 bg-slate-800 text-xs rounded-xl">&larr; Volver</button>
-        <button onclick="goToStep(7)" class="px-6 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Ir a la Evaluación &rarr;</button>
-      </div>
-    </section>
-
-    <!-- PASO 7: Evaluación Formativa -->
-    <section id="step-7" class="step-content space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h2 class="text-xl font-black text-white">Evaluación Formativa UTEM (Escala 1.0 - 7.0)</h2>
-        <div class="space-y-4 text-xs">
-          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
-            <p class="font-bold text-white">1. ¿Cuál es el dominio de la función T(V)?</p>
-            <select id="q1" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
-              <option value="">Selecciona...</option>
-              <option value="1">V &gt; 5 mil litros</option>
-              <option value="0">Todos los reales</option>
-            </select>
-          </div>
-          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
-            <p class="font-bold text-white">2. Para V = 25 mil litros, ¿cuánto tarda el vaciado?</p>
-            <select id="q2" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-white">
-              <option value="">Selecciona...</option>
-              <option value="1">6.25 minutos (6 min 15 s)</option>
-              <option value="0">25 minutos</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="gradeQuiz()" class="px-6 py-2.5 bg-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-lg">
-          Calificar Evaluación
-        </button>
-        <div id="quiz-result" class="hidden p-4 bg-slate-950 border border-amber-500 rounded-xl font-mono text-xs"></div>
-      </div>
-    </section>
-
-  </main>
-
-  <script>
-    function goToStep(step) {
-      document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.step-tab').forEach(el => {
-        el.classList.remove('bg-amber-500', 'text-slate-950');
-        el.classList.add('text-slate-400');
-      });
-      const currentSection = document.getElementById('step-' + step);
-      if (currentSection) currentSection.classList.remove('hidden');
-      const currentTab = document.getElementById('tab-' + step);
-      if (currentTab) {
-        currentTab.classList.add('bg-amber-500', 'text-slate-950');
-        currentTab.classList.remove('text-slate-400');
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function updateSimulation(val) {
-      const v = parseFloat(val);
-      document.getElementById('slider-val').innerText = v.toFixed(1);
-      const t = (5 * v) / (v - 5);
-      document.getElementById('t-calc').innerText = t.toFixed(2) + ' min';
-      const margin = 30 - t;
-      document.getElementById('margin-calc').innerText = (margin >= 0 ? '+' : '') + margin.toFixed(2) + ' min';
-      document.getElementById('tank-water').style.height = Math.min(100, Math.max(5, (v / 60) * 100)) + '%';
-    }
-
-    function gradeQuiz() {
-      const q1 = document.getElementById('q1').value;
-      const q2 = document.getElementById('q2').value;
-      let score = 0;
-      if (q1 === '1') score++;
-      if (q2 === '1') score++;
-      const grade = score === 2 ? 7.0 : score === 1 ? 4.0 : 1.0;
-      const resultDiv = document.getElementById('quiz-result');
-      resultDiv.classList.remove('hidden');
-      resultDiv.innerHTML = '<span class="text-amber-400 font-bold">Puntaje: ' + score + '/2 | Nota UTEM: ' + grade.toFixed(1) + '</span><br>' + (grade >= 4.0 ? '<span class="text-emerald-400">¡Felicitaciones! Has aprobado el Módulo IV.</span>' : '<span class="text-rose-400">Revisa los conceptos y vuelve a intentar.</span>');
-      if (grade >= 6.0 && typeof confetti === 'function') {
-        confetti({ particleCount: 80, spread: 60 });
-      }
-    }
-  </script>
-</body>
-</html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión Estanque · Modelamiento Racional UTEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root{--as:#20242a;--co:#ece9e2;--pa:#fbfaf6;--al:#1f5fd1;--be:#c44600;--li:#f5c518;--ok:#17803f;--no:#b3261e;--tx:#1d2126;--mu:#575e66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--co);color:var(--tx);font:17px/1.55 'Atkinson Hyperlegible',system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem)}h3{font-size:1.15rem}
+header{background:var(--as);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:5}
+.in{max-width:860px;margin:0 auto}header h1{font-size:1.15rem;margin:0}header small{color:#b9c0c8}
+.road{display:flex;gap:4px;margin:10px 0 0;padding:0;list-style:none}
+.road button{flex:1;background:none;border:0;color:#9aa3ad;font:700 .72rem 'Atkinson Hyperlegible';padding:8px 1px;cursor:pointer;border-bottom:3px solid transparent}
+.road button[aria-current=step]{color:#fff;border-color:var(--li)}.road button:disabled{opacity:.45;cursor:not-allowed}
+.lane{height:14px;position:relative;background:repeating-linear-gradient(90deg,var(--li) 0 22px,transparent 22px 40px) center/100% 3px no-repeat}
+.truck{position:absolute;top:-8px;font-size:20px;transition:left .6s ease;transform:translateX(-50%)}
+main{max-width:860px;margin:0 auto;padding:22px 16px 60px}
+section{background:var(--pa);border-radius:14px;padding:clamp(18px,4vw,34px);box-shadow:0 1px 0 #d8d4ca}
+.lead{font-size:1.1rem}.mu{color:var(--mu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}@media(max-width:600px){.two{grid-template-columns:1fr}}
+.card{border-radius:10px;padding:14px 16px;border:2px solid}.a{border-color:var(--al)}.b{border-color:var(--be)}.ta{color:var(--al)}.tb{color:var(--be)}
+.big{font:800 1.6rem 'Bricolage Grotesque';display:block}
+button.bt{font:700 1rem 'Atkinson Hyperlegible';background:var(--as);color:#fff;border:0;border-radius:10px;padding:12px 20px;cursor:pointer;min-height:44px}
+button.bt.y{background:var(--li);color:var(--as)}button.bt.g{background:#e6e2d8;color:var(--as)}button.bt:disabled{opacity:.4;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--li);outline-offset:2px;box-shadow:0 0 0 5px var(--as)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0;align-items:center}
+input[type=range]{width:100%;accent-color:var(--as);height:32px}
+input[type=text],textarea{width:100%;font:inherit;padding:10px 12px;border:2px solid #c9c4b8;border-radius:8px;background:#fff}
+label{font-weight:700;display:block;margin:10px 0 4px}
+svg{width:100%;height:auto;background:#fff;border-radius:10px;border:1px solid #d8d4ca}
+svg text{font:11px 'Atkinson Hyperlegible';fill:var(--mu);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}svg .g{stroke:#e4e0d6}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;background:#eef3ff;min-height:20px}.fb.ok{background:#e4f5ea;color:#0f5a2b}.fb.no{background:#fdeceb;color:#8a1c15}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border:2px solid #c9c4b8;border-radius:10px;background:#fff;font:inherit;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){border-color:var(--as)}.opt.ok{border-color:var(--ok);background:#e4f5ea}.opt.no{border-color:var(--no);background:#fdeceb;opacity:.7}
+#tk{width:110px;height:120px;border:3px solid var(--as);border-top:0;border-radius:0 0 12px 12px;display:flex;align-items:flex-end;overflow:hidden;background:#fff;margin:6px 0}
+#wt{width:100%;background:linear-gradient(#5aa9ff,#1f5fd1);transition:height .25s}
+pre{white-space:pre-wrap;background:var(--as);color:#e8ebef;padding:14px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;max-height:280px;overflow:auto}
+.m{font:700 1.05rem ui-monospace,monospace;background:#f1eee6;padding:10px 14px;border-radius:8px;margin:8px 0;overflow-x:auto}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}.fr>span{display:block;padding:0 4px}.fr>span:first-child{border-bottom:2px solid currentColor}
+table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid #d8d4ca;padding:8px 12px;text-align:left}th{background:#f1eee6}
+[hidden]{display:none!important}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><div class="in"><h1>Misión Estanque <small>· MATC0001 · Módulo IV · UTEM</small></h1><ol class="road" id="road"></ol><div class="lane"><span class="truck" id="truck">🚚</span></div></div></header>
+<main>
+<!-- 0 -->
+<section><h2>Hay que vaciar el estanque</h2>
+<p class="lead">Eres la ingeniera o el ingeniero de una planta industrial. Al terminar la jornada, el estanque de agua debe vaciarse para limpieza y mantenimiento. Medimos cuánto tarda según el volumen inicial <b>V</b> (en miles de litros).</p>
+<table><thead><tr><th>V (miles de L)</th><th>T (minutos)</th></tr></thead><tbody><tr><td>10</td><td>10,00</td></tr><tr><td>20</td><td>6,67</td></tr><tr><td>30</td><td>6,00</td></tr><tr><td>40</td><td>5,71</td></tr><tr><td>50</td><td>5,56</td></tr></tbody></table>
+<div class="m" style="font-weight:400;font-size:.95rem"><b>Palabras clave.</b> <b>Función racional:</b> cociente de dos polinomios. <b>Dominio:</b> valores de V que sí puedes usar. <b>Asíntota:</b> recta a la que la curva se acerca sin tocarla.</div>
+<h3>Antes de calcular, ¿cuánto crees que tardaría un estanque de 100 mil litros?</h3>
+<p class="mu">No hay respuesta mala: es tu hipótesis. Al final la comparamos con lo que descubras.</p>
+<div class="row"><button class="bt g" onclick="pick('Más de 10 min')">Más de 10 min</button><button class="bt g" onclick="pick('Entre 5 y 10 min')">Entre 5 y 10 min</button><button class="bt g" onclick="pick('Menos de 5 min')">Menos de 5 min</button></div>
+<div class="fb" id="fb0" hidden></div><div class="row"><button class="bt y" id="n0" hidden onclick="go(1)">Vamos a explorar</button></div></section>
+<!-- 1 -->
+<section hidden><h2>Explora: ¿cómo cambia el tiempo?</h2>
+<p>Mira que más agua <b>no</b> significa mucho más tiempo. Mueve V y observa la curva. <b>Reto:</b> encuentra el volumen con que el vaciado tarda justo <b>7,5 minutos</b>.</p>
+<svg id="c1" viewBox="0 0 640 350" role="img" aria-label="Gráfico del tiempo de vaciado según el volumen"></svg>
+<label for="h">Volumen V: <span id="hv"></span> mil L</label><input type="range" id="h" min="5.5" max="60" step="0.5" value="40">
+<div class="two"><div><div id="tk"><div id="wt"></div></div></div><div class="card b"><span class="tb">Tiempo T</span><span class="big" id="st"></span></div></div>
+<div class="fb" id="lead"></div>
+<div class="row"><button class="bt y" onclick="mark()">Aquí tarda 7,5 min</button></div><div class="fb" id="fb1" hidden></div>
+<div id="aft1" hidden><h3>Una pregunta para pensar</h3><div id="mq1"></div></div></section>
+<!-- 2 -->
+<section hidden><h2>De la curva al modelo</h2>
+<p>Lo que dibujaste es un <b>modelo racional</b>. Construyámoslo en tres pasos.</p>
+<div id="mq2a"></div><div id="mq2b" hidden></div><div id="mq2c" hidden></div>
+<div id="mod" hidden><h3>Así se escribe formalmente</h3>
+<div class="m">T(V) = <span class="fr"><span>P(V)</span><span>Q(V)</span></span> = <span class="fr"><span>5V</span><span>V − 5</span></span></div>
+<ul style="padding-left:20px"><li>Numerador <b>P(V) = 5V</b> y denominador <b>Q(V) = V − 5</b>: ambos son polinomios de grado 1.</li><li><b>Dominio:</b> Q(V) ≠ 0, o sea V ≠ 5. En el contexto, además, V &gt; 5 para que el tiempo sea positivo.</li><li>Ejemplo: T(25) = 5·25 ÷ (25 − 5) = 125 ÷ 20 = 6,25 min.</li></ul>
+<h3>Ahora hazlo tú</h3><p>Otro estanque se modela con <b>T(V) = 6V ÷ (V − 3)</b>. ¿Qué valor de V hace cero el denominador?</p>
+<div class="row"><label for="gb" style="margin:0">V =</label><input id="gb" type="text" inputmode="decimal" style="max-width:130px"><button class="bt" onclick="chkg()">Comprobar</button></div><div class="fb" id="fbG" hidden></div>
+<div class="row"><button class="bt y" id="ng" hidden onclick="unlock(3);go(3);reset3()">Estudiar las asíntotas</button></div></div></section>
+<!-- 3 -->
+<section hidden><h2>Asíntotas: los límites del modelo</h2>
+<p>Las asíntotas dicen qué pasa en los extremos. Avanza paso a paso.</p>
+<svg id="c3" viewBox="0 0 640 350" role="img" aria-label="Curva con asíntota vertical en 5 y horizontal en 5"></svg>
+<div id="steps"></div><div class="row"><button class="bt" id="nx" onclick="step()">Mostrar siguiente paso</button></div>
+<div id="ask" hidden><label for="xh">Tu turno: asíntota horizontal T = <span class="fr"><span>5</span><span>1</span></span>. ¿Cuánto vale?</label><input type="text" id="xh" inputmode="decimal" style="max-width:160px"> <button class="bt" onclick="chkh()">Comprobar</button></div><div class="fb" id="fb2" hidden></div>
+<div id="ask2" hidden><p>Con un estanque enorme, V = 1000 mil L, el tiempo debería estar muy cerca de 5.</p><label for="tm">Calcula T(1000) = 5000 ÷ 995 (2 decimales). ¿Cuántos minutos?</label><input type="text" id="tm" inputmode="decimal" style="max-width:160px"> <button class="bt" onclick="chkt()">Comprobar</button><div class="fb" id="fb2b" hidden></div></div>
+<div class="row"><button class="bt y" id="n3" hidden onclick="unlock(4);go(4)">Poner condiciones de operación</button></div></section>
+<!-- 4 -->
+<section hidden><h2>Condiciones de operación: inecuaciones</h2>
+<p>La planta exige que el vaciado tarde <b>como máximo M minutos</b>. Partimos con <b>M = 30</b>.</p>
+<div class="m">T(V) ≤ M ⟺ <span class="fr"><span>5V</span><span>V − 5</span></span> ≤ M</div>
+<p class="mu">Como V &gt; 5, el denominador V − 5 es <b>positivo</b>: al multiplicar por él <b>la desigualdad se mantiene</b>. (Si fuera negativo, se invertiría.)</p>
+<div class="m">5V ≤ M·(V − 5)</div>
+<h3>1. Hazlo tú: M = 30</h3>
+<p>Tenemos 5V ≤ 30·(V − 5). Desarrolla el paréntesis:</p>
+<div class="row"><span class="m" style="margin:0">5V ≤ 30V −</span><input id="d1" type="text" inputmode="numeric" style="max-width:110px"><button class="bt" onclick="chkd1()">Comprobar</button></div><div class="fb" id="fbD" hidden></div>
+<div id="rts" hidden><p>Pasamos las V a un lado: 5V − 30V ≤ −150 ⟺ −25V ≤ −150. <b>Al dividir por −25 la desigualdad se invierte:</b></p>
+<div class="row"><span class="m" style="margin:0">V ≥</span><input id="d2" type="text" inputmode="decimal" style="max-width:110px"><button class="bt" onclick="chkd2()">Comprobar</button></div><div class="fb" id="fbR" hidden></div></div>
+<h3>2. Explora: cambia el tiempo máximo M</h3>
+<p>La <b>zona verde</b> muestra los volúmenes donde la curva queda bajo la línea roja, es decir, T(V) ≤ M. El estanque tiene una capacidad máxima de <b>40 mil L</b>.</p>
+<svg id="c4" viewBox="0 0 640 350" role="img" aria-label="Zona de volúmenes que cumplen el tiempo máximo"></svg>
+<label for="M">Tiempo máximo M: <span id="mv"></span> min</label><input type="range" id="M" min="5.5" max="30" step="0.5" value="30">
+<div class="two"><div class="card a"><span class="ta">Solo por tiempo</span><span class="big" id="i1"></span></div><div class="card b"><span class="tb">Con capacidad V ≤ 40</span><span class="big" id="i2"></span></div></div>
+<div class="m" id="eq" style="font-size:.9rem"></div><p class="mu" id="nt"></p>
+<h3>3. Descubre una conexión</h3><p>Mueve M hasta que el volumen mínimo sea <b>exactamente 10 mil L</b>. ¿Te suena ese par de números?</p>
+<div class="row"><button class="bt y" onclick="mark3()">Aquí el mínimo es 10</button></div><div class="fb" id="fbC" hidden></div>
+<h3>4. Combina ambas condiciones</h3><p>Con M = 30 y capacidad V ≤ 40, ¿entre qué volúmenes puede estar V?</p>
+<div class="row"><input type="text" id="lo" placeholder="desde" style="max-width:110px"><span>≤ V ≤</span><input type="text" id="hi" placeholder="hasta" style="max-width:110px"><button class="bt" onclick="chki()">Comprobar</button></div><div class="fb" id="fbI" hidden></div>
+<div class="row"><button class="bt y" id="n4" hidden onclick="unlock(5);go(5)">Tomar la decisión</button></div><p class="mu" id="gt"></p></section>
+<!-- 5 -->
+<section hidden><h2>Decide y justifica</h2>
+<p>El estanque hoy tiene <b>V = 12 mil litros</b>. La cuadrilla de limpieza entra cuando termina el vaciado. Debes decidir <b>a cuántos minutos de iniciado el vaciado la citas</b>.</p>
+<div class="row"><button class="bt g" id="oA" onclick="ch(8)">A los 8 min</button><button class="bt g" id="oB" onclick="ch(10)">A los 10 min</button><button class="bt g" id="oC" onclick="ch(15)">A los 15 min</button></div>
+<div class="fb" id="fb4" hidden></div>
+<label for="ju">Tu justificación (con tus números y el modelo)</label><textarea id="ju" rows="4" placeholder="Ej.: T(12) = 5·12 ÷ (12 − 5) = … Cumple porque … y no conviene … porque …"></textarea>
+<label for="ju2">¿Qué cambiaría tu decisión? (opcional)</label><textarea id="ju2" rows="2" placeholder="Ej.: Si el estanque tuviera solo 8 mil litros…"></textarea>
+<div class="two"><div><label for="nm">Nombre</label><input type="text" id="nm"></div><div><label for="rt">RUT (opcional)</label><input type="text" id="rt" placeholder="12.345.678-9"></div></div>
+<p class="mu">Estos datos se quedan en tu navegador y solo aparecen en lo que tú copias o descargas.</p>
+<pre id="rep" aria-live="polite"></pre><div class="fb" id="chk" hidden></div>
+<div class="row"><button class="bt g" id="dl" onclick="dlt(txt(),'Informe_Mision_Estanque.txt')" disabled>Descargar .txt</button><button class="bt g" id="cp" onclick="cpt(txt(),this,'Copiar informe')" disabled>Copiar informe</button><button class="bt y" id="n5" onclick="unlock(6);go(6);quiz()" disabled>Ir al reto final</button></div></section>
+<!-- 6 -->
+<section hidden><h2>Reto final</h2><div id="quiz"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),F=n=>Math.round(n).toLocaleString('es-CL'),N=v=>parseFloat(String(v).replace(',','.')),f2=n=>n.toFixed(2).replace('.',',').replace(',00','');
+const T=x=>5*x/(x-5),X=x=>70+x/60*540,Y=t=>310-Math.min(t,30)/30*290;
+const S={s:0,max:0,pred:null,ch:null,g:{}},names=['Caso','Explora','Modela','Asíntotas','Condiciones','Decisión','Reto'];
+function road(){$('#road').innerHTML=names.map((n,i)=>`<li style="flex:1;display:flex"><button ${i>S.max?'disabled':''} ${i==S.s?'aria-current="step"':''} onclick="go(${i})">${n}</button></li>`).join('');$('#truck').style.left=(7+S.s*14.3)+'%'}
+function go(n){if(n>S.max)return;S.s=n;document.querySelectorAll('main section').forEach((e,i)=>e.hidden=i!==n);road();scrollTo({top:0,behavior:'smooth'});if(n==1)ex();if(n==3)draw('#c3',{asy:1});if(n==4)rst();if(n==5)rep()}
+function unlock(n){if(n>S.max)S.max=n;road()}
+function say(id,t,k){const e=$(id);e.hidden=false;e.className='fb '+(k||'');e.innerHTML=t}
+function draw(id,o){let s='';
+for(let t=0;t<=30;t+=5)s+=`<line class="g" x1="70" x2="610" y1="${Y(t)}" y2="${Y(t)}"/><text x="64" y="${Y(t)+4}" text-anchor="end">${t}</text>`;
+for(let x=0;x<=60;x+=10)s+=`<line class="g" x1="${X(x)}" x2="${X(x)}" y1="20" y2="310"/><text x="${X(x)}" y="328" text-anchor="middle">${x}</text>`;
+if(o.lo!=null)s+=`<rect x="${X(o.lo)}" y="20" width="${X(o.hi)-X(o.lo)}" height="290" fill="#17803f" fill-opacity=".14"/>`;
+if(o.m)s+=`<line x1="70" x2="610" y1="${Y(o.m)}" y2="${Y(o.m)}" stroke="#b3261e" stroke-width="2" stroke-dasharray="6 4"/><text x="500" y="${Y(o.m)-6}" style="fill:#b3261e;font-weight:700">Máximo M = ${f2(o.m)} min</text>`;
+if(o.lim)s+=`<line x1="${X(o.lim)}" x2="${X(o.lim)}" y1="20" y2="310" stroke="#1f5fd1" stroke-width="2" stroke-dasharray="4 3"/><text x="${X(o.lim)-5}" y="34" text-anchor="end" style="fill:#1f5fd1;font-weight:700">Capacidad V ≤ ${o.lim}</text>`;
+if(o.asy)s+=`<line x1="${X(5)}" x2="${X(5)}" y1="20" y2="310" stroke="#b3261e" stroke-width="2" stroke-dasharray="6 4"/><text x="${X(5)+6}" y="34" style="fill:#b3261e;font-weight:700">Asíntota vertical V = 5</text><line x1="70" x2="610" y1="${Y(5)}" y2="${Y(5)}" stroke="#1f5fd1" stroke-width="2" stroke-dasharray="6 4"/><text x="610" y="${Y(5)-6}" text-anchor="end" style="fill:#1f5fd1;font-weight:700">Asíntota horizontal T = 5</text>`;
+let d='';for(let x=6;x<=60;x+=.25)d+=(x==6?'M':'L')+X(x).toFixed(1)+' '+Y(T(x)).toFixed(1);
+s+=`<path d="${d}" fill="none" stroke="#c44600" stroke-width="3.5"/>`;
+if(o.x!=null){const t=T(o.x);s+=`<line x1="${X(o.x)}" x2="${X(o.x)}" y1="20" y2="310" stroke="#20242a" stroke-dasharray="3 3"/>`+(t<=30?`<line x1="70" x2="${X(o.x)}" y1="${Y(t)}" y2="${Y(t)}" stroke="#20242a" stroke-dasharray="3 3"/>`:'')+`<circle cx="${X(o.x)}" cy="${Y(t)}" r="7" fill="#1f5fd1" stroke="#fff" stroke-width="2.5"/><text x="${X(o.x)+10}" y="${Y(t)+16}" style="fill:#1f5fd1;font-weight:700">${t>30?'T > 30 min':f2(t)+' min'}</text>`}
+$(id).innerHTML=s+`<text x="340" y="346" text-anchor="middle">Volumen inicial V (miles de L)</text><text x="6" y="12">Tiempo de vaciado T (min)</text>`}
+function mcq(el,q,o,ok,hint,why,cb){let t=0;const idx=o.map((_,i)=>i).sort(()=>Math.random()-.5);
+el.innerHTML=`<p><b>${q}</b></p>`+idx.map(i=>`<button class="opt" data-i="${i}">${o[i]}</button>`).join('')+'<div class="fb" hidden></div>';
+const fb=el.querySelector('.fb');el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(+b.dataset.i===ok){b.classList.add('ok');el.querySelectorAll('.opt').forEach(x=>x.disabled=true);fb.hidden=false;fb.className='fb ok';fb.innerHTML=(t?'¡Eso! ':'¡Bien! ')+why;cb&&cb(t==0)}else{t++;b.classList.add('no');b.disabled=true;fb.hidden=false;fb.className='fb no';fb.innerHTML='Todavía no. '+hint}})}
+function chain(q,done){q.forEach((r,i)=>{$(r[0]).hidden=i>0;mcq($(r[0]),r[1],r[2],r[3],r[4],r[5],()=>{i<q.length-1?$(q[i+1][0]).hidden=false:done()})})}
+/* 0 */
+function pick(v){S.pred=v;say('#fb0',`Tu hipótesis: <b>${v}</b>. La vamos a poner a prueba.`);$('#n0').hidden=false;unlock(1)}
+/* 1 */
+function ex(){const x=+$('#h').value,t=T(x);$('#hv').textContent=f2(x);$('#st').textContent=f2(t)+' min';$('#wt').style.height=(x/60*100)+'%';
+$('#lead').innerHTML=`Con <b>V = ${f2(x)} mil L</b> tarda ${f2(t)} min. ${x<15?'Cerca de 5 mil L el tiempo cambia muy rápido.':'Aquí el tiempo casi no cambia aunque aumentes V.'}`;draw('#c1',{x})}
+$('#h').oninput=ex;
+function mark(){const x=+$('#h').value,t=T(x);
+if(Math.abs(x-15)<=.5){say('#fb1','<b>¡Descubierto!</b> Con V = 15 mil L: T(15) = 75 ÷ 10 = 7,5 min.','ok');$('#aft1').hidden=false;
+mcq($('#mq1'),'Aunque el volumen sea enorme, el tiempo no baja de 5 min. ¿Qué ocurre con la curva?',['Se acerca a T = 5 pero nunca lo alcanza','Llega a 5 y después sigue bajando','Vuelve a subir'],0,'Mira el lado derecho del gráfico: ¿la curva cruza T = 5?','La curva se acerca a un valor límite sin tocarlo: eso es una asíntota horizontal.',()=>$('#mq1').insertAdjacentHTML('beforeend','<div class="row"><button class="bt y" onclick="unlock(2);go(2);modelo()">Escribir el modelo</button></div>'))}
+else say('#fb1',t>7.5?'Todavía no. Aquí tarda más de 7,5 min: aumenta V.':'Todavía no. Aquí tarda menos de 7,5 min: disminuye V.','no')}
+/* 2 */
+function modelo(){const q=[['#mq2a','T(V) = 5V ÷ (V − 5) es un cociente de dos polinomios. ¿Cómo se llama?',['Función racional','Función cuadrática','Función lineal'],0,'Fíjate que V aparece tanto arriba como abajo de la fracción.','Un cociente de polinomios es una función racional.'],
+['#mq2b','¿Qué valor de V no se puede usar en el modelo?',['V = 5, porque el denominador sería 0','V = 0, porque el numerador sería 0','V = 10, porque el tiempo sería exacto'],0,'Busca cuándo V − 5 se hace cero.','Con V = 5 habría división por 0, así que ese valor queda fuera del dominio.'],
+['#mq2c','¿Qué dominio tiene sentido para el estanque?',['V > 5: el denominador no es cero y el tiempo es positivo','Todos los números reales','V ≥ 0'],0,'Si V = 3, ¿qué tiempo da? ¿tiene sentido?','Con V < 5 el tiempo saldría negativo: el contexto restringe el dominio a V > 5.']];
+$('#mod').hidden=true;chain(q,()=>$('#mod').hidden=false)}
+function chkg(){N($('#gb').value)===3?(say('#fbG','¡Bien! V − 3 = 0 ⟹ V = 3. Entonces el dominio es V ≠ 3.','ok'),$('#ng').hidden=false):say('#fbG','Resuelve V − 3 = 0.','no')}
+/* 3 */
+const ST=['<b>Paso 1. Asíntota vertical.</b> Se busca donde el denominador vale 0:<div class="m">V − 5 = 0 ⟹ V = 5</div>Cuando V se acerca a 5 por la derecha, T crece sin límite: el vaciado se vuelve interminable.','<b>Paso 2. Asíntota horizontal.</b> P(V) = 5V y Q(V) = V − 5 tienen el <b>mismo grado</b> (1). Entonces la asíntota es el cociente de los coeficientes líderes:<div class="m">T = <span class="fr"><span>5</span><span>1</span></span></div>'];let k=0;
+function reset3(){k=0;$('#steps').innerHTML='';$('#nx').hidden=false;$('#ask').hidden=true;step()}
+function step(){if(k<ST.length)$('#steps').insertAdjacentHTML('beforeend','<p>'+ST[k++]+'</p>');if(k>=ST.length){$('#nx').hidden=true;$('#ask').hidden=false}}
+function chkh(){N($('#xh').value)===5?(say('#fb2','¡Exacto! T = 5 min: el tiempo mínimo al que se acerca el vaciado.','ok'),$('#ask2').hidden=false):say('#fb2','Divide los coeficientes líderes: 5 ÷ 1.','no')}
+function chkt(){Math.abs(N($('#tm').value)-5.03)<=.01?(say('#fb2b','¡Correcto! T(1000) ≈ 5,03: casi 5, pero siempre un poquito más.','ok'),$('#n3').hidden=false):say('#fb2b','Divide 5000 ÷ 995 y redondea a 2 decimales.','no')}
+/* 4 */
+function rst(){const M=+$('#M').value,xm=5*M/(M-5),ok=xm<=40;$('#mv').textContent=f2(M);$('#i1').textContent=`V ≥ ${f2(xm)}`;$('#i2').textContent=ok?`[${f2(xm)} ; 40]`:'sin solución';
+$('#eq').innerHTML=`5V ≤ ${f2(M)}·(V − 5) ⟹ V ≥ <span class="fr"><span>5·${f2(M)}</span><span>${f2(M)} − 5</span></span> = ${f2(xm)}`;
+$('#nt').textContent=M<=7?'Mira cómo se dispara el volumen mínimo al acercar M a 5: es la asíntota horizontal en acción.':'';draw('#c4',{m:M,lo:ok?xm:null,hi:40,lim:40})}
+$('#M').oninput=rst;
+function gate(){const n=Object.keys(S.g).length;$('#gt').textContent=n<3?`Retos completados: ${n} de 3`:'';if(n==3)$('#n4').hidden=false}
+function chkd1(){N($('#d1').value)===150?(say('#fbD','¡Bien! 30·(V − 5) = 30V − 150.','ok'),$('#rts').hidden=false):say('#fbD','Multiplica 30 · 5.','no')}
+function chkd2(){N($('#d2').value)===6?(say('#fbR','¡Eso! V ≥ 6 mil L. Con menos de 6 mil L el vaciado tardaría más de 30 min.','ok'),S.g.a=1,gate()):say('#fbR','Divide −150 ÷ −25 e invierte el sentido de la desigualdad.','no')}
+function mark3(){if(+$('#M').value===10){S.g.c=1;say('#fbC','<b>¡Lo encontraste!</b> Con M = 10 el mínimo es V = 10: es el primer dato de la tabla, T(10) = 10. El borde de la inecuación es la igualdad T(V) = M.','ok');gate()}else say('#fbC','Todavía no. '+(+$('#M').value>10?'Baja M.':'Sube M.'),'no')}
+function chki(){if(N($('#lo').value)===6&&N($('#hi').value)===40){S.g.i=1;say('#fbI','¡Correcto! [6, +∞) ∩ (5, 40] = [6, 40] mil L.','ok');gate()}else say('#fbI','Primero T ≤ 30 da V ≥ 6. Luego intersecta con V ≤ 40.','no')}
+/* 5 */
+function ch(c){S.ch=c;[['A',8],['B',10],['C',15]].forEach(([l,v])=>$('#o'+l).className='bt '+(c==v?'':'g'));
+say('#fb4',c==8?'T(12) = 60 ÷ 7 ≈ 8,57 min &gt; 8 min: a los 8 min el estanque aún no se vacía. No cumple.':c==10?'T(12) ≈ 8,57 ≤ 10 min: cumple con 1,43 min de holgura.':'T(12) ≈ 8,57 ≤ 15 min: cumple, pero la cuadrilla esperaría 6,43 min. Justifica por qué prefieres tanta holgura.');rep()}
+function txt(){const n=$('#nm').value.trim()||'[nombre]',r=$('#rt').value.trim()||'(no indicado)';
+return `INFORME TÉCNICO · MISIÓN ESTANQUE\nMATC0001 · Módulo IV · UTEM\n\nResponsable: ${n}  RUT: ${r}\n\nMODELO\n  T(V) = 5V / (V − 5)  (P(V) = 5V, Q(V) = V − 5)\n  Dominio: V ≠ 5; en el contexto, V > 5\n  Asíntota vertical: V = 5\n  Asíntota horizontal: T = 5/1 = 5 min\n  T(V) ≤ 30 ⟹ 5V ≤ 30(V − 5) ⟹ V ≥ 6\n  Con capacidad V ≤ 40: 6 ≤ V ≤ 40\n\nCASO V = 12 MIL LITROS\n  T(12) = 60/7 ≈ 8,57 min\n\nMI HIPÓTESIS INICIAL (100 mil L): ${S.pred||'-'}\nMI DECISIÓN: ${S.ch?'Citar a la cuadrilla a los '+S.ch+' min':'[sin elegir]'}\n\nJUSTIFICACIÓN\n${$('#ju').value.trim()||'[escribe tu justificación]'}\n\nPREGUNTA DE CIERRE: ¿QUÉ CAMBIARÍA MI DECISIÓN?\n${$('#ju2').value.trim()||'-'}\n`}
+function rep(){$('#rep').textContent=txt();const m=[];if(!S.ch)m.push('elige una hora de citación');if($('#ju').value.trim().length<30)m.push('escribe una justificación de al menos 30 caracteres');if(!$('#nm').value.trim())m.push('escribe tu nombre');
+['#dl','#cp','#n5'].forEach(i=>$(i).disabled=!!m.length);m.length?say('#chk','Para continuar: '+m.join(', ')+'.'):$('#chk').hidden=true}
+['#ju','#ju2','#nm','#rt'].forEach(i=>$(i).oninput=rep);
+async function cpt(x,b,l){try{await navigator.clipboard.writeText(x);b.textContent='¡Copiado!'}catch(e){b.textContent='No se pudo copiar: usa Descargar'}setTimeout(()=>b.textContent=l,2500)}
+function dlt(x,n){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([x],{type:'text/plain;charset=utf-8'}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+/* 6 */
+const Q=[['Para V = 20 mil L, ¿cuánto tarda el vaciado?',['6,67 min','4 min','10 min'],0,'T(20) = 5·20 ÷ (20 − 5).','T(20) = 100 ÷ 15 ≈ 6,67 min.'],
+['¿Qué significa la asíntota horizontal T = 5?',['Con volúmenes muy grandes el tiempo se acerca a 5 min sin alcanzarlos','El volumen mínimo es 5 mil L','El tiempo cuando V = 0 es 5 min'],0,'Piensa en V creciendo sin parar.','Es el valor al que tiende T cuando V es muy grande.'],
+['¿Qué significa la asíntota vertical V = 5?',['Cerca de V = 5 el tiempo crece sin límite','El estanque no puede superar 5 mil L','El tiempo es 5 min cuando V = 5'],0,'Es donde el denominador vale 0.','Al acercarse V a 5 por la derecha, T tiende a +∞.'],
+['Resuelve T(V) ≤ 20. ¿Cuál es el volumen mínimo?',['V ≥ 6,67','V ≥ 4','V ≥ 20'],0,'5V ≤ 20(V − 5) ⟹ 100 ≤ 15V.','100 ÷ 15 ≈ 6,67 mil L.'],
+['Si la planta exigiera T ≤ 4 min, ¿qué ocurre?',['No hay solución: T siempre es mayor que 5 min','Basta con V = 4','Sirve cualquier V muy grande'],0,'Compara 4 con la asíntota horizontal.','Como T > 5 siempre, ningún volumen cumple T ≤ 4.'],
+['Al multiplicar T(V) ≤ M por V − 5 (con V > 5), ¿qué pasa con la desigualdad?',['Se mantiene, porque V − 5 es positivo','Se invierte','Se vuelve igualdad'],0,'¿El número por el que multiplicas es positivo o negativo?','Solo se invierte al multiplicar o dividir por un número negativo.']];
+let qi=0,sc=0;
+function quiz(){qi=0;sc=0;nq()}
+function nq(){if(qi>=Q.length)return fin();const q=Q[qi];$('#quiz').innerHTML=`<p class="mu">Pregunta ${qi+1} de ${Q.length}</p><div id="qq"></div>`;
+mcq($('#qq'),q[0],q[1],q[2],q[3],q[4],f=>{if(f)sc++;$('#qq').insertAdjacentHTML('beforeend',`<div class="row"><button class="bt y" onclick="qi++;nq()">${qi+1<Q.length?'Siguiente pregunta':'Ver mi resultado'}</button></div>`)})}
+function fin(){const t=sc==Q.length?'Jefa o jefe de planta':sc>=4?'Ingeniera o ingeniero en terreno':'Aprendiz de planta';
+const c=S.pred=='Entre 5 y 10 min'?'Tu hipótesis era "entre 5 y 10 min", y el modelo la confirmó: T(100) ≈ 5,26 min.':`Tu hipótesis era "${S.pred}": el modelo da T(100) ≈ 5,26 min, muy cerca de la asíntota T = 5.`;
+S.cmp=cmp();$('#quiz').innerHTML=`<h3 style="font-size:1.6rem">${sc} de ${Q.length} · ${t}</h3><p class="lead">${c}</p><p>Lo que te llevas: un cociente de polinomios, un dominio que excluye V = 5, dos asíntotas que marcan los límites del proceso y una inecuación donde importa el signo del denominador. Eso es modelar con funciones racionales.</p>
+<h3>Tu entrega de misión cumplida</h3><p>Incluye tu comprobante y tu informe. Cópialo y pégalo en la tarea de Canvas: tu docente verá que completaste la misión y, con la rúbrica, retroalimentará tu justificación. El puntaje es formativo, no calificado.</p><pre id="cmp"></pre>
+<div class="row"><button class="bt y" onclick="cpt(S.cmp,this,'Copiar entrega')">Copiar entrega</button><button class="bt g" onclick="dlt(S.cmp,'Entrega_Mision_Estanque.txt')">Descargar entrega</button></div><div class="row"><button class="bt g" onclick="quiz()">Intentarlo de nuevo</button><button class="bt g" onclick="go(0)">Volver al inicio</button></div>`;
+$('#cmp').textContent=S.cmp;if(sc>=5&&typeof confetti=='function')confetti({particleCount:90,spread:70,origin:{y:.6}})}
+function cmp(){const d=new Date(),z=n=>String(n).padStart(2,'0'),f=`${z(d.getDate())}-${z(d.getMonth()+1)}-${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}`,n=$('#nm').value.trim(),r=$('#rt').value.trim();
+let h=5381;(n+r+f+sc).split('').forEach(c=>h=((h*33)^c.charCodeAt(0))>>>0);
+return `COMPROBANTE · MISIÓN ESTANQUE · MATC0001 · UTEM\nEstudiante: ${n}${r?'  RUT: '+r:''}\nFecha y hora: ${f}\nPuntaje formativo automático: ${sc} de ${Q.length} (no calificado)\nDecisión tomada: citar a los ${S.ch} min\nCódigo: ME-${sc}de${Q.length}-${h.toString(36).toUpperCase().slice(0,5)}\n\n------------------------------\n`+txt()}
+road();ex();rst();
+</script></body></html>

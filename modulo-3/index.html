@@ -1,410 +1,209 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Módulo III: Modelamiento por Tramos - Robot de Inspección | UTEM MATC0001</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-mono { font-family: 'Fira Code', monospace; }
-    @media print {
-      body { background: white !important; color: black !important; }
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
-    }
-  </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-amber-500 selection:text-slate-950 pb-20">
-
-  <!-- Header Institucional UTEM -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-lg no-print">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-blue-600 flex items-center justify-center font-black text-white shadow-lg text-sm border border-amber-400/40">
-          UTEM
-        </div>
-        <div>
-          <div class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
-            MATC0001 · Módulo III: Funciones por Tramos
-          </div>
-          <h1 class="text-sm sm:text-base font-bold text-white">
-            ¿Cómo modelar el movimiento de un robot de inspección?
-          </h1>
-        </div>
-      </div>
-      <div class="text-xs text-slate-400 hidden md:block">
-        Plan Común de Ingeniería y Ciencias
-      </div>
-    </div>
-  </header>
-
-  <!-- Contenedor Principal -->
-  <main class="max-w-5xl mx-auto px-4 py-8 space-y-10">
-
-    <!-- 1. Contexto e Identificación de Tramos -->
-    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
-      <div class="inline-block text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full mb-3">
-        Paso 1 · Contexto Operacional
-      </div>
-      <h2 class="text-xl sm:text-2xl font-black text-white mb-3">
-        El Robot de Inspección en el Almacén Industrial
-      </h2>
-      <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-        En una planta automatizada, un robot móvil recorre un pasillo rectilíneo de 29 metros durante 11 segundos para verificar sensores críticos. El recorrido se compone de 3 etapas cinemáticas consecutivas:
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="p-4 rounded-xl bg-slate-950 border border-blue-500/30 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-blue-400">Tramo 1</span>
-            <span class="text-[11px] font-mono text-slate-400">0 ≤ t ≤ 4 s</span>
-          </div>
-          <h3 class="font-bold text-white text-sm">Velocidad Constante</h3>
-          <p class="text-xs text-slate-300">Parte del reposo inicial en el origen ($s=0$) y avanza a $2\text{ m/s}$ constante. Al finalizar este tramo ($t=4$), alcanza $s = 8\text{ m}$.</p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-950 border border-amber-500/30 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-amber-400">Tramo 2</span>
-            <span class="text-[11px] font-mono text-slate-400">4 &lt; t ≤ 8 s</span>
-          </div>
-          <h3 class="font-bold text-white text-sm">Aceleración Uniforme</h3>
-          <p class="text-xs text-slate-300">Parte de $s=8\text{ m}$ con rapidez inicial $v_0 = 2\text{ m/s}$ y acelera a $1\text{ m/s}^2$. En $t=8\text{ s}$, alcanza $s = 20\text{ m}$ con rapidez de $6\text{ m/s}$.</p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400">Tramo 3</span>
-            <span class="text-[11px] font-mono text-slate-400">8 &lt; t ≤ 11 s</span>
-          </div>
-          <h3 class="font-bold text-white text-sm">Frenado Progresivo</h3>
-          <p class="text-xs text-slate-300">Aplica frenado regenerativo desde $s=20\text{ m}$ con $v_0=6\text{ m/s}$ y desaceleración de $-2\text{ m/s}^2$, deteniéndose en $t=11\text{ s}$ a los $29\text{ m}$.</p>
-        </div>
-      </div>
-
-      <div class="p-5 bg-slate-950 rounded-xl border border-amber-500/30 text-center font-mono text-amber-300 text-sm overflow-x-auto">
-        $$s(t) = \begin{cases} 2t, & 0 \le t \le 4 \\ 8 + 2(t-4) + \frac{1}{2}(t-4)^2, & 4 < t \le 8 \\ 20 + 6(t-8) - (t-8)^2, & 8 < t \le 11 \end{cases}$$
-      </div>
-    </section>
-
-    <!-- 2. Simulador Cinemático Interactivo -->
-    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <div>
-          <span class="text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
-            Paso 4 · Laboratorio Virtual
-          </span>
-          <h2 class="text-lg sm:text-xl font-bold text-white mt-2">Simulador de Trayectoria del Robot en el Pasillo</h2>
-        </div>
-        <div id="simBadge" class="text-xs font-bold font-mono px-3 py-1.5 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-500/30">
-          Etapa 1: Velocidad Constante
-        </div>
-      </div>
-
-      <!-- Pasillo de Planta -->
-      <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
-        <div class="flex justify-between text-[11px] font-mono text-slate-400">
-          <span>0m (Origen)</span>
-          <span class="text-blue-400">8m (Nodo A)</span>
-          <span class="text-amber-400">20m (Nodo B)</span>
-          <span class="text-rose-400 font-bold">25m (Zona Inspección)</span>
-          <span class="text-emerald-400">29m (Meta Final)</span>
-        </div>
-
-        <div class="w-full bg-slate-800 h-4 rounded-full relative">
-          <div id="simProgress" class="bg-gradient-to-r from-blue-500 via-amber-500 to-emerald-500 h-full rounded-full w-0 transition-all duration-75"></div>
-          <div id="simRobot" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-0 transition-all duration-75 text-amber-400 font-bold text-xs bg-slate-900 border border-amber-400 px-2 py-0.5 rounded shadow-lg whitespace-nowrap">
-            🤖 s = <span id="simPosRobot">0.00</span> m
-          </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3 text-center text-xs font-mono pt-2">
-          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <span class="text-slate-400 block text-[10px] uppercase font-bold">Tiempo transcurrido</span>
-            <span id="simTimeText" class="text-amber-400 font-black text-base sm:text-lg">0.0 s</span>
-          </div>
-          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <span class="text-slate-400 block text-[10px] uppercase font-bold">Posición s(t)</span>
-            <span id="simPosText" class="text-white font-black text-base sm:text-lg">0.00 m</span>
-          </div>
-          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <span class="text-slate-400 block text-[10px] uppercase font-bold">Velocidad instantánea</span>
-            <span id="simVelText" class="text-cyan-400 font-black text-base sm:text-lg">2.00 m/s</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controles de Simulación -->
-      <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
-        <button id="simPlayBtn" onclick="toggleSim()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-lg transition cursor-pointer">
-          Reproducir
-        </button>
-        <button onclick="resetSim()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition cursor-pointer">
-          Reiniciar
-        </button>
-        <input id="simSlider" type="range" min="0" max="11" step="0.05" value="0" oninput="onSimSlider(this.value)" class="flex-1 accent-amber-500 cursor-pointer">
-      </div>
-    </section>
-
-    <!-- 3. Análisis de Continuidad -->
-    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-5">
-      <div class="inline-block text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
-        Paso 5 · Continuidad del Movimiento
-      </div>
-      <h2 class="text-xl font-black text-white">
-        Verificación de Continuidad en los Nodos de Transición
-      </h2>
-      <p class="text-slate-300 text-sm leading-relaxed">
-        Para que el modelo sea físicamente admisible en robótica, el robot no puede teletransportarse (la función de posición debe ser continua):
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div class="flex items-center justify-between text-blue-400 font-bold text-sm">
-            <span>Transición en t = 4 s</span>
-            <span class="bg-blue-950 px-2 py-0.5 rounded text-xs">s = 8 m</span>
-          </div>
-          <div class="font-mono text-xs text-slate-300 space-y-1">
-            <div>Tramo 1 (por izquierda): $s_1(4) = 2(4) = 8\text{ m}$</div>
-            <div>Tramo 2 (por derecha): $s_2(4) = 8 + 2(0) + 0.5(0)^2 = 8\text{ m}$</div>
-            <div class="text-emerald-400 font-bold pt-1">✓ $\lim_{t \to 4^-} s(t) = \lim_{t \to 4^+} s(t) = s(4) = 8\text{ m}$ (Continuo)</div>
-          </div>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div class="flex items-center justify-between text-amber-400 font-bold text-sm">
-            <span>Transición en t = 8 s</span>
-            <span class="bg-amber-950 px-2 py-0.5 rounded text-xs">s = 20 m</span>
-          </div>
-          <div class="font-mono text-xs text-slate-300 space-y-1">
-            <div>Tramo 2 (por izquierda): $s_2(8) = 8 + 2(4) + 0.5(16) = 20\text{ m}$</div>
-            <div>Tramo 3 (por derecha): $s_3(8) = 20 + 6(0) - 0^2 = 20\text{ m}$</div>
-            <div class="text-emerald-400 font-bold pt-1">✓ $\lim_{t \to 8^-} s(t) = \lim_{t \to 8^+} s(t) = s(8) = 20\text{ m}$ (Continuo)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. Desafío de Ingeniería e Informe Técnico -->
-    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
-      <div class="inline-block text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
-        Paso 6 · Desafío de Ingeniería
-      </div>
-      <h2 class="text-xl font-black text-white">
-        ¿Cumple el Robot el Requerimiento Operacional de Inspección?
-      </h2>
-      <div class="p-4 rounded-xl bg-amber-950/20 border border-amber-500/40 text-sm text-slate-200">
-        <strong>Exigencia del Jefe de Operaciones:</strong> "El robot debe alcanzar la zona de inspección (posición $s = 25\text{ m}$) antes de los 10 segundos ($t < 10\text{ s}$)."
-      </div>
-
-      <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm space-y-3 text-slate-300">
-        <div class="text-amber-400 font-bold">Resolución Analítica:</div>
-        <div>1. Dado que $s=25\text{ m}$ se encuentra entre $20\text{ m}$ y $29\text{ m}$, corresponde a la <strong>Etapa 3</strong> ($8 < t \le 11$).</div>
-        <div class="p-2 rounded bg-slate-900 border border-slate-800 text-white font-bold">
-          $$20 + 6(t - 8) - (t - 8)^2 = 25$$
-        </div>
-        <div>2. Aplicando cambio de variable $u = t - 8$ (con $0 < u \le 3$):</div>
-        <div class="pl-4 space-y-1">
-          <div>$20 + 6u - u^2 = 25$</div>
-          <div>$u^2 - 6u + 5 = 0$</div>
-          <div>$(u - 1)(u - 5) = 0 \implies u_1 = 1, \; u_2 = 5$</div>
-        </div>
-        <div>3. La solución física válida dentro del tramo es $u = 1$:</div>
-        <div class="text-amber-400 font-bold">
-          $$t - 8 = 1 \implies \mathbf{t = 9.00\text{ segundos}}$$
-        </div>
-        <div class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 font-bold">
-          ✓ DICTAMEN TÉCNICO: Como $9\text{ s} < 10\text{ s}$, el robot CUMPLE satisfactoriamente con la meta operacional de la planta, con 1.0 segundo de holgura.
-        </div>
-      </div>
-
-      <!-- Botón Imprimir Dictamen -->
-      <div class="flex justify-end no-print">
-        <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl border border-slate-700 transition cursor-pointer">
-          🖨️ Imprimir / Guardar PDF del Dictamen
-        </button>
-      </div>
-    </section>
-
-    <!-- 5. Cuestionario de Evaluación Formativa -->
-    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 no-print">
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <div>
-          <span class="text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-500/30 px-3 py-1 rounded-full">
-            Paso 7 · Evaluación
-          </span>
-          <h2 class="text-xl font-black text-white mt-2">Evaluación Formativa (Escala 1.0 a 7.0)</h2>
-        </div>
-        <div id="gradeBadge" class="hidden text-xs font-mono font-bold px-3 py-1 rounded-full bg-slate-800 text-amber-400 border border-amber-500/40">
-          Nota: <span id="gradeVal">--</span>
-        </div>
-      </div>
-
-      <div class="space-y-4" id="quizContainer">
-        <!-- P1 -->
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <label class="text-xs font-bold text-slate-200 block">1. ¿Qué forma tiene la gráfica de $s(t)$ en el intervalo $[0, 4]$?</label>
-          <select id="q1" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
-            <option value="">Selecciona...</option>
-            <option value="correct">Recta de pendiente positiva constante</option>
-            <option value="wrong1">Parábola cóncava hacia arriba</option>
-            <option value="wrong2">Parábola cóncava hacia abajo</option>
-          </select>
-        </div>
-
-        <!-- P2 -->
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <label class="text-xs font-bold text-slate-200 block">2. ¿Por qué el Tramo 2 incluye el término $(t-4)$?</label>
-          <select id="q2" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
-            <option value="">Selecciona...</option>
-            <option value="wrong1">Porque la aceleración es de 4 m/s²</option>
-            <option value="correct">Para medir el tiempo transcurrido desde el inicio de esa etapa en t = 4</option>
-            <option value="wrong2">Porque el robot retrocede 4 metros</option>
-          </select>
-        </div>
-
-        <!-- P3 -->
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <label class="text-xs font-bold text-slate-200 block">3. ¿Cuál es la posición del robot al finalizar el segundo tramo en $t = 8\text{ s}$?</label>
-          <select id="q3" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
-            <option value="">Selecciona...</option>
-            <option value="wrong1">16 metros</option>
-            <option value="correct">20 metros</option>
-            <option value="wrong2">25 metros</option>
-          </select>
-        </div>
-
-        <!-- P4 -->
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <label class="text-xs font-bold text-slate-200 block">4. ¿En qué instante $t$ el robot alcanza exactamente los 25 metros?</label>
-          <select id="q4" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-mono">
-            <option value="">Selecciona...</option>
-            <option value="correct">t = 9 segundos</option>
-            <option value="wrong1">t = 10 segundos</option>
-            <option value="wrong2">t = 11 segundos</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between pt-2">
-        <button onclick="evaluateQuiz()" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl transition cursor-pointer">
-          Calificar Evaluación
-        </button>
-        <div id="quizResult" class="text-xs font-bold text-slate-300"></div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500 no-print">
-    Universidad Tecnológica Metropolitana (UTEM) · Departamento de Matemática · MATC0001
-  </footer>
-
-  <script>
-    // Cinemática
-    let simT = 0;
-    let simPlaying = false;
-    let simTimer = null;
-
-    function calcKinematics(currT) {
-      currT = Math.max(0, Math.min(11, currT));
-      let s = 0, v = 0, stage = '';
-      if (currT <= 4) {
-        s = 2 * currT;
-        v = 2;
-        stage = 'Etapa 1: Velocidad Constante (2 m/s)';
-      } else if (currT <= 8) {
-        let dt = currT - 4;
-        s = 8 + 2 * dt + 0.5 * dt * dt;
-        v = 2 + dt;
-        stage = 'Etapa 2: Aceleración Uniforme (+1 m/s²)';
-      } else {
-        let dt = currT - 8;
-        s = 20 + 6 * dt - dt * dt;
-        v = Math.max(0, 6 - 2 * dt);
-        stage = 'Etapa 3: Frenado hasta Detención (-2 m/s²)';
-      }
-      return { s, v, stage };
-    }
-
-    function updateSimUI() {
-      const data = calcKinematics(simT);
-      document.getElementById('simTimeText').innerText = simT.toFixed(1) + ' s';
-      document.getElementById('simPosText').innerText = data.s.toFixed(2) + ' m';
-      document.getElementById('simPosRobot').innerText = data.s.toFixed(1);
-      document.getElementById('simVelText').innerText = data.v.toFixed(2) + ' m/s';
-      document.getElementById('simBadge').innerText = data.stage;
-      document.getElementById('simSlider').value = simT;
-
-      const pct = (data.s / 29) * 100;
-      document.getElementById('simProgress').style.width = Math.min(100, pct) + '%';
-      document.getElementById('simRobot').style.left = Math.min(94, Math.max(2, pct)) + '%';
-    }
-
-    function toggleSim() {
-      simPlaying = !simPlaying;
-      document.getElementById('simPlayBtn').innerText = simPlaying ? 'Pausar' : 'Reproducir';
-      if (simPlaying) {
-        if (simT >= 11) simT = 0;
-        simTimer = setInterval(() => {
-          simT += 0.05;
-          if (simT >= 11) {
-            simT = 11;
-            toggleSim();
-          }
-          updateSimUI();
-        }, 50);
-      } else {
-        clearInterval(simTimer);
-      }
-    }
-
-    function resetSim() {
-      simPlaying = false;
-      clearInterval(simTimer);
-      document.getElementById('simPlayBtn').innerText = 'Reproducir';
-      simT = 0;
-      updateSimUI();
-    }
-
-    function onSimSlider(val) {
-      if (simPlaying) toggleSim();
-      simT = parseFloat(val);
-      updateSimUI();
-    }
-
-    // Quiz
-    function evaluateQuiz() {
-      const answers = [
-        document.getElementById('q1').value === 'correct',
-        document.getElementById('q2').value === 'correct',
-        document.getElementById('q3').value === 'correct',
-        document.getElementById('q4').value === 'correct',
-      ];
-      const correctCount = answers.filter(Boolean).length;
-      const grade = (1.0 + (correctCount / 4) * 6.0).toFixed(1);
-
-      document.getElementById('gradeBadge').classList.remove('hidden');
-      document.getElementById('gradeVal').innerText = grade;
-
-      const resDiv = document.getElementById('quizResult');
-      if (correctCount === 4) {
-        resDiv.innerHTML = '<span class="text-emerald-400 font-bold">¡Excelente! 4/4 correctas. Nota: 7.0</span>';
-        if (typeof confetti === 'function') {
-          confetti({ particleCount: 80, spread: 60, origin: { y: 0.85 } });
-        }
-      } else {
-        resDiv.innerHTML = '<span class="text-amber-400 font-bold">' + correctCount + '/4 correctas. Revisa tus respuestas.</span>';
-      }
-    }
-
-    updateSimUI();
-  </script>
-</body>
-</html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión Robot · Funciones por Tramos UTEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root{--as:#20242a;--co:#ece9e2;--pa:#fbfaf6;--al:#1f5fd1;--be:#c44600;--li:#f5c518;--ok:#17803f;--no:#b3261e;--tx:#1d2126;--mu:#575e66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--co);color:var(--tx);font:17px/1.55 'Atkinson Hyperlegible',system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem)}h3{font-size:1.15rem}
+header{background:var(--as);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:5}
+.in{max-width:860px;margin:0 auto}header h1{font-size:1.15rem;margin:0}header small{color:#b9c0c8}
+.road{display:flex;gap:4px;margin:10px 0 0;padding:0;list-style:none}
+.road button{flex:1;background:none;border:0;color:#9aa3ad;font:700 .72rem 'Atkinson Hyperlegible';padding:8px 1px;cursor:pointer;border-bottom:3px solid transparent}
+.road button[aria-current=step]{color:#fff;border-color:var(--li)}.road button:disabled{opacity:.45;cursor:not-allowed}
+.lane{height:14px;position:relative;background:repeating-linear-gradient(90deg,var(--li) 0 22px,transparent 22px 40px) center/100% 3px no-repeat}
+.truck{position:absolute;top:-8px;font-size:20px;transition:left .6s ease;transform:translateX(-50%)}
+main{max-width:860px;margin:0 auto;padding:22px 16px 60px}
+section{background:var(--pa);border-radius:14px;padding:clamp(18px,4vw,34px);box-shadow:0 1px 0 #d8d4ca}
+.lead{font-size:1.1rem}.mu{color:var(--mu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}@media(max-width:600px){.two{grid-template-columns:1fr}}
+.card{border-radius:10px;padding:14px 16px;border:2px solid}.a{border-color:var(--al)}.b{border-color:var(--be)}.ta{color:var(--al)}.tb{color:var(--be)}
+.big{font:800 1.6rem 'Bricolage Grotesque';display:block}
+button.bt{font:700 1rem 'Atkinson Hyperlegible';background:var(--as);color:#fff;border:0;border-radius:10px;padding:12px 20px;cursor:pointer;min-height:44px}
+button.bt.y{background:var(--li);color:var(--as)}button.bt.g{background:#e6e2d8;color:var(--as)}button.bt:disabled{opacity:.4;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--li);outline-offset:2px;box-shadow:0 0 0 5px var(--as)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0;align-items:center}
+input[type=range]{width:100%;accent-color:var(--as);height:32px}
+input[type=text],textarea{width:100%;font:inherit;padding:10px 12px;border:2px solid #c9c4b8;border-radius:8px;background:#fff}
+label{font-weight:700;display:block;margin:10px 0 4px}
+svg{width:100%;height:auto;background:#fff;border-radius:10px;border:1px solid #d8d4ca}
+svg text{font:11px 'Atkinson Hyperlegible';fill:var(--mu);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}svg .g{stroke:#e4e0d6}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;background:#eef3ff;min-height:20px}.fb.ok{background:#e4f5ea;color:#0f5a2b}.fb.no{background:#fdeceb;color:#8a1c15}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border:2px solid #c9c4b8;border-radius:10px;background:#fff;font:inherit;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){border-color:var(--as)}.opt.ok{border-color:var(--ok);background:#e4f5ea}.opt.no{border-color:var(--no);background:#fdeceb;opacity:.7}
+#pas{position:relative;height:36px;background:#e4e0d6;border-radius:8px;margin:8px 0}#pas i{position:absolute;top:0;bottom:0;width:3px;background:var(--no)}
+#rb{position:absolute;top:4px;font-size:22px;transform:translateX(-50%)}
+pre{white-space:pre-wrap;background:var(--as);color:#e8ebef;padding:14px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;max-height:280px;overflow:auto}
+.m{font:700 1.05rem ui-monospace,monospace;background:#f1eee6;padding:10px 14px;border-radius:8px;margin:8px 0;overflow-x:auto}
+.br{display:flex;align-items:center;gap:10px}.br>b{font:300 4.2rem/1 ui-monospace,monospace}.br div{line-height:2}
+table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid #d8d4ca;padding:8px 12px;text-align:left}th{background:#f1eee6}
+[hidden]{display:none!important}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><div class="in"><h1>Misión Robot <small>· MATC0001 · Módulo III · UTEM</small></h1><ol class="road" id="road"></ol><div class="lane"><span class="truck" id="truck">🚚</span></div></div></header>
+<main>
+<!-- 0 -->
+<section><h2>El robot que no puede llegar tarde</h2>
+<p class="lead">Eres la ingeniera o el ingeniero de una planta industrial. Un robot de inspección recorre un pasillo recto de <b>33 m</b> en <b>11 s</b>. No se mueve igual todo el rato: primero avanza parejo, luego acelera y al final frena. Medimos su posición <b>s</b> (metros desde el inicio) según el tiempo <b>t</b> (segundos).</p>
+<table><thead><tr><th>t (s)</th><th>s (m)</th></tr></thead><tbody><tr><td>0</td><td>0</td></tr><tr><td>4</td><td>8</td></tr><tr><td>6</td><td>14</td></tr><tr><td>8</td><td>24</td></tr><tr><td>11</td><td>33</td></tr></tbody></table>
+<div class="m" style="font-weight:400;font-size:.95rem"><b>Palabras clave.</b> <b>Función por tramos:</b> función con una fórmula distinta en cada intervalo. <b>Nodo:</b> instante donde cambia la fórmula. <b>Continua:</b> sin saltos; el robot no se teletransporta.</div>
+<h3>Antes de calcular: la zona de inspección empieza en los 29 m. ¿Cuándo crees que el robot llegará?</h3>
+<p class="mu">No hay respuesta mala: es tu hipótesis. Al final la comparamos con lo que descubras.</p>
+<div class="row"><button class="bt g" onclick="pick('Antes de 8 s')">Antes de 8 s</button><button class="bt g" onclick="pick('Entre 8 y 10 s')">Entre 8 y 10 s</button><button class="bt g" onclick="pick('Después de 10 s')">Después de 10 s</button></div>
+<div class="fb" id="fb0" hidden></div><div class="row"><button class="bt y" id="n0" hidden onclick="go(1)">Vamos a explorar</button></div></section>
+<!-- 1 -->
+<section hidden><h2>Explora: ¿cómo se mueve el robot?</h2>
+<p>Mueve el tiempo t y mira la curva, la posición y la velocidad. Fíjate en cómo cambia la inclinación. <b>Reto:</b> encuentra el instante en que el robot llega justo a <b>29 m</b>.</p>
+<div id="pas"><i style="left:85.6%"></i><span id="rb">🤖</span></div><p class="mu" style="margin:0;font-size:.9rem">Línea roja: zona de inspección (29 m). Meta: 33 m.</p>
+<svg id="c1" viewBox="0 0 640 350" role="img" aria-label="Gráfico de la posición del robot según el tiempo"></svg>
+<label for="h">Tiempo t: <span id="hv"></span> s</label><input type="range" id="h" min="0" max="11" step="0.25" value="2">
+<div class="two"><div class="card a"><span class="ta">Posición s</span><span class="big" id="sp"></span></div><div class="card b"><span class="tb">Velocidad</span><span class="big" id="sv"></span></div></div>
+<div class="fb" id="lead"></div>
+<div class="row"><button class="bt y" onclick="mark()">Aquí llega a 29 m</button></div><div class="fb" id="fb1" hidden></div>
+<div id="aft1" hidden><h3>Una pregunta para pensar</h3><div id="mq1"></div></div></section>
+<!-- 2 -->
+<section hidden><h2>De la curva al modelo</h2>
+<p>La curva cambia de forma en t = 4 y en t = 8. Lo que dibujaste es una <b>función por tramos</b>. Construyámosla en pasos.</p>
+<div id="mq2a"></div><div id="mq2b" hidden></div><div id="mq2c" hidden></div>
+<div id="mod" hidden><h3>Así se escribe formalmente</h3>
+<div class="m"><div class="br"><b>{</b><div>s(t) = 2t &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;si 0 ≤ t ≤ 4<br>s(t) = 8 + 2(t − 4) + ½(t − 4)² &nbsp;si 4 &lt; t ≤ 8<br>s(t) = 24 + 6(t − 8) − (t − 8)² &nbsp;&nbsp;si 8 &lt; t ≤ 11</div></div></div>
+<ul style="padding-left:20px"><li><b>Dominio:</b> 0 ≤ t ≤ 11. Cada instante cae en <b>un solo</b> tramo.</li><li>Tramo 1: recta (velocidad constante). Tramos 2 y 3: parábolas, como en el Módulo II.</li><li>Ejemplo: s(6) = 8 + 2·2 + ½·2² = 8 + 4 + 2 = 14 m.</li></ul>
+<h3>Ahora hazlo tú</h3><p>¿Dónde está el robot en <b>t = 10 s</b>? Primero elige el tramo (¿10 está entre 8 y 11?) y calcula.</p>
+<div class="row"><label for="gb" style="margin:0">s(10) =</label><input id="gb" type="text" inputmode="decimal" style="max-width:130px"><span>m</span><button class="bt" onclick="chkg()">Comprobar</button></div><div class="fb" id="fbG" hidden></div>
+<div class="row"><button class="bt y" id="ng" hidden onclick="unlock(3);go(3)">Revisar los nodos</button></div></div></section>
+<!-- 3 -->
+<section hidden><h2>Nodos: ¿el robot da saltos?</h2>
+<p>Un robot real no se teletransporta. En cada nodo, las dos fórmulas vecinas deben dar <b>el mismo valor</b>. Avanza paso a paso.</p>
+<svg id="c3" viewBox="0 0 640 350" role="img" aria-label="Curva con nodos en t = 4 y t = 8"></svg>
+<div id="steps"></div><div class="row"><button class="bt" id="nx" onclick="step()">Mostrar siguiente paso</button></div>
+<div id="ask" hidden><label for="xh">Tu turno, nodo t = 8. Calcula con la fórmula del <b>tramo 2</b>: s = 8 + 2·4 + ½·4². ¿Cuánto da?</label><input type="text" id="xh" inputmode="decimal" style="max-width:160px"> <button class="bt" onclick="chkh()">Comprobar</button></div><div class="fb" id="fb2" hidden></div>
+<div id="ask2" hidden><p>El tramo 3 en t = 8 da 24 + 6·0 − 0² = 24 m. Las dos fórmulas coinciden. Coinciden.</p><div id="mq3"></div></div>
+<div class="row"><button class="bt y" id="n3" hidden onclick="unlock(4);go(4)">Poner condiciones de operación</button></div></section>
+<!-- 4 -->
+<section hidden><h2>Condiciones de operación: ecuaciones</h2>
+<p>La planta exige que el robot llegue a la zona de inspección (<b>29 m</b>) <b>antes de 10 s</b>. Hay que resolver <b>s(t) = 29</b>.</p>
+<h3>1. Hazlo tú</h3><div id="q4a"></div>
+<div id="b4" hidden><p>Usamos el tramo 3 y el cambio <b>u = t − 8</b> (así 0 &lt; u ≤ 3):</p><div class="m">24 + 6u − u² = 29 ⟹ u² − 6u + 5 = 0</div>
+<p>Factorizamos: busca dos números que multiplicados den 5 y sumados den 6.</p>
+<div class="row"><span class="m" style="margin:0">(u − 1)(u − </span><input id="d1" type="text" inputmode="numeric" style="max-width:90px"><span class="m" style="margin:0">) = 0</span><button class="bt" onclick="chkd1()">Comprobar</button></div><div class="fb" id="fbD" hidden></div></div>
+<div id="q4c" hidden></div>
+<div id="r4" hidden><p>Como t = 8 + u y u = 1:</p><div class="row"><span class="m" style="margin:0">t = 8 + 1 =</span><input id="d2" type="text" inputmode="decimal" style="max-width:110px"><span>s</span><button class="bt" onclick="chkd2()">Comprobar</button></div><div class="fb" id="fbR" hidden></div></div>
+<h3>2. Explora: cambia la posición objetivo</h3>
+<p>Elige a qué posición debe llegar el robot. La línea roja marca esa posición y el punto azul, el instante en que la alcanza.</p>
+<svg id="c4" viewBox="0 0 640 350" role="img" aria-label="Instante en que el robot alcanza una posición"></svg>
+<label for="M">Posición objetivo: <span id="mv"></span> m</label><input type="range" id="M" min="1" max="33" step="0.5" value="10">
+<div class="two"><div class="card a"><span class="ta">Instante en que llega</span><span class="big" id="i1"></span></div><div class="card b"><span class="tb">¿Antes de 10 s?</span><span class="big" id="i2"></span></div></div>
+<div class="m" id="eq" style="font-size:.9rem"></div><p class="mu" id="nt"></p>
+<h3>3. Descubre una conexión</h3><p>Mueve la posición hasta que el robot llegue justo en <b>t = 4 s</b>, el primer nodo. ¿Qué posición es? ¿La viste en la tabla?</p>
+<div class="row"><button class="bt y" onclick="mark3()">Aquí llega en t = 4</button></div><div class="fb" id="fbC" hidden></div>
+<h3>4. Ahora una inecuación</h3><p>El escáner solo funciona cuando el robot está a <b>29 m o más</b>: s(t) ≥ 29. En el tramo 3 eso da u² − 6u + 5 ≤ 0, es decir, <b>1 ≤ u ≤ 5</b>. Pero u ≤ 3. ¿Entre qué instantes t funciona el escáner?</p>
+<div class="row"><input type="text" id="lo" placeholder="desde" style="max-width:110px"><span>≤ t ≤</span><input type="text" id="hi" placeholder="hasta" style="max-width:110px"><button class="bt" onclick="chki()">Comprobar</button></div><div class="fb" id="fbI" hidden></div>
+<div class="row"><button class="bt y" id="n4" hidden onclick="unlock(5);go(5)">Tomar la decisión</button></div><p class="mu" id="gt"></p></section>
+<!-- 5 -->
+<section hidden><h2>Decide y justifica</h2>
+<p>El escáner de la zona de inspección se programa a un instante fijo. Debes decidir <b>a qué segundo activarlo</b>. Recuerda que el robot está en la zona (29 a 33 m) solo durante parte del recorrido.</p>
+<div class="row"><button class="bt g" id="oA" onclick="ch(8)">A los 8 s</button><button class="bt g" id="oB" onclick="ch(9)">A los 9 s</button><button class="bt g" id="oC" onclick="ch(10)">A los 10 s</button></div>
+<div class="fb" id="fb4" hidden></div>
+<label for="ju">Tu justificación (con tus números y el modelo)</label><textarea id="ju" rows="4" placeholder="Ej.: s(10) = 24 + 6·2 − 2² = … Elijo … porque … y no conviene … porque …"></textarea>
+<label for="ju2">¿Qué cambiaría tu decisión? (opcional)</label><textarea id="ju2" rows="2" placeholder="Ej.: Si el robot frenara más fuerte…"></textarea>
+<div class="two"><div><label for="nm">Nombre</label><input type="text" id="nm"></div><div><label for="rt">RUT (opcional)</label><input type="text" id="rt" placeholder="12.345.678-9"></div></div>
+<p class="mu">Estos datos se quedan en tu navegador y solo aparecen en lo que tú copias o descargas.</p>
+<pre id="rep" aria-live="polite"></pre><div class="fb" id="chk" hidden></div>
+<div class="row"><button class="bt g" id="dl" onclick="dlt(txt(),'Informe_Mision_Robot.txt')" disabled>Descargar .txt</button><button class="bt g" id="cp" onclick="cpt(txt(),this,'Copiar informe')" disabled>Copiar informe</button><button class="bt y" id="n5" onclick="unlock(6);go(6);quiz()" disabled>Ir al reto final</button></div></section>
+<!-- 6 -->
+<section hidden><h2>Reto final</h2><div id="quiz"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),N=v=>parseFloat(String(v).replace(',','.')),f2=n=>n.toFixed(2).replace('.',',').replace(',00','');
+const P=t=>t<=4?2*t:t<=8?8+2*(t-4)+.5*(t-4)**2:24+6*(t-8)-(t-8)**2,
+V=t=>t<=4?2:t<=8?2+(t-4):6-2*(t-8),TR=t=>t<=4?1:t<=8?2:3,
+inv=D=>{let a=0,b=11;for(let i=0;i<40;i++){const m=(a+b)/2;P(m)<D?a=m:b=m}return b},
+X=t=>70+t/11*540,Y=s=>310-s/35*290;
+const S={s:0,max:0,pred:null,ch:null,g:{}},names=['Caso','Explora','Modela','Nodos','Condiciones','Decisión','Reto'];
+function road(){$('#road').innerHTML=names.map((n,i)=>`<li style="flex:1;display:flex"><button ${i>S.max?'disabled':''} ${i==S.s?'aria-current="step"':''} onclick="go(${i})">${n}</button></li>`).join('');$('#truck').style.left=(7+S.s*14.3)+'%'}
+function go(n){if(n>S.max)return;S.s=n;document.querySelectorAll('main section').forEach((e,i)=>e.hidden=i!==n);road();scrollTo({top:0,behavior:'smooth'});if(n==1)ex();if(n==3&&!$('#steps').innerHTML)reset3();if(n==4)s4();if(n==5)rep()}
+function unlock(n){if(n>S.max)S.max=n;road()}
+function say(id,t,k){const e=$(id);e.hidden=false;e.className='fb '+(k||'');e.innerHTML=t}
+function draw(id,o){let s='';
+for(let v=0;v<=35;v+=5)s+=`<line class="g" x1="70" x2="610" y1="${Y(v)}" y2="${Y(v)}"/><text x="64" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
+for(let t=0;t<=11;t++)s+=`<line class="g" x1="${X(t)}" x2="${X(t)}" y1="20" y2="310"/><text x="${X(t)}" y="328" text-anchor="middle">${t}</text>`;
+s+=`<line x1="70" x2="610" y1="${Y(29)}" y2="${Y(29)}" stroke="#b3261e" stroke-opacity=".45" stroke-width="2" stroke-dasharray="6 4"/><text x="610" y="${Y(29)-6}" text-anchor="end" style="fill:#b3261e;font-weight:700">Zona de inspección 29 m</text>`;
+if(o.d!=null){const t=inv(o.d);s+=`<line x1="70" x2="610" y1="${Y(o.d)}" y2="${Y(o.d)}" stroke="#b3261e" stroke-width="2"/><line x1="${X(t)}" x2="${X(t)}" y1="${Y(o.d)}" y2="310" stroke="#20242a" stroke-dasharray="3 3"/>`}
+let d='';for(let t=0;t<=11.001;t+=.1)d+=(t==0?'M':'L')+X(t).toFixed(1)+' '+Y(P(t)).toFixed(1);
+s+=`<path d="${d}" fill="none" stroke="#c44600" stroke-width="3.5"/>`;
+if(o.nodes)[[4,8],[8,24]].forEach(([t,v])=>s+=`<circle cx="${X(t)}" cy="${Y(v)}" r="7" fill="#17803f" stroke="#fff" stroke-width="2.5"/><text x="${X(t)+10}" y="${Y(v)+18}" style="fill:#17803f;font-weight:700">nodo t = ${t} s, s = ${v} m</text>`);
+if(o.x!=null)s+=`<line x1="${X(o.x)}" x2="${X(o.x)}" y1="20" y2="310" stroke="#20242a" stroke-dasharray="3 3"/><line x1="70" x2="${X(o.x)}" y1="${Y(P(o.x))}" y2="${Y(P(o.x))}" stroke="#20242a" stroke-dasharray="3 3"/><circle cx="${X(o.x)}" cy="${Y(P(o.x))}" r="7" fill="#1f5fd1" stroke="#fff" stroke-width="2.5"/><text x="${X(o.x)+10}" y="${Y(P(o.x))-10}" style="fill:#1f5fd1;font-weight:700">${f2(P(o.x))} m</text>`;
+if(o.d!=null){const t=inv(o.d);s+=`<circle cx="${X(t)}" cy="${Y(o.d)}" r="7" fill="#1f5fd1" stroke="#fff" stroke-width="2.5"/><text x="${X(t)+10}" y="${Y(o.d)+18}" style="fill:#1f5fd1;font-weight:700">t = ${f2(t)} s</text>`}
+$(id).innerHTML=s+`<text x="340" y="346" text-anchor="middle">Tiempo t (s)</text><text x="6" y="12">Posición s (m)</text>`}
+function mcq(el,q,o,ok,hint,why,cb){let t=0;const idx=o.map((_,i)=>i).sort(()=>Math.random()-.5);
+el.innerHTML=`<p><b>${q}</b></p>`+idx.map(i=>`<button class="opt" data-i="${i}">${o[i]}</button>`).join('')+'<div class="fb" hidden></div>';
+const fb=el.querySelector('.fb');el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(+b.dataset.i===ok){b.classList.add('ok');el.querySelectorAll('.opt').forEach(x=>x.disabled=true);fb.hidden=false;fb.className='fb ok';fb.innerHTML=(t?'¡Eso! ':'¡Bien! ')+why;cb&&cb(t==0)}else{t++;b.classList.add('no');b.disabled=true;fb.hidden=false;fb.className='fb no';fb.innerHTML='Todavía no. '+hint}})}
+function chain(q,done){q.forEach((r,i)=>{$(r[0]).hidden=i>0;mcq($(r[0]),r[1],r[2],r[3],r[4],r[5],()=>{i<q.length-1?$(q[i+1][0]).hidden=false:done()})})}
+/* 0 */
+function pick(v){S.pred=v;say('#fb0',`Tu hipótesis: <b>${v}</b>. La vamos a poner a prueba.`);$('#n0').hidden=false;unlock(1)}
+/* 1 */
+function ex(){const t=+$('#h').value;$('#hv').textContent=f2(t);$('#sp').textContent=f2(P(t))+' m';$('#sv').textContent=f2(V(t))+' m/s';
+$('#rb').style.left=(3+P(t)/33*94)+'%';
+$('#lead').innerHTML=`En t = ${f2(t)} s el robot usa el <b>tramo ${TR(t)}</b>: ${TR(t)==1?'avanza con velocidad constante.':TR(t)==2?'va acelerando.':'va frenando.'}`;draw('#c1',{x:t})}
+$('#h').oninput=ex;
+function mark(){const t=+$('#h').value;
+if(Math.abs(t-9)<=.25){say('#fb1','<b>¡Descubierto!</b> En t = 9 s: s = 24 + 6·1 − 1² = 29 m.','ok');$('#aft1').hidden=false;
+mcq($('#mq1'),'Entre t = 4 y t = 8 la curva se va inclinando cada vez más. ¿Qué significa?',['El robot va cada vez más rápido (acelera)','El robot va cada vez más lento','El robot retrocede'],0,'Mira la velocidad: ¿sube o baja cuando avanzas t?','Más inclinación significa más metros por segundo: el robot acelera.',()=>$('#mq1').insertAdjacentHTML('beforeend','<div class="row"><button class="bt y" onclick="unlock(2);go(2);modelo()">Escribir el modelo</button></div>'))}
+else say('#fb1',P(t)>29?'Todavía no. Aquí el robot ya pasó los 29 m: baja t.':'Todavía no. Aquí aún no llega a 29 m: sube t.','no')}
+/* 2 */
+function modelo(){const q=[['#mq2a','¿Por qué una sola fórmula no sirve para todo el recorrido?',['Porque el robot cambia su forma de moverse en cada etapa','Porque el pasillo cambia de largo','Porque el tiempo se detiene'],0,'Mira la curva: ¿se inclina siempre igual?','Cada etapa tiene su fórmula: por eso la función se define por tramos.'],
+['#mq2b','En el tramo 2 aparece (t − 4). ¿Qué mide?',['El tiempo transcurrido desde que empezó ese tramo','La aceleración del robot','Los metros que avanza'],0,'¿Cuánto vale (t − 4) justo en t = 4?','En t = 4 vale 0: el tramo 2 parte justo donde terminó el tramo 1.'],
+['#mq2c','Para calcular s(6), ¿qué fórmula usas?',['La del tramo 2, porque 4 &lt; 6 ≤ 8','La del tramo 1, porque 6 &gt; 0','La del tramo 3, porque 6 &gt; 4'],0,'Busca el intervalo donde cae 6.','6 está en (4, 8]: se usa el tramo 2 y s(6) = 14 m.']];
+$('#mod').hidden=true;chain(q,()=>$('#mod').hidden=false)}
+function chkg(){N($('#gb').value)===32?(say('#fbG','¡Bien! Tramo 3: s(10) = 24 + 6·2 − 2² = 24 + 12 − 4 = 32 m.','ok'),$('#ng').hidden=false):say('#fbG','10 está en (8, 11]: usa 24 + 6(t − 8) − (t − 8)² con t − 8 = 2.','no')}
+/* 3 */
+const ST=['<b>Paso 1. Nodo t = 4.</b> Por la izquierda (tramo 1): s = 2·4 = 8. Por la derecha (tramo 2): s = 8 + 2·0 + ½·0² = 8.<div class="m">8 = 8 ✓ no hay salto</div>','<b>Paso 2. Regla.</b> Una función por tramos es <b>continua</b> en un nodo si las dos fórmulas dan el mismo valor ahí. Revisa el segundo nodo.'];let k=0;
+function reset3(){k=0;$('#steps').innerHTML='';$('#nx').hidden=false;$('#ask').hidden=true;draw('#c3',{nodes:1});step()}
+function step(){if(k<ST.length)$('#steps').insertAdjacentHTML('beforeend','<p>'+ST[k++]+'</p>');if(k>=ST.length){$('#nx').hidden=true;$('#ask').hidden=false}}
+function chkh(){N($('#xh').value)===24?(say('#fb2','¡Exacto! 8 + 8 + 8 = 24 m: el tramo 3 debe partir desde 24 m.','ok'),$('#ask2').hidden=false,mcq($('#mq3'),'Si el tramo 3 empezara en 22 m en vez de 24 m, ¿qué pasaría en t = 8?',['El robot daría un salto de 2 m: el modelo no sería continuo','Nada, el modelo seguiría igual','El robot iría más rápido'],0,'Piensa en que el robot no puede teletransportarse.','Habría un salto: dos valores distintos en el mismo instante. Por eso revisamos los nodos.',()=>$('#n3').hidden=false)):say('#fb2','Calcula ½·4² = 8 y suma: 8 + 8 + 8.','no')}
+/* 4 */
+let i4=0;
+function s4(){rst();gate();if(i4)return;i4=1;mcq($('#q4a'),'¿En qué tramo ocurre s(t) = 29? Recuerda: s(8) = 24 y s(11) = 33.',['Tramo 3, porque 29 está entre 24 m y 33 m','Tramo 1, porque 29 es positivo','Tramo 2, porque 29 &gt; 8'],0,'Compara 29 con s(4) = 8, s(8) = 24 y s(11) = 33.','29 está entre 24 y 33: son las posiciones en t = 8 y t = 11.',()=>$('#b4').hidden=false)}
+function rst(){const D=+$('#M').value,t=inv(D);$('#mv').textContent=f2(D);$('#i1').textContent=f2(t)+' s';$('#i2').textContent=t<10?'Sí':'No';
+$('#eq').innerHTML=`s(t) = ${f2(D)} se resuelve en el tramo ${TR(t)}`;$('#nt').textContent=D>=32?'Cerca de la meta el robot casi se detiene: los últimos metros cuestan mucho tiempo.':'';draw('#c4',{d:D})}
+$('#M').oninput=rst;
+function gate(){const n=Object.keys(S.g).length,k=x=>S.g[x]?'✓':'○';$('#gt').innerHTML=n<3?`<b>Para avanzar completa 3 retos (${n} de 3):</b><br>${k('a')} Resolver s(t) = 29 y llegar a t = 9 (parte 1)<br>${k('c')} Encontrar la posición 8 m (parte 3)<br>${k('i')} Intervalo de la inecuación (parte 4)`:'<b>¡Retos completos!</b> Ya puedes tomar la decisión.';if(n==3)$('#n4').hidden=false}
+function chkd1(){if(N($('#d1').value)===5){say('#fbD','¡Bien! (u − 1)(u − 5) = u² − 6u + 5. Soluciones: u = 1 y u = 5.','ok');if($('#q4c').hidden){$('#q4c').hidden=false;mcq($('#q4c'),'¿Qué solución sirve: u = 1 o u = 5? Recuerda que 0 &lt; u ≤ 3.',['u = 1','u = 5','Las dos'],0,'Si u = 5, entonces t = 13 s. ¿Existe ese instante?','u = 5 daría t = 13 s, fuera del recorrido (termina en t = 11).',()=>$('#r4').hidden=false)}}else say('#fbD','Dos números que multiplicados dan 5 y sumados dan 6: 1 y …','no')}
+function chkd2(){N($('#d2').value)===9?(say('#fbR','¡Eso! t = 9 s. Como 9 &lt; 10, el robot cumple la exigencia.','ok'),S.g.a=1,gate()):say('#fbR','t = 8 + u, con u = 1.','no')}
+function mark3(){const D=+$('#M').value;if(D===8){S.g.c=1;say('#fbC','<b>¡Lo encontraste!</b> Con 8 m el robot llega en t = 4 s: es el primer nodo y es el dato de la tabla. En el nodo coinciden el tramo 1 y el tramo 2.','ok');gate()}else say('#fbC','Todavía no. '+(D>8?'Baja la posición.':'Sube la posición.'),'no')}
+function chki(){if(N($('#lo').value)===9&&N($('#hi').value)===11){S.g.i=1;say('#fbI','¡Correcto! 1 ≤ u ≤ 5 y u ≤ 3 dan 1 ≤ u ≤ 3; sumando 8, 9 ≤ t ≤ 11.','ok');gate()}else say('#fbI','Recuerda t = 8 + u, con 1 ≤ u ≤ 3.','no')}
+/* 5 */
+function ch(c){S.ch=c;[['A',8],['B',9],['C',10]].forEach(([l,v])=>$('#o'+l).className='bt '+(c==v?'':'g'));
+say('#fb4',c==8?'s(8) = 24 m &lt; 29 m: a los 8 s el robot aún no entra a la zona. No cumple.':c==9?'s(9) = 29 m: el robot justo entra a la zona, sin margen. Cumple, pero un pequeño atraso lo haría fallar.':'s(10) = 32 m ≥ 29 m: el robot está dentro de la zona (9 ≤ t ≤ 11), con margen. Cumple.');rep()}
+function txt(){const n=$('#nm').value.trim()||'[nombre]',r=$('#rt').value.trim()||'(no indicado)';
+return `INFORME TÉCNICO · MISIÓN ROBOT\nMATC0001 · Módulo III · UTEM\n\nResponsable: ${n}  RUT: ${r}\n\nMODELO\n  s(t) = 2t, si 0 ≤ t ≤ 4\n  s(t) = 8 + 2(t − 4) + ½(t − 4)², si 4 < t ≤ 8\n  s(t) = 24 + 6(t − 8) − (t − 8)², si 8 < t ≤ 11\n  Nodos: s(4) = 8 y s(8) = 24 coinciden (continua)\n  s(t) = 29 ⟹ u² − 6u + 5 = 0, u = t − 8 ⟹ u = 1 ⟹ t = 9 s\n  s(t) ≥ 29 ⟹ 9 ≤ t ≤ 11\n\nMI HIPÓTESIS INICIAL: ${S.pred||'-'}\nMI DECISIÓN: ${S.ch?'Activar el escáner a los '+S.ch+' s':'[sin elegir]'}\n\nJUSTIFICACIÓN\n${$('#ju').value.trim()||'[escribe tu justificación]'}\n\nPREGUNTA DE CIERRE: ¿QUÉ CAMBIARÍA MI DECISIÓN?\n${$('#ju2').value.trim()||'-'}\n`}
+function rep(){$('#rep').textContent=txt();const m=[];if(!S.ch)m.push('elige un instante para el escáner');if($('#ju').value.trim().length<30)m.push('escribe una justificación de al menos 30 caracteres');if(!$('#nm').value.trim())m.push('escribe tu nombre');
+['#dl','#cp','#n5'].forEach(i=>$(i).disabled=!!m.length);m.length?say('#chk','Para continuar: '+m.join(', ')+'.'):$('#chk').hidden=true}
+['#ju','#ju2','#nm','#rt'].forEach(i=>$(i).oninput=rep);
+async function cpt(x,b,l){try{await navigator.clipboard.writeText(x);b.textContent='¡Copiado!'}catch(e){b.textContent='No se pudo copiar: usa Descargar'}setTimeout(()=>b.textContent=l,2500)}
+function dlt(x,n){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([x],{type:'text/plain;charset=utf-8'}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+/* 6 */
+const Q=[['Para t = 2 s, ¿dónde está el robot?',['4 m','2 m','8 m'],0,'Tramo 1: s = 2t.','s(2) = 2·2 = 4 m.'],
+['¿Qué tramo usas para t = 7?',['Tramo 2, porque 4 &lt; 7 ≤ 8','Tramo 1, porque 7 &gt; 0','Tramo 3, porque 7 &gt; 4'],0,'Busca el intervalo donde cae 7.','7 está en (4, 8]: tramo 2.'],
+['¿Qué debe cumplirse para que la función sea continua en un nodo?',['Las dos fórmulas dan el mismo valor en el nodo','Las dos fórmulas son idénticas','La velocidad vale cero en el nodo'],0,'Piensa en que el robot no se teletransporta.','Mismo valor en el nodo: no hay saltos.'],
+['¿Cuánto vale s(11)?',['33 m','31 m','24 m'],0,'Tramo 3 con t − 8 = 3: 24 + 18 − 9.','24 + 6·3 − 3² = 33 m.'],
+['Al resolver s(t) = 29 salen u = 1 y u = 5. ¿Por qué se descarta u = 5?',['Porque el tramo 3 solo dura 3 s (0 &lt; u ≤ 3)','Porque 5 es impar','Porque da un tiempo negativo'],0,'t = 8 + 5 = 13: ¿existe ese instante en el recorrido?','t = 13 s queda fuera del recorrido, que termina en t = 11.'],
+['Resolver s(t) ≥ 29 en el tramo 3 da 1 ≤ u ≤ 3. ¿Entre qué instantes t?',['9 s y 11 s','1 s y 3 s','8 s y 9 s'],0,'Recuerda u = t − 8.','Sumando 8: 9 ≤ t ≤ 11.']];
+let qi=0,sc=0;
+function quiz(){qi=0;sc=0;nq()}
+function nq(){if(qi>=Q.length)return fin();const q=Q[qi];$('#quiz').innerHTML=`<p class="mu">Pregunta ${qi+1} de ${Q.length}</p><div id="qq"></div>`;
+mcq($('#qq'),q[0],q[1],q[2],q[3],q[4],f=>{if(f)sc++;$('#qq').insertAdjacentHTML('beforeend',`<div class="row"><button class="bt y" onclick="qi++;nq()">${qi+1<Q.length?'Siguiente pregunta':'Ver mi resultado'}</button></div>`)})}
+function fin(){const t=sc==Q.length?'Jefa o jefe de planta':sc>=4?'Ingeniera o ingeniero en terreno':'Aprendiz de planta';
+const c=S.pred=='Entre 8 y 10 s'?'Tu hipótesis era "entre 8 y 10 s", y el modelo la confirmó: el robot llega a 29 m en t = 9 s.':`Tu hipótesis era "${S.pred}": el modelo da t = 9 s para llegar a la zona de inspección.`;
+S.cmp=cmp();$('#quiz').innerHTML=`<h3 style="font-size:1.6rem">${sc} de ${Q.length} · ${t}</h3><p class="lead">${c}</p><p>Lo que te llevas: una función con una fórmula distinta en cada tramo, un dominio dividido en intervalos, nodos donde las fórmulas deben coincidir y ecuaciones e inecuaciones que se resuelven dentro del tramo correcto.</p>
+<h3>Tu entrega de misión cumplida</h3><p>Incluye tu comprobante y tu informe. Cópialo y pégalo en la tarea de Canvas: tu docente verá que completaste la misión y, con la rúbrica, retroalimentará tu justificación. El puntaje es formativo, no calificado.</p><pre id="cmp"></pre>
+<div class="row"><button class="bt y" onclick="cpt(S.cmp,this,'Copiar entrega')">Copiar entrega</button><button class="bt g" onclick="dlt(S.cmp,'Entrega_Mision_Robot.txt')">Descargar entrega</button></div><div class="row"><button class="bt g" onclick="quiz()">Intentarlo de nuevo</button><button class="bt g" onclick="go(0)">Volver al inicio</button></div>`;
+$('#cmp').textContent=S.cmp;if(sc>=6&&typeof confetti=='function')confetti({particleCount:90,spread:70,origin:{y:.6}})}
+function cmp(){const d=new Date(),z=n=>String(n).padStart(2,'0'),f=`${z(d.getDate())}-${z(d.getMonth()+1)}-${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}`,n=$('#nm').value.trim(),r=$('#rt').value.trim();
+let h=5381;(n+r+f+sc).split('').forEach(c=>h=((h*33)^c.charCodeAt(0))>>>0);
+return `COMPROBANTE · MISIÓN ROBOT · MATC0001 · UTEM\nEstudiante: ${n}${r?'  RUT: '+r:''}\nFecha y hora: ${f}\nPuntaje formativo automático: ${sc} de ${Q.length} (no calificado)\nDecisión tomada: activar el escáner a los ${S.ch} s\nCódigo: MR-${sc}de${Q.length}-${h.toString(36).toUpperCase().slice(0,5)}\n\n------------------------------\n`+txt()}
+road();ex();rst();
+</script></body></html>
